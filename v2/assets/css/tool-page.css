@@ -1,0 +1,390 @@
+/* ==========================================================================
+   Tool Page — Hero, Content (prose + sidebar)
+   Colors: --ink:#0b1220 --body:#4a5568 --muted:#8792a6 --paper:#fff
+   --surface:#f6f8fb --line:#e4e9f0 --accent:#2563eb --ok:#16a34a
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tool Hero
+   -------------------------------------------------------------------------- */
+.tctp-th {
+    padding: 14px 0 30px;
+    background: radial-gradient(60% 100% at 50% 0%, #f4f7ff 0%, transparent 70%);
+}
+
+.tctp-th-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Breadcrumb */
+.tctp-crumbs {
+    font-size: 13px;
+    color: #8792a6;
+    padding: 18px 0 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tctp-crumbs a { color: #8792a6; }
+.tctp-crumbs a:hover { color: #0b1220; }
+.tctp-crumbs .current { color: #0b1220; }
+
+/* Pills */
+.tctp-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 14px 0 16px;
+}
+
+.tctp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #4a5568;
+    border: 1px solid #e4e9f0;
+    background: #fff;
+    padding: 5px 11px;
+    border-radius: 100px;
+}
+
+.tctp-pill.ok {
+    color: #15803d;
+    background: #e7f7ed;
+    border-color: #c9ecd6;
+}
+
+.tctp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+}
+
+/* Title + Lede */
+.tctp-th h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 4.4vw, 50px);
+    line-height: 1.06;
+    font-weight: 700;
+    color: #0b1220;
+    max-width: 18ch;
+    margin: 0;
+}
+
+.tctp-th .lede {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17.5px;
+    color: #4a5568;
+    max-width: 60ch;
+    margin: 14px 0 0;
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Tool Content — Prose + Sidebar
+   -------------------------------------------------------------------------- */
+.tctp-tc {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 24px 20px;
+}
+
+.tctp-tc-inner {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 56px;
+}
+
+/* --------------------------------------------------------------------------
+   Prose
+   -------------------------------------------------------------------------- */
+.tctp-prose h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0b1220;
+    margin: 44px 0 14px;
+}
+
+.tctp-prose h2:first-child {
+    margin-top: 0;
+}
+
+.tctp-prose p {
+    font-family: 'DM Sans', sans-serif;
+    color: #4a5568;
+    margin: 0 0 14px;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+/* Steps */
+.tctp-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 18px 0 0;
+}
+
+.tctp-step {
+    border: 1px solid #e4e9f0;
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+}
+
+.tctp-step b {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: #0b1220;
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.tctp-step h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0b1220;
+    margin: 0 0 6px;
+}
+
+.tctp-step p {
+    font-size: 13.5px;
+    margin: 0;
+}
+
+/* Feature cards */
+.tctp-feat {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.tctp-fcard {
+    border: 1px solid #e4e9f0;
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tctp-fcard:hover {
+    border-color: #c9d6ea;
+    transform: translateY(-2px);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 8px 24px -12px rgba(16, 24, 40, 0.18);
+}
+
+.tctp-fcard-ic {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #f6f8fb;
+    border: 1px solid #e4e9f0;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.tctp-fcard h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0b1220;
+    margin: 0 0 6px;
+}
+
+.tctp-fcard p {
+    font-size: 13.5px;
+    color: #4a5568;
+    margin: 0;
+}
+
+/* Bullet list */
+.tctp-bullets {
+    padding: 0;
+    margin: 16px 0 0;
+    list-style: none;
+}
+
+.tctp-bullets li {
+    padding: 12px 0;
+    border-top: 1px solid #e4e9f0;
+    font-size: 14.5px;
+    color: #4a5568;
+}
+
+.tctp-bullets li strong {
+    color: #0b1220;
+    font-weight: 600;
+}
+
+/* FAQ */
+.tctp-faq {
+    border: 1px solid #e4e9f0;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 18px;
+}
+
+.tctp-faq details {
+    border-bottom: 1px solid #e4e9f0;
+    background: #fff;
+}
+
+.tctp-faq details:last-child {
+    border: 0;
+}
+
+.tctp-faq summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 18px;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #0b1220;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.tctp-faq summary::-webkit-details-marker { display: none; }
+.tctp-faq summary::after { content: '+'; color: #8792a6; font-weight: 500; }
+.tctp-faq details[open] summary::after { content: '–'; }
+
+.tctp-faq p {
+    padding: 0 18px 16px;
+    margin: 0;
+    font-size: 14.5px;
+    color: #4a5568;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar
+   -------------------------------------------------------------------------- */
+.tctp-aside {
+    position: sticky;
+    top: 92px;
+    align-self: start;
+    display: grid;
+    gap: 16px;
+}
+
+.tctp-box {
+    border: 1px solid #e4e9f0;
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+}
+
+.tctp-box h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8792a6;
+    margin: 0 0 12px;
+}
+
+.tctp-rel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    margin-left: -10px;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #4a5568;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tctp-rel:hover {
+    background: #f6f8fb;
+    color: #0b1220;
+}
+
+.tctp-rel i {
+    font-style: normal;
+    color: #8792a6;
+}
+
+/* CTA box */
+.tctp-cta {
+    background: #0b1220;
+    color: #fff;
+    border-color: #0b1220;
+}
+
+.tctp-cta h4 {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tctp-cta p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.78);
+    margin: 0 0 14px;
+}
+
+.tctp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    background: #fff;
+    color: #0b1220;
+    text-decoration: none;
+    transition: opacity 0.16s;
+}
+
+.tctp-btn:hover {
+    opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — 1000px
+   -------------------------------------------------------------------------- */
+@media (max-width: 1000px) {
+    .tctp-tc-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .tctp-aside {
+        position: static;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — 760px
+   -------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+    .tctp-steps,
+    .tctp-feat {
+        grid-template-columns: 1fr;
+    }
+
+    .tctp-th h1 {
+        font-size: 28px;
+    }
+}

@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Strip — Trust/benefits bar matching HTML design
+   Colors: --surface:#f6f8fb --line:#e4e9f0 --ink:#0b1220 --body:#4a5568
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Strip container
+   -------------------------------------------------------------------------- */
+.tctp-strip {
+    border-top: 1px solid #e4e9f0;
+    border-bottom: 1px solid #e4e9f0;
+    background: #f6f8fb;
+}
+
+/* --------------------------------------------------------------------------
+   Inner grid — 3 columns, gap 36px, padding 44px 24px
+   -------------------------------------------------------------------------- */
+.tctp-strip-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+    padding: 44px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   Item text
+   -------------------------------------------------------------------------- */
+.tctp-strip-item h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0b1220;
+    margin: 0 0 6px;
+}
+
+.tctp-strip-item p {
+    font-family: 'DM Sans', sans-serif;
+    margin: 0;
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — 960px: 2 columns
+   -------------------------------------------------------------------------- */
+@media (max-width: 960px) {
+    .tctp-strip-inner {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — 640px: 1 column
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+    .tctp-strip-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 32px 16px;
+    }
+}

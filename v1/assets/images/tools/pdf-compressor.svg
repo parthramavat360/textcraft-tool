@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none" role="img" aria-label="PDF Compressor Tool – Compress PDF files online without losing quality">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#101018"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a24c"/>
+      <stop offset="100%" stop-color="#e8c56d"/>
+    </linearGradient>
+    <linearGradient id="goldDim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a24c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#e8c56d" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="cardGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bg)" rx="0"/>
+
+  <!-- Ambient decorative circles -->
+  <circle cx="680" cy="80" r="160" fill="url(#goldDim)"/>
+  <circle cx="120" cy="420" r="100" fill="url(#goldDim)"/>
+  <circle cx="400" cy="250" r="200" fill="url(#goldDim)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03">
+    <line x1="0" y1="100" x2="800" y2="100" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="800" y2="200" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="800" y2="300" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="800" y2="400" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+  </g>
+
+  <!-- Main document card -->
+  <g filter="url(#shadow)" transform="translate(200, 100)">
+    <rect x="0" y="0" width="400" height="300" rx="16" fill="#0e0e18" stroke="rgba(212,162,76,0.12)" stroke-width="1"/>
+    <rect x="0" y="0" width="400" height="300" rx="16" fill="url(#cardGlow)"/>
+
+    <!-- Document top bar -->
+    <rect x="0" y="0" width="400" height="48" rx="16" fill="rgba(212,162,76,0.06)"/>
+    <rect x="24" y="16" width="20" height="16" rx="3" fill="#d4a24c" opacity="0.6"/>
+    <rect x="56" y="18" width="80" height="5" rx="2.5" fill="#d4a24c" opacity="0.3"/>
+    <rect x="56" y="28" width="120" height="5" rx="2.5" fill="#d4a24c" opacity="0.2"/>
+
+    <!-- Document lines -->
+    <rect x="24" y="64" width="160" height="6" rx="3" fill="#ffffff" opacity="0.08"/>
+    <rect x="24" y="80" width="200" height="6" rx="3" fill="#ffffff" opacity="0.06"/>
+    <rect x="24" y="96" width="140" height="6" rx="3" fill="#ffffff" opacity="0.08"/>
+    <rect x="24" y="116" width="170" height="6" rx="3" fill="#ffffff" opacity="0.06"/>
+    <rect x="24" y="132" width="90" height="6" rx="3" fill="#ffffff" opacity="0.08"/>
+
+    <!-- Compression visual - gauge -->
+    <g transform="translate(280, 60)">
+      <rect x="0" y="0" width="100" height="100" rx="50" fill="none" stroke="rgba(212,162,76,0.08)" stroke-width="6"/>
+      <path d="M50 50 L50 15 A35 35 0 0 1 85 50" stroke="url(#gold)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="50" cy="50" r="6" fill="#d4a24c"/>
+      <line x1="50" y1="50" x2="50" y2="30" stroke="#d4a24c" stroke-width="2" stroke-linecap="round"/>
+      <text x="50" y="85" text-anchor="middle" fill="#d4a24c" font-size="11" font-weight="700" font-family="system-ui">85%</text>
+    </g>
+
+    <!-- Arrow down indicating compression -->
+    <g transform="translate(200, 200)">
+      <rect x="-80" y="0" width="160" height="40" rx="20" fill="rgba(212,162,76,0.08)" stroke="rgba(212,162,76,0.15)" stroke-width="1"/>
+      <path d="M-8 12 L0 20 L8 12" stroke="#d4a24c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M0 4 L0 20" stroke="#d4a24c" stroke-width="2" stroke-linecap="round"/>
+      <text x="28" y="18" fill="#d4a24c" font-size="11" font-weight="600" font-family="system-ui" opacity="0.7">COMPRESSING</text>
+    </g>
+
+    <!-- Small file size indicators -->
+    <g transform="translate(24, 180)">
+      <rect x="0" y="0" width="80" height="28" rx="14" fill="rgba(212,162,76,0.06)" stroke="rgba(212,162,76,0.1)" stroke-width="0.5"/>
+      <text x="14" y="18" fill="rgba(212,162,76,0.5)" font-size="9" font-weight="500" font-family="system-ui">2.4 MB</text>
+    </g>
+    <g transform="translate(120, 180)">
+      <rect x="0" y="0" width="80" height="28" rx="14" fill="rgba(76,212,124,0.06)" stroke="rgba(76,212,124,0.1)" stroke-width="0.5"/>
+      <text x="14" y="18" fill="rgba(76,212,124,0.6)" font-size="9" font-weight="500" font-family="system-ui">0.8 MB</text>
+    </g>
+
+    <!-- Bottom label -->
+    <text x="200" y="270" text-anchor="middle" fill="rgba(212,162,76,0.35)" font-size="10" font-weight="500" font-family="system-ui" letter-spacing="3">PDF OPTIMIZATION</text>
+  </g>
+
+  <!-- Decorative gold accent line -->
+  <line x1="160" y1="80" x2="160" y2="420" stroke="url(#gold)" stroke-width="1" opacity="0.15"/>
+
+  <!-- Small decorative dots -->
+  <circle cx="640" cy="120" r="2" fill="#d4a24c" opacity="0.3"/>
+  <circle cx="660" cy="140" r="1.5" fill="#d4a24c" opacity="0.2"/>
+  <circle cx="630" cy="380" r="1.5" fill="#d4a24c" opacity="0.25"/>
+  <circle cx="170" cy="80" r="1.5" fill="#d4a24c" opacity="0.2"/>
+  <circle cx="150" cy="440" r="2" fill="#d4a24c" opacity="0.15"/>
+</svg>

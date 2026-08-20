@@ -1,0 +1,113 @@
+/* ==========================================================================
+   TextCraft Tools Pro — Global Styles
+   Clean reset + Elementor overrides + full-width breakout
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Box model + scrollbar fix
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #ffffff;
+    color: #0b1220;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   Links + headings
+   -------------------------------------------------------------------------- */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    letter-spacing: -.02em;
+    color: #0b1220;
+}
+
+/* --------------------------------------------------------------------------
+   Elementor — force full-width sections for our widgets
+   -------------------------------------------------------------------------- */
+.elementor-section.elementor-section-full_width > .elementor-container {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+}
+
+/* Remove ALL padding from Elementor wrappers for our widgets */
+.elementor-widget-tctp_header .elementor-widget-container,
+.elementor-widget-tctp_hero .elementor-widget-container,
+.elementor-widget-tctp_footer .elementor-widget-container,
+.elementor-widget-tctp_tools_section .elementor-widget-container,
+.elementor-widget-tctp_strip .elementor-widget-container,
+.elementor-widget-tctp_tool_hero .elementor-widget-container,
+.elementor-widget-tctp_tool_content .elementor-widget-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+.elementor-widget-tctp_header,
+.elementor-widget-tctp_hero,
+.elementor-widget-tctp_footer,
+.elementor-widget-tctp_tools_section,
+.elementor-widget-tctp_strip,
+.elementor-widget-tctp_tool_hero,
+.elementor-widget-tctp_tool_content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+/* --------------------------------------------------------------------------
+   Elementor — fix position: sticky by removing overflow from all ancestors
+   Elementor adds overflow:hidden on multiple wrapper levels which kills sticky
+   -------------------------------------------------------------------------- */
+.elementor-section,
+.elementor-section > .elementor-container,
+.elementor-row,
+.elementor-column,
+.elementor-column-wrap,
+.elementor-widget-wrap,
+.elementor-element,
+.elementor-widget,
+.elementor-widget-container {
+    overflow: visible !important;
+}
+
+/* --------------------------------------------------------------------------
+   Images — prevent overflow
+   -------------------------------------------------------------------------- */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Selection color
+   -------------------------------------------------------------------------- */
+::selection {
+    background: #eaf0ff;
+    color: #0b1220;
+}

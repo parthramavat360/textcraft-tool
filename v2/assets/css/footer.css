@@ -1,0 +1,144 @@
+/* ==========================================================================
+   TextCraft Tools Pro — Footer Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Footer — Main Container
+   -------------------------------------------------------------------------- */
+.tctp-footer {
+    padding: 52px 0 40px;
+    font-size: 14px;
+    color: var(--tctp-body);
+    font-family: var(--tctp-font-body);
+}
+
+.tctp-fwrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — 4-Column Grid
+   -------------------------------------------------------------------------- */
+.tctp-fgrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — Brand Column
+   -------------------------------------------------------------------------- */
+.tctp-fbrand-col {
+    /* Takes up the first 2fr column */
+}
+
+.tctp-fbrand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--tctp-font-display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--tctp-ink);
+    text-decoration: none;
+}
+
+.tctp-fmark {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: var(--tctp-ink);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.tctp-fdesc {
+    max-width: 34ch;
+    margin-top: 12px;
+    color: var(--tctp-body);
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — Link Columns
+   -------------------------------------------------------------------------- */
+.tctp-fcol h4 {
+    font-family: var(--tctp-font-display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--tctp-muted);
+    margin: 0 0 12px;
+}
+
+.tctp-fcol ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.tctp-fcol li {
+    margin-bottom: 8px;
+}
+
+.tctp-fcol a {
+    color: var(--tctp-body);
+    text-decoration: none;
+    transition: color .18s ease;
+}
+
+.tctp-fcol a:hover {
+    color: var(--tctp-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Footer — Copyright Bar
+   -------------------------------------------------------------------------- */
+.tctp-fcopy {
+    border-top: 1px solid var(--tctp-line);
+    margin-top: 40px;
+    padding-top: 20px;
+    font-size: 13px;
+    color: var(--tctp-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ==========================================================================
+   Media Queries — Responsive Breakpoints
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tablet Portrait / iPad (max-width: 960px)
+   — 2-column grid: brand + 2 cols per row
+   -------------------------------------------------------------------------- */
+@media (max-width: 960px) {
+    .tctp-fgrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile / iPhone (max-width: 640px)
+   — Single column layout
+   — Copyright bar stacks vertically
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+    .tctp-fgrid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .tctp-fcopy {
+        flex-direction: column;
+        gap: 6px;
+    }
+}

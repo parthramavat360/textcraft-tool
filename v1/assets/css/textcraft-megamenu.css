@@ -1,0 +1,679 @@
+/* ============================================================
+   TextCraft Tools — Header & Mega Menu Stylesheet
+   @package  TextCraft_Tools
+   @version  3.0.0
+
+   RESPONSIVE MEGA MENU:
+   - position:fixed for viewport-safe centering (override for
+     Hello Elementor in textcraft-tools.css)
+   - tc-mega-* scoped classes for CSS isolation
+   - Backward-compatible IDs (mega-trigger, mega-btn, mega-panel)
+     for existing JS.
+   - Grid auto-columns that wrap gracefully
+   - No horizontal overflow
+   ============================================================ */
+
+/* ── CSS custom props ─────────────────────────────────────── */
+:root {
+    --hdr-h:        68px;
+    --hdr-bg:       rgba(5, 5, 5, 0.95);
+    --hdr-border:   rgba(212, 162, 76, 0.10);
+    --mega-w:       980px;
+    --mega-bg:      #090909;
+    --mega-border:  rgba(212, 162, 76, 0.10);
+    --drawer-w:     320px;
+    --drawer-bg:    #050505;
+    --overlay-bg:   rgba(0, 0, 0, 0.8);
+    --hdr-gold1:    #d4a24c;
+    --hdr-gold2:    #b8860b;
+    --hdr-gold-light: #ffcc66;
+    --ease-out:     cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+.site-header *,
+.mobile-drawer * { box-sizing: border-box; }
+
+/* ============================================================
+   SITE HEADER SHELL
+   ============================================================ */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    height: var(--hdr-h);
+    background: var(--hdr-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--hdr-border);
+    transition: box-shadow 0.3s var(--ease-out),
+                background 0.3s var(--ease-out);
+    overflow: visible;
+}
+
+.site-header.scrolled {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    background: rgba(13, 15, 26, 0.98);
+}
+
+.header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: visible;
+    position: relative;
+}
+
+/* ============================================================
+   DESKTOP NAV
+   ============================================================ */
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+    /* overflow visible for mega panel */
+    overflow: visible;
+    position: relative;
+}
+
+/* ── Shared nav link ── */
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #a8997d;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.18s var(--ease-out),
+                background 0.18s var(--ease-out);
+    font-family: 'Lexend', 'DM Sans', system-ui, sans-serif;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.nav-link:hover,
+.nav-link.active,
+.nav-link--mega[aria-expanded="true"] {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.nav-link.active { color: var(--hdr-gold1, #d4a24c); }
+
+/* ── Mega chevron ── */
+.mega-chevron,
+.tc-mega-chevron {
+    transition: transform 0.22s var(--ease-out);
+    flex-shrink: 0;
+}
+.nav-link--mega[aria-expanded="true"] .mega-chevron,
+.tc-mega-btn[aria-expanded="true"] .tc-mega-chevron {
+    transform: rotate(180deg);
+}
+
+/* ============================================================
+   MEGA MENU TRIGGER CONTAINER
+   ============================================================ */
+.nav-item--mega,
+.tc-mega-trigger {
+    position: relative;
+}
+
+/* Bridge pseudo-element — hover gap filler */
+.nav-item--mega::after,
+.tc-mega-trigger::after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    right: -20px;
+    top: 100%;
+    height: 12px;           /* same as translateY offset in closed state */
+    pointer-events: auto;   /* capture mouse so gap doesn't trigger mouseleave */
+    z-index: 299;
+    display: none;
+}
+
+.nav-item--mega:hover::after,
+.nav-item--mega.mega-is-open::after {
+    display: block;
+}
+
+/* ============================================================
+   MEGA PANEL — Base styles (shared by .mega-panel and .tc-mega-panel)
+   ============================================================ */
+.mega-panel,
+.tc-mega-panel {
+    background: var(--mega-bg);
+    border: 1px solid var(--mega-border);
+    border-radius: 16px;
+    box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.6),
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.22s var(--ease-out),
+        transform 0.22s var(--ease-out),
+        visibility 0.22s var(--ease-out);
+    visibility: hidden;
+    z-index: 400;
+    will-change: opacity, transform;
+    box-sizing: border-box;
+    max-width: calc(100vw - 32px);
+    overflow: visible;
+}
+
+/*
+   Position method 1: absolute — used by themes where the trigger
+   is centered in the nav.  Overridden by the Hello Elementor fix
+   in textcraft-tools.css to use fixed positioning.
+*/
+.mega-panel,
+.tc-mega-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    width: min(var(--mega-w), calc(100vw - 32px));
+}
+
+/*
+   Position method 2: fixed — applied via Hello Elementor override.
+   textcraft-tools.css sets #mega-panel / .tc-mega-panel to
+   position: fixed; left: 16px; right: 16px; width: auto;
+   for themes where the trigger sits on the right side of the nav.
+*/
+
+/* ── OPEN STATE ── */
+.mega-panel.is-open,
+.tc-mega-panel.is-open,
+.nav-item--mega:hover > .mega-panel,
+.tc-mega-trigger:hover > .tc-mega-panel {
+    opacity: 1;
+    pointer-events: auto;   /* ← KEY FIX: restore clicks inside panel */
+    transform: translateX(-50%) translateY(0);
+    visibility: visible;
+}
+
+.mega-panel__inner,
+.tc-mega-inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0;
+    padding: 24px 8px 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Column ── */
+.mega-col,
+.tc-mega-col {
+    padding: 0 12px 16px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    min-width: 0;
+}
+.mega-col:last-child,
+.tc-mega-col:last-child { border-right: none; }
+
+.mega-col__heading,
+.tc-mega-category {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--hdr-gold1, #d4a853);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    white-space: nowrap;
+}
+
+.mega-col__list,
+.tc-mega-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Override theme .site-navigation ul.menu li ul { ... } — the theme
+   hides ALL nested <ul> elements inside nav menu items, including .tc-mega-list
+   which lives several levels deep inside the mega panel. The theme also
+   applies background:#fff, position:absolute, etc. which create a broken
+   white-dropdown appearance inside the dark mega panel.
+
+   This scoped rule has higher specificity (0,3,0) to win over the
+   theme's (0,2,3) selector and resets all problematic inherited styles. */
+.tc-mega-panel .tc-mega-list.mega-col__list {
+    display: flex !important;
+    background: transparent !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+    border: 0 none !important;
+    border-image: none !important;
+    border-radius: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+}
+
+.tc-mega-panel .tc-mega-list.mega-col__list li {
+    background: transparent !important;
+    border: 0 none !important;
+    position: static !important;
+}
+
+.tc-mega-panel .tc-mega-list.mega-col__list li a {
+    background: transparent !important;
+    border: 0 none !important;
+    display: flex !important;
+    padding: 8px 10px !important;
+}
+
+/* ── Tool link inside mega ── */
+.mega-tool-link,
+.tc-mega-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #a8997d;
+    text-decoration: none;
+    transition:
+        color 0.16s var(--ease-out),
+        background 0.16s var(--ease-out),
+        transform 0.16s var(--ease-out);
+    line-height: 1.35;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.mega-tool-link:hover,
+.tc-mega-link:hover {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.06);
+    transform: translateX(3px);
+}
+
+.mega-tool-link__icon,
+.tc-mega-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    width: 20px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.mega-tool-link__label,
+.tc-mega-label { flex: 1; }
+
+/* ── Mega footer strip ── */
+.mega-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(245, 158, 11, 0.03);
+    border-top: 1px solid rgba(212, 162, 76, 0.08);
+    font-size: 12.5px;
+    color: #6b6558;
+}
+
+.mega-panel__footer-link {
+    color: var(--hdr-gold1, #d4a853);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s;
+    cursor: pointer;
+}
+
+.mega-panel__footer-link:hover { color: var(--hdr-gold-light, #e8c56d); }
+
+/* ============================================================
+   HAMBURGER BUTTON
+   ============================================================ */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 9px 10px;
+    margin-left: auto;
+    transition:
+        border-color 0.18s var(--ease-out),
+        background 0.18s var(--ease-out);
+}
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.hamburger__bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #a8997d;
+    border-radius: 99px;
+    transition:
+        transform 0.3s var(--ease-out),
+        opacity 0.3s var(--ease-out),
+        background 0.18s;
+    transform-origin: center;
+}
+
+.hamburger[aria-expanded="true"] .hamburger__bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background: #ffffff;
+}
+.hamburger[aria-expanded="true"] .hamburger__bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger[aria-expanded="true"] .hamburger__bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background: #ffffff;
+}
+
+/* ============================================================
+   MOBILE OVERLAY
+   ============================================================ */
+.mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    z-index: 250;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease-out);
+    backdrop-filter: blur(2px);
+}
+
+.mobile-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ============================================================
+   MOBILE DRAWER
+   ============================================================ */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--drawer-w);
+    max-width: 90vw;
+    background: var(--drawer-bg);
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
+    z-index: 260;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s var(--ease-out);
+    overflow: hidden;
+}
+
+.mobile-drawer.is-open {
+    transform: translateX(0);
+}
+
+/* ── Drawer head ── */
+.mobile-drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    flex-shrink: 0;
+}
+
+.mobile-drawer__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    color: #a8997d;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mobile-drawer__close:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Drawer body ── */
+.mobile-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.mobile-drawer__body::-webkit-scrollbar { width: 4px; }
+.mobile-drawer__body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+}
+
+/* ── Top-level mobile nav links ── */
+.mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #a8997d;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.04);
+    border-left-color: var(--hdr-gold1, #d4a24c);
+}
+
+/* ── Accordion ── */
+.mobile-accordion {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-accordion__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a8997d;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Lexend', 'DM Sans', system-ui, sans-serif;
+    text-align: left;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mobile-accordion__trigger:hover {
+    color: #f5f0e8;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.mobile-accordion__trigger[aria-expanded="true"] {
+    color: var(--hdr-gold1, #d4a24c);
+    background: rgba(245, 158, 11, 0.04);
+}
+
+.mob-chevron {
+    flex-shrink: 0;
+    transition: transform 0.22s var(--ease-out);
+}
+
+.mobile-accordion__trigger[aria-expanded="true"] .mob-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Accordion panel ── */
+.mobile-accordion__panel {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 8px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* ── Tool link inside drawer ── */
+.mobile-tool-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px 9px 28px;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #a8997d;
+    text-decoration: none;
+    transition: color 0.14s, background 0.14s;
+}
+
+.mobile-tool-link:hover {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+/* ── Drawer footer ── */
+.mobile-drawer__foot {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+    color: #6b6558;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   DESKTOP — hide standard "All Tools" (mega trigger replaces it)
+   On mobile, the theme's .site-navigation-dropdown handles the
+   standard "All Tools" sub-menu natively via its own JS/CSS.
+   ============================================================ */
+@media (min-width: 769px) {
+    li.menu-item.tc-has-mega {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   TABLET  (≤1024px) — capped width + auto columns
+   ============================================================ */
+@media (max-width: 1024px) {
+    :root { --mega-w: 680px; }
+
+    .mega-panel__inner,
+    .tc-mega-inner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mega-col:nth-child(2),
+    .tc-mega-col:nth-child(2) { border-right: none; }
+}
+
+/* ============================================================
+   MOBILE  (≤768px) — hide desktop mega, show hamburger
+   ============================================================ */
+@media (max-width: 768px) {
+    .site-nav  { display: none; }
+    .hamburger { display: flex; }
+    .tc-mega-trigger,
+    .mega-panel,
+    .tc-mega-panel { display: none !important; }
+}
+
+/* ============================================================
+   SMALL MOBILE  (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+    :root { --drawer-w: 100vw; }
+    .mobile-drawer { border-left: none; }
+}
+
+/* ============================================================
+   FOCUS VISIBLE — keyboard nav
+   ============================================================ */
+.nav-link:focus-visible,
+.mega-tool-link:focus-visible,
+.tc-mega-link:focus-visible,
+.mobile-nav-link:focus-visible,
+.mobile-tool-link:focus-visible,
+.mobile-accordion__trigger:focus-visible,
+.hamburger:focus-visible,
+.mobile-drawer__close:focus-visible {
+    outline: 2px solid var(--hdr-gold1, #d4a853);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .mega-panel,
+    .tc-mega-panel,
+    .mobile-drawer,
+    .mobile-overlay,
+    .hamburger__bar,
+    .mega-chevron,
+    .tc-mega-chevron,
+    .mob-chevron,
+    .mega-tool-link,
+    .tc-mega-link,
+    .logo-icon {
+        transition: none !important;
+        animation: none !important;
+    }
+}

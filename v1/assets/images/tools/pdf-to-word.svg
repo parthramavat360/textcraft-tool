@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none" role="img" aria-label="PDF to Word Converter Tool – Convert PDF files into editable Word documents">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#101018"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a24c"/>
+      <stop offset="100%" stop-color="#e8c56d"/>
+    </linearGradient>
+    <linearGradient id="goldDim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a24c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#e8c56d" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="cardGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bg)" rx="0"/>
+
+  <!-- Ambient decorative circles -->
+  <circle cx="680" cy="80" r="160" fill="url(#goldDim)"/>
+  <circle cx="120" cy="420" r="100" fill="url(#goldDim)"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.03">
+    <line x1="0" y1="100" x2="800" y2="100" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="800" y2="200" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="800" y2="300" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="800" y2="400" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="500" stroke="#d4a24c" stroke-width="0.5"/>
+  </g>
+
+  <!-- PDF document card (left) -->
+  <g filter="url(#shadow)" transform="translate(100, 110)">
+    <rect x="0" y="0" width="220" height="280" rx="12" fill="#0e0e18" stroke="rgba(212,162,76,0.12)" stroke-width="1"/>
+    <rect x="0" y="0" width="220" height="280" rx="12" fill="url(#cardGlow)"/>
+
+    <!-- PDF label -->
+    <rect x="0" y="0" width="220" height="42" rx="12" fill="rgba(212,76,76,0.08)"/>
+    <rect x="12" y="9" width="28" height="24" rx="4" fill="#d44c4c" opacity="0.7"/>
+    <text x="18" y="26" fill="#fff" font-size="10" font-weight="800" font-family="system-ui">PDF</text>
+    <text x="52" y="25" fill="rgba(255,255,255,0.4)" font-size="10" font-weight="500" font-family="system-ui">document.pdf</text>
+
+    <!-- Content lines -->
+    <rect x="16" y="60" width="140" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="74" width="180" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="88" width="120" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="106" width="160" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="120" width="100" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="138" width="170" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="152" width="130" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="170" width="80" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+
+    <!-- Lock icon -->
+    <g transform="translate(172, 64)">
+      <rect x="0" y="0" width="32" height="32" rx="8" fill="rgba(212,162,76,0.06)"/>
+      <rect x="10" y="14" width="12" height="10" rx="2" fill="#d4a24c" opacity="0.4"/>
+      <path d="M12 14V11a4 4 0 0 1 8 0v3" stroke="#d4a24c" stroke-width="1.5" fill="none" opacity="0.4"/>
+    </g>
+
+    <!-- Page number -->
+    <rect x="85" y="240" width="50" height="22" rx="11" fill="rgba(255,255,255,0.04)"/>
+    <text x="110" y="254" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="9" font-weight="500" font-family="system-ui">3 pages</text>
+  </g>
+
+  <!-- Arrow + conversion badge (center) -->
+  <g transform="translate(355, 220)">
+    <!-- Arrow line -->
+    <line x1="0" y1="0" x2="60" y2="0" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+    <path d="M52 -6 L60 0 L52 6" stroke="url(#gold)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Conversion badge -->
+    <rect x="-20" y="-32" width="100" height="24" rx="12" fill="rgba(212,162,76,0.1)" stroke="rgba(212,162,76,0.15)" stroke-width="0.5"/>
+    <text x="30" y="-17" text-anchor="middle" fill="#d4a24c" font-size="9" font-weight="700" font-family="system-ui" letter-spacing="1">CONVERT</text>
+  </g>
+
+  <!-- DOCX document card (right) -->
+  <g filter="url(#shadow)" transform="translate(480, 110)">
+    <rect x="0" y="0" width="220" height="280" rx="12" fill="#0e0e18" stroke="rgba(212,162,76,0.12)" stroke-width="1"/>
+    <rect x="0" y="0" width="220" height="280" rx="12" fill="url(#cardGlow)"/>
+
+    <!-- DOCX label -->
+    <rect x="0" y="0" width="220" height="42" rx="12" fill="rgba(76,124,212,0.08)"/>
+    <rect x="12" y="9" width="34" height="24" rx="4" fill="#4c7cd4" opacity="0.7"/>
+    <text x="16" y="26" fill="#fff" font-size="9" font-weight="800" font-family="system-ui">DOCX</text>
+    <text x="56" y="25" fill="rgba(255,255,255,0.4)" font-size="10" font-weight="500" font-family="system-ui">document.docx</text>
+
+    <!-- Content lines -->
+    <rect x="16" y="60" width="160" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="74" width="140" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="88" width="170" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="106" width="120" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="120" width="150" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="138" width="90" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+    <rect x="16" y="156" width="180" height="5" rx="2.5" fill="#ffffff" opacity="0.08"/>
+    <rect x="16" y="170" width="110" height="5" rx="2.5" fill="#ffffff" opacity="0.06"/>
+
+    <!-- Edit icon -->
+    <g transform="translate(172, 60)">
+      <rect x="0" y="0" width="32" height="32" rx="8" fill="rgba(212,162,76,0.06)"/>
+      <path d="M8 24 L10 18 L22 6 L26 10 L14 22 Z" fill="#d4a24c" opacity="0.3"/>
+    </g>
+
+    <!-- Success badge -->
+    <rect x="72" y="238" width="76" height="24" rx="12" fill="rgba(76,212,124,0.06)" stroke="rgba(76,212,124,0.1)" stroke-width="0.5"/>
+    <text x="110" y="253" text-anchor="middle" fill="rgba(76,212,124,0.6)" font-size="9" font-weight="600" font-family="system-ui">EDITABLE</text>
+  </g>
+
+  <!-- Decorative gold accent line -->
+  <line x1="60" y1="80" x2="60" y2="420" stroke="url(#gold)" stroke-width="1" opacity="0.1"/>
+  <line x1="740" y1="80" x2="740" y2="420" stroke="url(#gold)" stroke-width="1" opacity="0.1"/>
+
+  <!-- Small decorative particles -->
+  <circle cx="420" cy="130" r="1.5" fill="#d4a24c" opacity="0.25"/>
+  <circle cx="380" cy="380" r="1.5" fill="#d4a24c" opacity="0.15"/>
+  <circle cx="680" cy="440" r="1" fill="#d4a24c" opacity="0.2"/>
+  <circle cx="120" cy="90" r="1" fill="#d4a24c" opacity="0.2"/>
+</svg>

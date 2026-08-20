@@ -1,0 +1,991 @@
+/* ================================================================
+   TextCraft Tools Pro – Workspace CSS
+   Design tokens from HTML reference (Space Grotesk / DM Sans)
+   ================================================================
+   --ink:#0b1220  --ink-2:#1c2637  --body:#4a5568  --muted:#8792a6
+   --paper:#fff   --surface:#f6f8fb --line:#e4e9f0
+   --accent:#2563eb --accent-soft:#eaf0ff
+   --ok:#16a34a  --ok-soft:#e7f7ed
+   --radius:14px
+   ================================================================ */
+
+/* ── 1. Workspace Layout ─────────────────────────────────────── */
+
+.tctp-ws {
+  display: grid;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 22px;
+  padding: 8px 0;
+}
+
+.ws-right {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+  min-width: 0;
+}
+
+/* ── 2. Panels ──────────────────────────────────────────────── */
+
+.panel,
+.tctp-panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.panel-head,
+.tctp-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-head h3,
+.tctp-panel-head h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+}
+
+.panel-head span,
+.tctp-panel-head span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.panel-body,
+.tctp-panel-body {
+  padding: 20px;
+}
+
+/* ── 3. Drop Zone ───────────────────────────────────────────── */
+
+.drop,
+.tctp-drop {
+  border: 1.5px dashed #cfd9e8;
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 44px 24px;
+  text-align: center;
+  transition: 0.18s ease;
+  cursor: pointer;
+}
+
+.drop:hover,
+.drop.hot,
+.tctp-drop:hover,
+.tctp-drop.hot {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.drop .ic,
+.tctp-drop-ic {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.drop b {
+  font-family: var(--font-display);
+  font-size: 16px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.drop small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.drop input[type="file"] {
+  display: none;
+}
+
+/* ── 4. File Row ────────────────────────────────────────────── */
+
+.file-row,
+.tctp-file-row {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.file-row.visible,
+.tctp-file-row.visible {
+  display: flex;
+}
+
+.file-row .ic {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+}
+
+.file-row .meta,
+.tctp-file-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-row .meta b,
+.tctp-file-meta b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-row .meta span,
+.tctp-file-meta span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.x,
+.tctp-x {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+}
+
+.x:hover,
+.tctp-x:hover {
+  color: var(--ink);
+}
+
+/* ── 5. Buttons ─────────────────────────────────────────────── */
+
+.actions,
+.tctp-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14.5px;
+  font-family: var(--font-body);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-accent,
+.tctp-btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.btn-accent:hover,
+.tctp-btn-accent:hover { filter: brightness(1.07); }
+.btn-accent:disabled,
+.tctp-btn-accent:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-primary,
+.tctp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.btn-primary:hover,
+.tctp-btn-primary:hover { background: var(--ink-2); }
+.btn-primary:disabled,
+.tctp-btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-ghost,
+.tctp-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.btn-ghost:hover,
+.tctp-btn-ghost:hover { border-color: #cfd8e4; }
+.btn-ghost:disabled,
+.tctp-btn-ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-danger,
+.tctp-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: #dc2626;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.btn-danger:hover,
+.tctp-btn-danger:hover { background: #fef2f2; border-color: #fca5a5; }
+
+/* ── 6. Stats ───────────────────────────────────────────────── */
+
+.stats,
+.tctp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.stats div,
+.tctp-stats div {
+  background: #fff;
+  padding: 16px;
+}
+
+.stats span,
+.tctp-stats span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.stats b,
+.tctp-stats b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.stats .saved b,
+.tctp-stats .saved b { color: var(--ok); }
+
+/* ── 7. Progress Bar ────────────────────────────────────────── */
+
+.bar,
+.tctp-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--surface);
+  overflow: hidden;
+  margin: 18px 0 8px;
+  border: 1px solid var(--line);
+}
+
+.bar i,
+.tctp-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), #60a5fa);
+  transition: width 0.3s ease;
+  font-style: normal;
+}
+
+.bar-label,
+.tctp-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ── 8. Preview Area ────────────────────────────────────────── */
+
+.preview,
+.tctp-preview {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  height: 230px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 13.5px;
+  overflow: hidden;
+}
+
+.preview img,
+.tctp-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ── 9. Textareas ───────────────────────────────────────────── */
+
+.tctp-textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  resize: vertical;
+  transition: border-color 0.16s;
+  line-height: 1.6;
+}
+
+.tctp-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.tctp-textarea[readonly] {
+  background: var(--surface);
+  color: var(--body);
+}
+
+/* ── 10. Form Controls ──────────────────────────────────────── */
+
+.tctp-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tctp-input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  transition: border-color 0.16s;
+}
+
+.tctp-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.tctp-select {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  cursor: pointer;
+}
+
+.tctp-range {
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--line);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.tctp-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.tctp-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ── 11. Option Toggles ─────────────────────────────────────── */
+
+.tctp-toggle-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.tctp-toggle {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: 0.16s ease;
+  background: #fff;
+  text-align: left;
+}
+
+.tctp-toggle:hover { border-color: #cfd8e4; }
+
+.tctp-toggle.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.tctp-toggle b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+}
+
+.tctp-toggle span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── 12. Button Groups ──────────────────────────────────────── */
+
+.tctp-btn-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tctp-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--body);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.14s ease;
+}
+
+.tctp-btn-sm:hover { border-color: #cfd8e4; }
+
+.tctp-btn-sm.sel {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── 13. Toast Notification ─────────────────────────────────── */
+
+.tctp-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: 0.3s ease;
+  z-index: 9999;
+}
+
+.tctp-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── 14. Workspace Column Wrappers ───────────────────────────── */
+
+.tctp-ws-left,
+.tctp-ws-right {
+  min-width: 0;
+}
+
+.ws-right {
+  min-width: 0;
+}
+
+/* ── 15. Mode Buttons (toggle groups) ────────────────────────── */
+
+.tctp-mode-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tctp-mode-btns .btn-ghost,
+.tctp-mode-btns .tctp-btn-ghost {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.btn-ghost.sel,
+.tctp-btn-ghost.sel,
+.btn-ghost.tctp-active,
+.tctp-btn-ghost.tctp-active,
+.btn-ghost.sel:hover,
+.tctp-btn-ghost.sel:hover,
+.btn-ghost.tctp-active:hover,
+.tctp-btn-ghost.tctp-active:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-ghost:not(.sel):not(.tctp-active):hover,
+.tctp-btn-ghost:not(.sel):not(.tctp-active):hover {
+  border-color: #cfd8e4;
+}
+
+/* ── 16. Generator Field Wrappers ────────────────────────────── */
+
+.tctp-gen-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tctp-gen-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.tctp-gen-field .tctp-input,
+.tctp-gen-field .tctp-select {
+  flex: 1;
+  max-width: 200px;
+  height: 38px;
+  font-size: 13px;
+}
+
+.tctp-gen-field .tctp-checkbox-label {
+  margin-bottom: 0;
+}
+
+/* ── 17. Small Inputs ────────────────────────────────────────── */
+
+.tctp-input-sm {
+  width: 100px;
+  height: 38px;
+  font-size: 13px;
+}
+
+/* ── 18. Tool-Specific Option Layouts ────────────────────────── */
+
+.tctp-find-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tctp-find-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+}
+
+.tctp-char-opts,
+.tctp-repeat-opts,
+.tctp-invis-opts,
+.tctp-ascii-font,
+.tctp-emdash-opts,
+.tctp-underscore-opts,
+.tctp-format-opts,
+.tctp-md-opts,
+.tctp-json-opts,
+.tctp-hash-opts,
+.tctp-svg-opts,
+.tctp-split-opts,
+.tctp-rotate-opts,
+.tctp-delete-opts,
+.tctp-pdf-opts,
+.tctp-trace-opts,
+.tctp-video-opts,
+.tctp-raster-opts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.tctp-char-opts label,
+.tctp-repeat-opts label,
+.tctp-invis-opts label,
+.tctp-ascii-font label,
+.tctp-emdash-opts label,
+.tctp-underscore-opts label,
+.tctp-format-opts label,
+.tctp-md-opts label,
+.tctp-json-opts label,
+.tctp-hash-opts label,
+.tctp-svg-opts label,
+.tctp-split-opts label,
+.tctp-rotate-opts label,
+.tctp-delete-opts label,
+.tctp-pdf-opts label,
+.tctp-trace-opts label,
+.tctp-video-opts label,
+.tctp-raster-opts label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tctp-char-opts .tctp-input,
+.tctp-repeat-opts .tctp-input,
+.tctp-invis-opts .tctp-input,
+.tctp-ascii-font .tctp-select,
+.tctp-hash-opts .tctp-select,
+.tctp-rotate-opts .tctp-select,
+.tctp-delete-opts .tctp-select,
+.tctp-video-opts .tctp-select,
+.tctp-split-opts .tctp-input {
+  height: 36px;
+  font-size: 13px;
+  max-width: 200px;
+}
+
+/* ── 19. Compression Levels ──────────────────────────────────── */
+
+.levels,
+.tctp-levels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.level,
+.tctp-level {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: 0.16s ease;
+  background: #fff;
+}
+
+.level:hover,
+.tctp-level:hover {
+  border-color: #cfd8e4;
+}
+
+.level.sel,
+.tctp-level.tctp-sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.level b,
+.tctp-level b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.level span,
+.tctp-level span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── 20. Quality / Range Options ─────────────────────────────── */
+
+.tctp-quality-opts {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tctp-quality-opts label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tctp-range-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ── 21. Resize / Color Options ──────────────────────────────── */
+
+.tctp-resize-opts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.tctp-resize-fields {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tctp-resize-fields .tctp-input {
+  width: 80px;
+  height: 36px;
+  font-size: 13px;
+}
+
+.tctp-resize-fields span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tctp-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tctp-color input[type="color"] {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* ── 22. Hint Text ───────────────────────────────────────────── */
+
+.tctp-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── 23. Options Heading ─────────────────────────────────────── */
+
+.tctp-options-heading {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── 24. Notepad Info ────────────────────────────────────────── */
+
+.tctp-notepad-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tctp-notepad-info label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ── 25. Frequency Sort ──────────────────────────────────────── */
+
+.tctp-freq-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.tctp-freq-sort label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tctp-freq-sort .tctp-select {
+  height: 36px;
+  font-size: 13px;
+  max-width: 180px;
+}
+
+/* ── 26. Grid Helpers & Utilities ────────────────────────────── */
+
+.tctp-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.tctp-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.tctp-mb-8  { margin-bottom: 8px; }
+.tctp-mb-12 { margin-bottom: 12px; }
+.tctp-mb-16 { margin-bottom: 16px; }
+.tctp-mb-20 { margin-bottom: 20px; }
+.tctp-mt-16 { margin-top: 16px; }
+.tctp-mt-20 { margin-top: 20px; }
+
+/* ── 27. Responsive ─────────────────────────────────────────── */
+
+/* Tablet – stack workspace columns */
+@media (max-width: 1000px) {
+  .tctp-ws { grid-template-columns: 1fr; }
+}
+
+/* Mobile – collapse grids, full-width buttons */
+@media (max-width: 760px) {
+  .tctp-stats         { grid-template-columns: 1fr; }
+  .tctp-grid-2,
+  .tctp-grid-3        { grid-template-columns: 1fr; }
+  .tctp-toggle-group  { grid-template-columns: 1fr 1fr; }
+  .tctp-actions       { flex-direction: column; }
+  .tctp-mode-btns     { flex-direction: column; }
+  .tctp-mode-btns .tctp-btn-ghost { width: 100%; }
+  .tctp-find-row      { grid-template-columns: 1fr; }
+  .tctp-levels        { flex-direction: column; }
+  .tctp-gen-field     { flex-direction: column; align-items: stretch; }
+  .tctp-gen-field label { min-width: 0; }
+  .tctp-gen-field .tctp-input,
+  .tctp-gen-field .tctp-select { max-width: 100%; }
+
+  .tctp-actions .tctp-btn-accent,
+  .tctp-actions .tctp-btn-primary,
+  .tctp-actions .tctp-btn-ghost,
+  .tctp-actions .tctp-btn-danger { width: 100%; }
+}
