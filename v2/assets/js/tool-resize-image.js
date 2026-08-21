@@ -32,7 +32,8 @@
         file = f;
         resizedBlob = null;
         TCTP.showFileRow('tc-rsz-file', f);
-        document.getElementById('tc-rsz-download').style.display = 'none';
+        var dlBtn = document.getElementById('tc-rsz-download');
+        if (dlBtn) dlBtn.style.display = 'none';
 
         var img = new Image();
         img.onload = function () {
@@ -61,19 +62,20 @@
             file = null;
             resizedBlob = null;
             TCTP.hideFileRow('tc-rsz-file');
-            document.getElementById('tc-rsz-download').style.display = 'none';
+            var dlBtn = document.getElementById('tc-rsz-download');
+            if (dlBtn) dlBtn.style.display = 'none';
         });
     }
 
     // ── Mode toggle ────────────────────────────────────────────
 
-    TCTP.initModeGroup('tc-rsz-drop', null);
+    var modeCards = document.querySelectorAll('.tc-rsz-mode-card');
+    modeCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+            resizeMode = card.getAttribute('data-val');
 
-    var modeBtns = document.querySelectorAll('.tc-modes[data-group="rsz-mode"] .tc-btn');
-    modeBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            resizeMode = btn.getAttribute('data-val');
             var pixelsOpts = document.getElementById('tc-rsz-pixels-opts');
             var percentOpts = document.getElementById('tc-rsz-percent-opts');
             if (resizeMode === 'pixels') {
@@ -88,10 +90,11 @@
 
     // ── Format toggle ──────────────────────────────────────────
 
-    var fmtBtns = document.querySelectorAll('.tc-modes[data-group="rsz-format"] .tc-btn');
+    var fmtBtns = document.querySelectorAll('.tc-rsz-fmt');
     fmtBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
+            fmtBtns.forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
             outputFormat = btn.getAttribute('data-val');
             var qWrap = document.getElementById('tc-rsz-quality-wrap');
             if (qWrap) {
@@ -104,15 +107,38 @@
         });
     });
 
-    // ── Aspect ratio lock ──────────────────────────────────────
+    // ── Aspect ratio lock toggle ───────────────────────────────
 
     var lockBtn = document.getElementById('tc-rsz-lock');
     var lockCheckbox = document.getElementById('tc-rsz-lock-ratio');
+
+    function updateLockUI() {
+        if (lockBtn) {
+            if (lockRatio) {
+                lockBtn.classList.add('tc-rsz-lock--on');
+                lockBtn.title = 'Aspect ratio locked';
+            } else {
+                lockBtn.classList.remove('tc-rsz-lock--on');
+                lockBtn.title = 'Aspect ratio unlocked';
+            }
+        }
+    }
+
+    if (lockBtn) {
+        lockBtn.addEventListener('click', function () {
+            lockRatio = !lockRatio;
+            if (lockCheckbox) lockCheckbox.checked = lockRatio;
+            updateLockUI();
+        });
+    }
     if (lockCheckbox) {
         lockCheckbox.addEventListener('change', function () {
             lockRatio = lockCheckbox.checked;
+            updateLockUI();
         });
     }
+
+    // ── Width/Height linked inputs ─────────────────────────────
 
     var wInput = document.getElementById('tc-rsz-width');
     var hInput = document.getElementById('tc-rsz-height');
@@ -153,16 +179,31 @@
 
     // ── Preset buttons ─────────────────────────────────────────
 
-    var presetBtns = document.querySelectorAll('#tc-rsz-presets .tc-btn');
+    var presetBtns = document.querySelectorAll('#tc-rsz-presets .tc-rsz-preset');
     presetBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
+            presetBtns.forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
             var val = parseInt(btn.getAttribute('data-val'));
             var pctInput = document.getElementById('tc-rsz-percent');
             if (pctInput) pctInput.value = val;
-            presetBtns.forEach(function (b) { b.classList.remove('sel'); });
-            btn.classList.add('sel');
         });
     });
+
+    // Custom percent input syncs back to presets
+    var pctInput = document.getElementById('tc-rsz-percent');
+    if (pctInput) {
+        pctInput.addEventListener('input', function () {
+            var val = parseInt(pctInput.value) || 0;
+            presetBtns.forEach(function (b) {
+                if (parseInt(b.getAttribute('data-val')) === val) {
+                    b.classList.add('sel');
+                } else {
+                    b.classList.remove('sel');
+                }
+            });
+        });
+    }
 
     // ── Resize ─────────────────────────────────────────────────
 
@@ -243,7 +284,8 @@
                         TCTP.showResultPreview(canvas.toDataURL(mime, quality / 100));
                         TCTP.switchToResultTab();
 
-                        document.getElementById('tc-rsz-download').style.display = '';
+                        var dlBtn = document.getElementById('tc-rsz-download');
+                        if (dlBtn) dlBtn.style.display = '';
                         TCTP.toast('Image resized to ' + targetW + '\u00D7' + targetH + '!');
                     }, mime, quality);
                 };
