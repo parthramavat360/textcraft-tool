@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'pdf_compressor'; }
     public function get_title(): string { return 'PDF Compressor'; }
     public function get_icon(): string { return 'eicon-file-download'; }
@@ -23,7 +25,7 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Reduce PDF file size instantly. Choose between light, balanced, or strong compression. Everything runs in your browser — your files are never uploaded.
+            Reduce PDF file size instantly. Choose between light, balanced, or strong compression. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-pdf-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>

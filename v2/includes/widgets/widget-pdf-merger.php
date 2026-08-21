@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Pdf_Merger extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'pdf_merger'; }
     public function get_title(): string { return 'PDF Merger'; }
     public function get_icon(): string { return 'eicon-file-download'; }
@@ -23,7 +25,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Merge multiple PDF documents into a single file. Drag to reorder files before merging. Everything runs in your browser — your files are never uploaded.
+            Merge multiple PDF documents into a single file. Drag to reorder files before merging. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-pm-drop', '.pdf,application/pdf', 'Drag & drop multiple PDFs here or click to browse'); ?>

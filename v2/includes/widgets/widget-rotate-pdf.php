@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'rotate_pdf'; }
     public function get_title(): string { return 'Rotate PDF'; }
     public function get_icon(): string { return 'eicon-editor-rotate'; }
@@ -23,7 +25,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Rotate all pages in a PDF document. Choose 90° clockwise, 90° counter-clockwise, or 180° rotation. Everything runs in your browser — your files are never uploaded.
+            Rotate all pages in a PDF document. Choose 90Â° clockwise, 90Â° counter-clockwise, or 180Â° rotation. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-rp-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
@@ -32,9 +34,9 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         <div class="tc-input-group" style="margin-top:16px">
             <label class="tc-label">Rotation</label>
             <div class="tc-modes" data-group="rp-rotation">
-                <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">90° CW</button>
-                <button class="tc-btn tc-btn--ghost" data-val="270" type="button">90° CCW</button>
-                <button class="tc-btn tc-btn--ghost" data-val="180" type="button">180°</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">90Â° CW</button>
+                <button class="tc-btn tc-btn--ghost" data-val="270" type="button">90Â° CCW</button>
+                <button class="tc-btn tc-btn--ghost" data-val="180" type="button">180Â°</button>
             </div>
         </div>
 

@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Image_To_Text extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'image_to_text'; }
     public function get_title(): string { return 'Image to Text (OCR)'; }
     public function get_icon(): string { return 'eicon-document'; }

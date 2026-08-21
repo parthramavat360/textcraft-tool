@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Pdf_To_Jpg extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'pdf_to_jpg'; }
     public function get_title(): string { return 'PDF to JPG Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -23,7 +25,7 @@ class Widget_Pdf_To_Jpg extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Convert each page of a PDF to a JPG image. Choose your preferred DPI for quality. Everything runs in your browser — your files are never uploaded.
+            Convert each page of a PDF to a JPG image. Choose your preferred DPI for quality. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-p2j-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>

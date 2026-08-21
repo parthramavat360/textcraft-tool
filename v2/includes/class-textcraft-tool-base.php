@@ -337,6 +337,13 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
 
     // ── Result panel (right column) ────────────────────────────
 
+    /**
+     * Set to true in child widgets that need a visual preview area
+     * (image converters, PDF tools, compressors, etc.).
+     * Text/generator tools should leave this false.
+     */
+    protected bool $show_preview = false;
+
     protected function render_result(array $settings): void {
         ?>
         <div class="tc-result-col">
@@ -351,6 +358,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                         <div><span>Compressed</span><b id="tc-stat-comp">—</b></div>
                         <div class="saved"><span>Saved</span><b id="tc-stat-saved">—</b></div>
                     </div>
+                    <?php if ($this->show_preview): ?>
                     <div class="tc-tabs-header">
                         <h4>Preview</h4>
                         <div class="tc-tabs">
@@ -359,6 +367,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                         </div>
                     </div>
                     <div class="tc-preview" id="tc-preview">Preview appears after processing</div>
+                    <?php endif; ?>
                     <?php $this->render_result_content($settings); ?>
                 </div>
             </div>
@@ -369,8 +378,8 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
 
     /**
      * Override in child to add extra content below the standard result panel.
-     * The standard stats (tc-stat-orig/comp/saved), preview tabs, and preview
-     * area are always rendered by render_result().
+     * The standard stats (tc-stat-orig/comp/saved) are always rendered.
+     * Preview tabs/area only render if $this->show_preview = true.
      */
     protected function render_result_content(array $settings): void {}
 

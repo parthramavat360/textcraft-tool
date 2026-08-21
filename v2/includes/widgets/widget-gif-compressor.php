@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Gif_Compressor extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'gif_compressor'; }
     public function get_title(): string { return 'GIF Compressor'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -23,7 +25,7 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress animated and static GIF images. Choose quality level and whether to preserve all frames. Everything runs in your browser — your files are never uploaded.
+            Compress animated and static GIF images. Choose quality level and whether to preserve all frames. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-gif-drop', 'image/gif,.gif', 'Drag & drop GIF images here or click to browse'); ?>

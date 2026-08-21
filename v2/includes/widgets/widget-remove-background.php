@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Remove_Background extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'remove_background'; }
     public function get_title(): string { return 'Remove Background'; }
     public function get_icon(): string { return 'eicon-image-exclude'; }

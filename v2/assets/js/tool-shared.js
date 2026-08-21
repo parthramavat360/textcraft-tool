@@ -284,6 +284,33 @@
     };
 
     // ═══════════════════════════════════════════════════════════
+    //  PREVIEW TABS
+    // ═══════════════════════════════════════════════════════════
+
+    TCTP.initTabs = function () {
+        var tabBtns = document.querySelectorAll('.tc-tabs button');
+        if (!tabBtns.length) return;
+        tabBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                tabBtns.forEach(function (b) { b.classList.remove('on'); });
+                btn.classList.add('on');
+                var tab = btn.getAttribute('data-tab');
+                var preview = document.getElementById('tc-preview');
+                if (preview) {
+                    preview.setAttribute('data-active-tab', tab || 'original');
+                }
+            });
+        });
+    };
+
+    // Auto-init tabs on DOMContentLoaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', TCTP.initTabs);
+    } else {
+        TCTP.initTabs();
+    }
+
+    // ═══════════════════════════════════════════════════════════
     //  SCOPING HELPER
     // ═══════════════════════════════════════════════════════════
 

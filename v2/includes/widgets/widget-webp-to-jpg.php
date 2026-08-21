@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'webp_to_jpg'; }
     public function get_title(): string { return 'WebP to JPG Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }

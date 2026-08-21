@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Png_To_Heic extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'png_to_heic'; }
     public function get_title(): string { return 'PNG to HEIC Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }

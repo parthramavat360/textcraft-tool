@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Webp_To_Png extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'webp_to_png'; }
     public function get_title(): string { return 'WebP to PNG Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -23,7 +25,7 @@ class Widget_Webp_To_Png extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Convert WebP images to PNG format instantly. Preserves full quality and transparency. Everything runs in your browser — your files are never uploaded.
+            Convert WebP images to PNG format instantly. Preserves full quality and transparency. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-w2p-drop', 'image/webp,.webp', 'Drag & drop WebP images here or click to browse'); ?>

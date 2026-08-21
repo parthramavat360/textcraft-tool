@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Png_Compressor extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'png_compressor'; }
     public function get_title(): string { return 'PNG Compressor'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -23,7 +25,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress PNG images losslessly at full original resolution — no quality loss, transparency preserved. Optional downscale available below.
+            Compress PNG images losslessly at full original resolution â€” no quality loss, transparency preserved. Optional downscale available below.
         </div>
 
         <?php $this->render_drop_zone('tc-png-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>

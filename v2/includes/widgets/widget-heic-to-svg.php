@@ -12,6 +12,8 @@ defined('ABSPATH') || exit;
 
 class Widget_Heic_To_Svg extends TextCraft_Tool_Base {
 
+    protected bool $show_preview = true;
+
     public function get_name(): string { return 'heic_to_svg'; }
     public function get_title(): string { return 'HEIC to SVG Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
