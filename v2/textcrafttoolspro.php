@@ -146,6 +146,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-base64-encode-decode.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-hash-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-url-encode-decode.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-resize-image.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -226,6 +227,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Base64_Encode_Decode() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Hash_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_URL_Encode_Decode() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Resize_Image() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -475,6 +477,7 @@ function tctp_enqueue_assets() {
         'tool-base64-encode-decode',
         'tool-hash-generator',
         'tool-url-encode-decode',
+        'tool-resize-image',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
