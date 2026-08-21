@@ -30,7 +30,7 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-wp-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <?php $this->render_range('tc-wp-quality', 10, 100, 80, 'Quality', '%'); ?>
+            <?php $this->render_range('tc-wp-quality', 10, 100, 90, 'Quality', '%'); ?>
         </div>
 
         <?php $this->render_progress_bar('tc-wp-progress', 'Compressing...'); ?>

@@ -1,8 +1,10 @@
 /**
  * PNG Compressor — Tool JS
  *
- * Client-side PNG compression using canvas + UPNG.js for lossy encoding.
- * Smart color quantization with optional resize.
+ * Client-side LOSSLESS PNG compression: canvas re-encode at full original
+ * resolution (downscale only if the user explicitly opts in), optionally
+ * further optimized via UPNG.js with cnum=0 (lossless). No palette
+ * quantization, no color reduction — output is pixel-identical.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -36,18 +38,21 @@
         TCTP.showFileRow('tc-png-file', f);
     }, 'image/png,.png');
 
-    var removeBtn = document.querySelector('#tc-png-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-png-file .tctp-x, #tc-png-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         compressedBlob = null;
         TCTP.hideFileRow('tc-png-file');
     });
 
-    // Level buttons
-    document.querySelectorAll('.tctp-modes[data-group="png-level"] .tctp-btn').forEach(function (btn) {
+    // Level buttons: Light = fast browser encode,
+    // Balanced/Strong = additional UPNG lossless optimization.
+    document.querySelectorAll('[data-group="png-level"] .tc-btn, [data-group="png-level"] .tctp-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            level = parseInt(btn.getAttribute('data-val')) || 2;
+            var group = btn.closest('[data-group="png-level"]');
+            if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
+            level = parseInt(btn.getAttribute('data-val'), 10) || 2;
         });
     });
 
@@ -59,10 +64,12 @@
         TCTP.showProgress('tc-png-progress');
         TCTP.setProgress('tc-png-progress', 20, 'Reading image...');
 
-        try {
-            await loadScript('https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.js');
-        } catch (e) {
-            // Fallback: skip UPNG, use canvas only
+        if (level > 1) {
+            try {
+                await loadScript('https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.js');
+            } catch (e) {
+                // UPNG unavailable — plain canvas encoding is used below.
+            }
         }
 
         var reader = new FileReader();
@@ -70,55 +77,51 @@
             TCTP.setProgress('tc-png-progress', 50, 'Processing...');
             var img = new Image();
             img.onload = function () {
-                var canvas = document.createElement('canvas');
                 var w = img.naturalWidth;
                 var h = img.naturalHeight;
-                var doResize = document.getElementById('tc-png-resize').checked;
-                var maxDim = 1200;
 
-                if (doResize && (w > maxDim || h > maxDim)) {
-                    var ratio = Math.min(maxDim / w, maxDim / h);
-                    w = Math.round(w * ratio);
-                    h = Math.round(h * ratio);
+                // Downscale ONLY when the user explicitly opted in.
+                var resizeBox = document.getElementById('tc-png-resize');
+                if (resizeBox && resizeBox.checked) {
+                    var maxDim = 1200;
+                    if (w > maxDim || h > maxDim) {
+                        var ratio = Math.min(maxDim / w, maxDim / h);
+                        w = Math.round(w * ratio);
+                        h = Math.round(h * ratio);
+                    }
                 }
 
+                var canvas = document.createElement('canvas');
                 canvas.width = w;
                 canvas.height = h;
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
 
-                // Quantize colors (step by level)
-                var steps = { 1: 64, 2: 32, 3: 16 };
-                var step = steps[level] || 32;
-                var imgData = ctx.getImageData(0, 0, w, h);
-                var data = imgData.data;
-                for (var i = 0; i < data.length; i += 4) {
-                    data[i] = Math.round(data[i] / step) * step;
-                    data[i + 1] = Math.round(data[i + 1] / step) * step;
-                    data[i + 2] = Math.round(data[i + 2] / step) * step;
-                }
-                ctx.putImageData(imgData, 0, 0);
+                compressedBlob = null;
 
-                // Try UPNG first
-                var useUpng = window.UPNG;
-                if (useUpng) {
-                    var rgba = ctx.getImageData(0, 0, w, h).data.buffer;
+                // Lossless UPNG optimization (cnum=0 = no palette quantization).
+                if (level > 1 && window.UPNG) {
                     try {
-                        var upngBuf = UPNG.encode([rgba], w, h, 64);
-                        compressedBlob = new Blob([upngBuf], { type: 'image/png' });
+                        var rgba = ctx.getImageData(0, 0, w, h).data.buffer;
+                        var upngBuf = UPNG.encode([rgba], w, h, 0);
+                        if (upngBuf) compressedBlob = new Blob([upngBuf], { type: 'image/png' });
                     } catch (e) {
-                        useUpng = false;
+                        compressedBlob = null;
                     }
                 }
 
-                if (!compressedBlob) {
+                if (compressedBlob) {
+                    showResult(file.size, compressedBlob.size);
+                } else {
                     canvas.toBlob(function (blob) {
                         compressedBlob = blob;
                         showResult(file.size, blob.size);
                     }, 'image/png');
-                } else {
-                    showResult(file.size, compressedBlob.size);
                 }
+            };
+            img.onerror = function () {
+                TCTP.hideProgress('tc-png-progress');
+                TCTP.toast('Failed to decode PNG image.', '\u274C');
             };
             img.src = e.target.result;
         };

@@ -6,32 +6,25 @@ var convertBtn = document.getElementById('tc-'+prefix+'-convert');
 var copyBtn = document.getElementById('tc-'+prefix+'-copy');
 if(!input||!output||!convertBtn||!copyBtn) return;
 
-var modeReplace = document.querySelector('.tc-'+prefix+'-mode[data-mode="replace-with-space"]');
-var modeRemove = document.querySelector('.tc-'+prefix+'-mode[data-mode="remove-all"]');
-var currentMode = 'replace-with-space';
+var currentMode = 'space';
 
-if(modeReplace){ modeReplace.addEventListener('click',function(){
-  currentMode='replace-with-space';
-  modeReplace.classList.add('active');
-  modeRemove.classList.remove('active');
-}); }
-if(modeRemove){ modeRemove.addEventListener('click',function(){
-  currentMode='remove-all';
-  modeRemove.classList.add('active');
-  modeReplace.classList.remove('active');
-}); }
+document.querySelectorAll('.tc-modes[data-group="ru-mode"] .tc-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    TCTP.activateBtn(btn);
+    currentMode = btn.getAttribute('data-val') || 'space';
+  });
+});
 
 convertBtn.addEventListener('click',function(){
   var text=input.value;
-  if(!text){ TCTP.toast('Please enter some text.','warning'); return; }
+  if(!text){ TCTP.toast('Please enter some text.','\u26A0\uFE0F'); return; }
   var result;
-  if(currentMode==='replace-with-space'){
+  if(currentMode==='space'){
     result=text.replace(/_+/g,' ');
   } else {
     result=text.replace(/_/g,'');
   }
   output.value=result;
-  TCTP.activateBtn(convertBtn);
   TCTP.toast('Underscores processed.');
 });
 

@@ -1,34 +1,39 @@
+/**
+ * Repeat Text Generator — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
+
 (function(){ 'use strict';
-var prefix = 'rpt';
-var input = document.getElementById('tc-'+prefix+'-input');
-var output = document.getElementById('tc-'+prefix+'-output');
-var generateBtn = document.getElementById('tc-'+prefix+'-generate');
-var copyBtn = document.getElementById('tc-'+prefix+'-copy');
-var countInput = document.getElementById('tc-'+prefix+'-count');
-var separatorSelect = document.getElementById('tc-'+prefix+'-separator');
+var input = document.getElementById('tc-rt-text');
+var output = document.getElementById('tc-rt-output');
+var generateBtn = document.getElementById('tc-rt-generate');
+var copyBtn = document.getElementById('tc-rt-copy');
+var countInput = document.getElementById('tc-rt-count');
+var separatorSelect = document.getElementById('tc-rt-separator');
 if(!input||!output||!generateBtn||!copyBtn) return;
 
 generateBtn.addEventListener('click',function(){
   var text=input.value;
-  if(!text){ TCTP.toast('Please enter some text.','warning'); return; }
-  var count=parseInt(countInput.value,10)||1;
+  if(!text){ TCTP.toast('Please enter some text.','\u26A0\uFE0F'); return; }
+  var count=parseInt(countInput ? countInput.value : '5',10)||1;
   if(count<1) count=1;
-  if(count>10000){ TCTP.toast('Maximum count is 10,000.','warning'); return; }
-  var sep=separatorSelect?separatorSelect.value:'\\n';
-  if(sep==='\\n') sep='\n';
-  else if(sep==='\\n\\n') sep='\n\n';
-  else if(sep==='comma') sep=', ';
-  else if(sep==='space') sep=' ';
-  else if(sep==='dash') sep=' — ';
-  else sep='\n';
+  if(count>1000){ TCTP.toast('Maximum count is 1,000.','\u26A0\uFE0F'); return; }
+  var sepVal=separatorSelect&&separatorSelect.value?separatorSelect.value:'newline';
+  var sep;
+  switch(sepVal){
+    case 'space': sep=' '; break;
+    case 'comma': sep=','; break;
+    case 'none': sep=''; break;
+    case 'newline':
+    default: sep='\n';
+  }
   var parts=[];
   for(var i=0;i<count;i++){ parts.push(text); }
   output.value=parts.join(sep);
-  TCTP.activateBtn(generateBtn);
   TCTP.toast('Text repeated '+count+' times.');
 });
 
 copyBtn.addEventListener('click',function(){
-  TCTP.copyText(output.value);
+  TCTP.copyText(output.value,'Repeated text');
 });
 })();

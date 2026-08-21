@@ -2,7 +2,7 @@
  * Random Date Generator — Tool JS
  *
  * Start/end date inputs, format select, count input,
- * generate, copy, download.
+ * generate, copy.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -10,52 +10,41 @@
 (function () {
     'use strict';
 
-    var dateFormat = 'YYYY-MM-DD';
-    var output = document.getElementById('tc-rdate-output');
+    var output = document.getElementById('tc-rd-output');
     if (!output) return;
 
-    document.querySelectorAll('.tctp-modes[data-group="rdate-format"] .tctp-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            dateFormat = btn.getAttribute('data-val') || 'YYYY-MM-DD';
-        });
-    });
+    var resultText = document.getElementById('tc-rd-result-text');
 
     function padZero(n) { return n < 10 ? '0' + n : '' + n; }
+
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
 
     function formatDate(date, format) {
         var y = date.getFullYear();
         var m = padZero(date.getMonth() + 1);
         var d = padZero(date.getDate());
-        var h = padZero(date.getHours());
-        var min = padZero(date.getMinutes());
-        var s = padZero(date.getSeconds());
 
         switch (format) {
-            case 'DD/MM/YYYY': return d + '/' + m + '/' + y;
-            case 'MM/DD/YYYY': return m + '/' + d + '/' + y;
-            case 'YYYY-MM-DD': return y + '-' + m + '-' + d;
-            case 'DD-MM-YYYY': return d + '-' + m + '-' + y;
-            case 'DD.MM.YYYY': return d + '.' + m + '.' + y;
-            case 'YYYY/MM/DD': return y + '/' + m + '/' + d;
-            case 'MMMM D, YYYY':
-                var months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-                return months[date.getMonth()] + ' ' + parseInt(d) + ', ' + y;
-            case 'YYYY-MM-DD HH:mm:ss': return y + '-' + m + '-' + d + ' ' + h + ':' + min + ':' + s;
+            case 'm/d/Y': return m + '/' + d + '/' + y;
+            case 'd/m/Y': return d + '/' + m + '/' + y;
+            case 'written': return MONTHS[date.getMonth()] + ' ' + parseInt(d, 10) + ', ' + y;
+            case 'Y-m-d':
             default: return y + '-' + m + '-' + d;
         }
     }
 
-    var generateBtn = document.getElementById('tc-rdate-generate');
+    var generateBtn = document.getElementById('tc-rd-generate');
     if (generateBtn) generateBtn.addEventListener('click', function () {
-        var startInput = document.getElementById('tc-rdate-start');
-        var endInput = document.getElementById('tc-rdate-end');
-        var countInput = document.getElementById('tc-rdate-count');
+        var startInput = document.getElementById('tc-rd-start');
+        var endInput = document.getElementById('tc-rd-end');
+        var formatSel = document.getElementById('tc-rd-format');
+        var countInput = document.getElementById('tc-rd-count');
 
-        var startDate = startInput ? new Date(startInput.value) : new Date('2020-01-01');
-        var endDate = endInput ? new Date(endInput.value) : new Date('2025-12-31');
-        var count = countInput ? Math.max(1, Math.min(1000, parseInt(countInput.value) || 10)) : 10;
+        var dateFormat = formatSel && formatSel.value ? formatSel.value : 'Y-m-d';
+        var startDate = startInput && startInput.value ? new Date(startInput.value) : new Date('2020-01-01');
+        var endDate = endInput && endInput.value ? new Date(endInput.value) : new Date('2026-12-31');
+        var count = countInput ? Math.max(1, Math.min(1000, parseInt(countInput.value, 10) || 10)) : 10;
 
         if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
             TCTP.toast('Please enter valid dates.', '\u26A0\uFE0F');
@@ -77,24 +66,14 @@
         }
 
         output.value = results.join('\n');
-
-        var countEl = document.getElementById('tc-rdate-stat-count');
-        if (countEl) countEl.textContent = count;
-
-        var statsEl = document.getElementById('tc-rdate-stats');
-        if (statsEl) statsEl.style.display = '';
+        if (resultText) resultText.value = results.join('\n');
 
         TCTP.toast(count + ' random dates generated!');
     });
 
-    var copyBtn = document.getElementById('tc-rdate-copy');
+    var copyBtn = document.getElementById('tc-rd-copy');
     if (copyBtn) copyBtn.addEventListener('click', function () {
         TCTP.copyText(output.value, 'Dates');
-    });
-
-    var downloadBtn = document.getElementById('tc-rdate-download');
-    if (downloadBtn) downloadBtn.addEventListener('click', function () {
-        TCTP.downloadText(output.value, 'random-dates.txt');
     });
 
 })();

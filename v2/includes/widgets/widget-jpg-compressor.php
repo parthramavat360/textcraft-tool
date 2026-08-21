@@ -30,8 +30,8 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-jpg-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <label class="tc-label">Quality: <strong id="tc-jpg-quality-val">72</strong>%</label>
-            <input type="range" class="tc-range" id="tc-jpg-quality" min="20" max="95" value="72">
+            <label class="tc-label">Quality: <strong id="tc-jpg-quality-val">92</strong>%</label>
+            <input type="range" class="tc-range" id="tc-jpg-quality" min="20" max="95" value="92">
         </div>
 
         <?php $this->render_progress_bar('tc-jpg-progress', 'Compressing...'); ?>

@@ -30,7 +30,7 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-p2j-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <?php $this->render_range('tc-p2j-quality', 1, 100, 90, 'Quality', '%'); ?>
+            <?php $this->render_range('tc-p2j-quality', 1, 100, 92, 'Quality', '%'); ?>
         </div>
 
         <div class="tc-input-group">

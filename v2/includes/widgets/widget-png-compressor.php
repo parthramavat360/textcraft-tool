@@ -23,7 +23,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress PNG images with smart color quantization and optional resize. Uses UPNG.js for lossy compression while preserving transparency.
+            Compress PNG images losslessly at full original resolution — no quality loss, transparency preserved. Optional downscale available below.
         </div>
 
         <?php $this->render_drop_zone('tc-png-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>
@@ -39,7 +39,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-checkboxes">
-            <label class="tc-check"><input type="checkbox" id="tc-png-resize" checked> Resize to max 1200px</label>
+            <label class="tc-check"><input type="checkbox" id="tc-png-resize"> Resize to max 1200px</label>
         </div>
 
         <?php $this->render_progress_bar('tc-png-progress', 'Compressing...'); ?>

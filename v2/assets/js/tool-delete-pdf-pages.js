@@ -15,8 +15,10 @@
     var pdfDoc = null;
     var selectedPages = {};
     var totalPages = 0;
+    var lastBlob = null;
+    var lastName = '';
 
-    var drop = document.getElementById('tc-dpp-drop');
+    var drop = document.getElementById('tc-dp-drop');
     if (!drop) return;
 
     function loadScript(src) {
@@ -41,7 +43,7 @@
     }
 
     function renderThumbnails(ab) {
-        var grid = document.getElementById('tc-dpp-grid');
+        var grid = document.getElementById('tc-dp-grid');
         if (!grid) return;
         grid.innerHTML = '';
         selectedPages = {};
@@ -50,7 +52,7 @@
         window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise.then(function (pdf) {
             pdfDoc = pdf;
             totalPages = pdf.numPages;
-            var pageSelectEl = document.getElementById('tc-dpp-page-count');
+            var pageSelectEl = document.getElementById('tc-dp-stat-total');
             if (pageSelectEl) pageSelectEl.textContent = totalPages + ' pages';
 
             var pending = pdf.numPages;
@@ -62,14 +64,14 @@
                         canvas.width = vp.width;
                         canvas.height = vp.height;
                         canvas.setAttribute('data-page', pageNum);
-                        canvas.className = 'tc-dpp-thumb';
+                        canvas.className = 'tc-dp-thumb';
                         canvas.title = 'Page ' + pageNum;
 
                         var ctx = canvas.getContext('2d');
                         page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
                             pending--;
                             if (pending === 0) {
-                                var gridEl = document.getElementById('tc-dpp-grid');
+                                var gridEl = document.getElementById('tc-dp-grid');
                                 if (gridEl) gridEl.style.display = '';
                             }
                         });
@@ -83,7 +85,7 @@
                                 canvas.classList.add('selected');
                             }
                             var selCount = Object.keys(selectedPages).length;
-                            var selEl = document.getElementById('tc-dpp-sel-count');
+                            var selEl = document.getElementById('tc-dp-stat-selected');
                             if (selEl) selEl.textContent = selCount + ' selected';
                         });
 
@@ -96,45 +98,50 @@
         });
     }
 
-    TCTP.initDropZone('tc-dpp-drop', 'tc-dpp-drop-input', function (f) {
+    TCTP.initDropZone('tc-dp-drop', 'tc-dp-drop-input', function (f) {
         if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
             TCTP.toast('Please select a PDF file.', '\u26A0\uFE0F');
             return;
         }
         file = f;
         selectedPages = {};
-        TCTP.showFileRow('tc-dpp-file', f);
-        var grid = document.getElementById('tc-dpp-grid');
+        lastBlob = null;
+        TCTP.showFileRow('tc-dp-file', f);
+        var grid = document.getElementById('tc-dp-grid');
         if (grid) grid.style.display = 'none';
+        var dlBtn = document.getElementById('tc-dp-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+        var remainingEl = document.getElementById('tc-dp-stat-remaining');
+        if (remainingEl) remainingEl.textContent = '-';
 
-        TCTP.showProgress('tc-dpp-progress');
-        TCTP.setProgress('tc-dpp-progress', 10, 'Loading libraries...');
+        TCTP.showProgress('tc-dp-progress');
+        TCTP.setProgress('tc-dp-progress', 10, 'Loading libraries...');
 
         ensureLibs().then(function () {
-            TCTP.setProgress('tc-dpp-progress', 30, 'Rendering thumbnails...');
+            TCTP.setProgress('tc-dp-progress', 30, 'Rendering thumbnails...');
             return file.arrayBuffer();
         }).then(function (ab) {
-            TCTP.setProgress('tc-dpp-progress', 50, 'Loading pages...');
+            TCTP.setProgress('tc-dp-progress', 50, 'Loading pages...');
             renderThumbnails(ab);
-            TCTP.setProgress('tc-dpp-progress', 100, 'Done!');
+            TCTP.setProgress('tc-dp-progress', 100, 'Done!');
         }).catch(function (err) {
             TCTP.toast('Failed: ' + err.message, '\u274C');
-            TCTP.hideProgress('tc-dpp-progress');
+            TCTP.hideProgress('tc-dp-progress');
         });
     }, '.pdf,application/pdf');
 
-    var removeBtn = document.querySelector('#tc-dpp-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-dp-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         pdfDoc = null;
         selectedPages = {};
         totalPages = 0;
-        TCTP.hideFileRow('tc-dpp-file');
-        var grid = document.getElementById('tc-dpp-grid');
+        TCTP.hideFileRow('tc-dp-file');
+        var grid = document.getElementById('tc-dp-grid');
         if (grid) { grid.innerHTML = ''; grid.style.display = 'none'; }
     });
 
-    var deleteBtn = document.getElementById('tc-dpp-delete');
+    var deleteBtn = document.getElementById('tc-dp-delete');
     if (deleteBtn) deleteBtn.addEventListener('click', async function () {
         var toDelete = Object.keys(selectedPages).map(Number);
         if (toDelete.length === 0) {
@@ -146,12 +153,12 @@
             return;
         }
 
-        TCTP.showProgress('tc-dpp-progress');
-        TCTP.setProgress('tc-dpp-progress', 10, 'Loading libraries...');
+        TCTP.showProgress('tc-dp-progress');
+        TCTP.setProgress('tc-dp-progress', 10, 'Loading libraries...');
 
         try {
             await ensureLibs();
-            TCTP.setProgress('tc-dpp-progress', 30, 'Processing PDF...');
+            TCTP.setProgress('tc-dp-progress', 30, 'Processing PDF...');
 
             var ab = await file.arrayBuffer();
             var pdfBytes = new Uint8Array(ab);
@@ -166,18 +173,30 @@
             var copiedPages = await newPdf.copyPages(srcPdf, keepPages);
             copiedPages.forEach(function (page) { newPdf.addPage(page); });
 
-            TCTP.setProgress('tc-dpp-progress', 70, 'Saving...');
+            TCTP.setProgress('tc-dp-progress', 70, 'Saving...');
             var newBytes = await newPdf.save();
             var blob = new Blob([newBytes], { type: 'application/pdf' });
 
-            TCTP.setProgress('tc-dpp-progress', 100, 'Done!');
+            TCTP.setProgress('tc-dp-progress', 100, 'Done!');
             var name = (file ? file.name.replace(/\.pdf$/i, '') : 'document') + '-removed-pages.pdf';
+            lastBlob = blob;
+            lastName = name;
+            var remainingEl = document.getElementById('tc-dp-stat-remaining');
+            if (remainingEl) remainingEl.textContent = keepPages.length + ' pages';
+            var downloadBtn = document.getElementById('tc-dp-download');
+            if (downloadBtn) downloadBtn.style.display = '';
             TCTP.downloadBlob(blob, name);
             TCTP.toast(keepPages.length + ' pages remaining. Downloaded!');
         } catch (err) {
             TCTP.toast('Failed: ' + err.message, '\u274C');
-            TCTP.hideProgress('tc-dpp-progress');
+            TCTP.hideProgress('tc-dp-progress');
         }
+    });
+
+    var downloadBtn = document.getElementById('tc-dp-download');
+    if (downloadBtn) downloadBtn.addEventListener('click', function () {
+        if (!lastBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+        TCTP.downloadBlob(lastBlob, lastName);
     });
 
 })();

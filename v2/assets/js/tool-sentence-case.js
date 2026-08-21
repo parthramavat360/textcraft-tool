@@ -1,44 +1,63 @@
+/**
+ * Sentence Case Converter — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
+
 (function(){ 'use strict';
-var inp = document.getElementById('tc-sc-input'); if (!inp) return;
-var out = document.getElementById('tc-sc-output');
-var btnConvert = document.getElementById('tc-sc-convert');
-var btnCopy = document.getElementById('tc-sc-copy');
-var optI = document.getElementById('tc-sc-opt-i');
-var optAbbr = document.getElementById('tc-sc-opt-abbr');
-var elWords = document.getElementById('tc-sc-words');
-var elSents = document.getElementById('tc-sc-chars');
+var inp = document.getElementById('tc-sentence-input'); if (!inp) return;
+var out = document.getElementById('tc-sentence-output');
+var btnConvert = document.getElementById('tc-sentence-convert');
+var statusEl = document.getElementById('tc-sentence-status');
+if (!btnConvert) return;
+
+function setStat(ids, val){
+    for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el) { el.textContent = val; return; }
+    }
+}
 
 btnConvert.addEventListener('click', function(){
     var text = inp.value;
-    var preserveAbbr = optAbbr && optAbbr.checked;
-    var abbreviations = [];
-    if(preserveAbbr){
-        text.replace(/\b[A-Z]{2,}\b/g, function(m){ abbreviations.push(m); return '{{TCTP_ABBR_' + (abbreviations.length-1) + '}}'; });
-        text.replace(/\b[A-Z][a-z]{1,3}\./g, function(m){ abbreviations.push(m); return '{{TCTP_ABBR_' + (abbreviations.length-1) + '}}'; });
+    if(!text.trim()){
+        TCTP.toast('Please enter some text.', '\u26A0\uFE0F');
+        return;
     }
+
+    TCTP.showProgress('tc-sentence-bar');
+    TCTP.setProgress('tc-sentence-bar', 40, 'Converting...');
+
+    var abbreviations = [];
+    text = text.replace(/\b[A-Z]{2,}\b/g, function(m){
+        abbreviations.push(m);
+        return '{{TCTP_ABBR_' + (abbreviations.length - 1) + '}}';
+    });
+    text = text.replace(/\b[A-Z][a-z]{1,3}\./g, function(m){
+        abbreviations.push(m);
+        return '{{TCTP_ABBR_' + (abbreviations.length - 1) + '}}';
+    });
+
     var result = text.toLowerCase();
     result = result.replace(/(^|[.!?]\s+)([a-z])/g, function(m, sep, ch){ return sep + ch.toUpperCase(); });
-    if(optI && optI.checked){
-        result = result.replace(/\bi\b/g, 'I');
-        result = result.replace(/\bI'm\b/g, function(){ return "I'm"; });
-        result = result.replace(/\bI've\b/g, function(){ return "I've"; });
-        result = result.replace(/\bI'll\b/g, function(){ return "I'll"; });
-        result = result.replace(/\bI'd\b/g, function(){ return "I'd"; });
-    }
-    if(preserveAbbr){
-        abbreviations.forEach(function(abbr, i){
-            result = result.replace('{{TCTP_ABBR_' + i + '}}', abbr);
-        });
-    }
-    out.value = result;
-    if(elWords) elWords.textContent = result.split(/\s+/).filter(Boolean).length;
-    if(elSents) elSents.textContent = result.length;
-    if(TCTP && TCTP.activateBtn) TCTP.activateBtn(btnCopy);
-});
 
-btnCopy.addEventListener('click', function(){
-    if(TCTP && TCTP.copyText) TCTP.copyText(out.value);
-});
+    result = result.replace(/\bi\b/g, 'I');
+    result = result.replace(/\bi'm\b/g, "I'm");
+    result = result.replace(/\bi've\b/g, "I've");
+    result = result.replace(/\bi'll\b/g, "I'll");
+    result = result.replace(/\bi'd\b/g, "I'd");
 
-if(TCTP && TCTP.getStats) TCTP.getStats(inp, [elWords, elSents]);
+    abbreviations.forEach(function(abbr, i){
+        result = result.replace('{{TCTP_ABBR_' + i + '}}', abbr);
+    });
+
+    if(out) out.value = result;
+    setStat(['tc-sentence-stats-words', 'tc-sentence-stat-words'], result.split(/\s+/).filter(Boolean).length);
+    setStat(['tc-sentence-stats-sentences', 'tc-sentence-stat-sentences'], (result.match(/[.!?]+(\s|$)/g) || []).length || (result.trim() ? 1 : 0));
+    setStat(['tc-sentence-stats-chars', 'tc-sentence-stat-chars'], result.length);
+
+    TCTP.setProgress('tc-sentence-bar', 100, 'Done!');
+    TCTP.hideProgress('tc-sentence-bar');
+    if(statusEl) statusEl.textContent = 'Converted to sentence case.';
+    TCTP.toast('Converted to sentence case!');
+});
 })();

@@ -30,8 +30,8 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-j2w-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <label class="tc-label">Quality: <strong id="tc-j2w-quality-val">82</strong>%</label>
-            <input type="range" class="tc-range" id="tc-j2w-quality" min="1" max="100" value="82">
+            <label class="tc-label">Quality: <strong id="tc-j2w-quality-val">92</strong>%</label>
+            <input type="range" class="tc-range" id="tc-j2w-quality" min="1" max="100" value="92">
         </div>
 
         <div class="tc-input-group">

@@ -1,58 +1,35 @@
-(function(){ 'use strict';
-var inp = document.getElementById('tc-ed-input'); if (!inp) return;
-var out = document.getElementById('tc-ed-output');
-var btnRemove = document.getElementById('tc-ed-remove');
-var btnCopy = document.getElementById('tc-ed-copy');
-var btnClear = document.getElementById('tc-ed-clear');
-var chkEm = document.getElementById('tc-ed-opt-em');
-var chkEn = document.getElementById('tc-ed-opt-en');
-var chkHyphen = document.getElementById('tc-ed-opt-hyphen');
-var elEm = document.getElementById('tc-ed-stat-em');
-var elEn = document.getElementById('tc-ed-stat-en');
-var elTotal = document.getElementById('tc-ed-stat-total');
+/**
+ * Em Dash Remover — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
 
-document.querySelectorAll('[data-val]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        var val = btn.getAttribute('data-val');
-        var repl = btn.hasAttribute('data-replace') ? btn.getAttribute('data-replace') : '';
-        out.value = inp.value.split(val).join(repl);
-        countStats();
-        if(TCTP && TCTP.activateBtn) TCTP.activateBtn(btnCopy);
-    });
-});
+(function(){ 'use strict';
+var inp = document.getElementById('tc-edr-input'); if (!inp) return;
+var out = document.getElementById('tc-edr-output');
+var btnRemove = document.getElementById('tc-edr-remove');
+var statusEl = document.getElementById('tc-edr-status');
+if (!btnRemove) return;
+
+function setStat(ids, val){
+    for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el) { el.textContent = val; return; }
+    }
+}
 
 btnRemove.addEventListener('click', function(){
     var text = inp.value;
     var emCount = 0, enCount = 0;
-    if(chkEm && chkEm.checked){ emCount = (text.match(/\u2014/g) || []).length; text = text.split('\u2014').join(' '); }
-    if(chkEn && chkEn.checked){ enCount = (text.match(/\u2013/g) || []).length; text = text.split('\u2013').join(' '); }
-    if(chkHyphen && chkHyphen.checked){ text = text.split(' \u2010').join(' ').split('\u2010 ').join(' ').split('\u2010').join('-'); }
+    if(text.indexOf('\u2014') !== -1){ emCount = (text.match(/\u2014/g) || []).length; text = text.split('\u2014').join(' '); }
+    if(text.indexOf('\u2013') !== -1){ enCount = (text.match(/\u2013/g) || []).length; text = text.split('\u2013').join(' '); }
     var totalReplaced = emCount + enCount;
-    out.value = text;
-    if(elEm) elEm.textContent = emCount;
-    if(elEn) elEn.textContent = enCount;
-    if(elTotal) elTotal.textContent = totalReplaced;
-    if(TCTP && TCTP.activateBtn) TCTP.activateBtn(btnCopy);
+    if(out) out.value = text;
+    setStat(['tc-edr-stats-em_count', 'tc-edr-stats-em-count', 'tc-edr-stat-em'], emCount);
+    setStat(['tc-edr-stats-en_count', 'tc-edr-stats-en-count', 'tc-edr-stat-en'], enCount);
+    setStat(['tc-edr-stats-total', 'tc-edr-stat-total'], totalReplaced);
+    if(statusEl) statusEl.textContent = totalReplaced > 0
+        ? 'Removed ' + totalReplaced + ' dash' + (totalReplaced === 1 ? '' : 'es') + '.'
+        : 'No em or en dashes found.';
+    TCTP.toast(totalReplaced > 0 ? totalReplaced + ' dash' + (totalReplaced === 1 ? '' : 'es') + ' removed!' : 'No dashes found.', totalReplaced > 0 ? '\u2705' : '\u26A0\uFE0F');
 });
-
-function countStats(){
-    var text = out.value || inp.value;
-    var emCount = (text.match(/\u2014/g) || []).length;
-    var enCount = (text.match(/\u2013/g) || []).length;
-    if(elEm) elEm.textContent = emCount;
-    if(elEn) elEn.textContent = enCount;
-    if(elTotal) elTotal.textContent = emCount + enCount;
-}
-
-btnCopy.addEventListener('click', function(){
-    if(TCTP && TCTP.copyText) TCTP.copyText(out.value);
-});
-btnClear.addEventListener('click', function(){
-    inp.value = '';
-    out.value = '';
-    if(elEm) elEm.textContent = '0';
-    if(elEn) elEn.textContent = '0';
-    if(elTotal) elTotal.textContent = '0';
-});
-countStats();
 })();

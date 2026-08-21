@@ -154,8 +154,8 @@
     TCTP.showFileRow = function (rowId, file) {
         var row = document.getElementById(rowId);
         if (!row) return;
-        var nameEl = row.querySelector('.tctp-file-name');
-        var sizeEl = row.querySelector('.tctp-file-size');
+        var nameEl = row.querySelector('.tctp-file-name, .tc-file-name');
+        var sizeEl = row.querySelector('.tctp-file-size, .tc-file-size');
         if (nameEl) nameEl.textContent = file.name;
         if (sizeEl) sizeEl.textContent = TCTP.formatSize(file.size);
         row.style.display = '';
@@ -189,8 +189,8 @@
     TCTP.setProgress = function (barId, pct, label) {
         var bar = document.getElementById(barId);
         if (!bar) return;
-        var fill = bar.querySelector('.tctp-bar-fill');
-        var labelEl = bar.querySelector('.tctp-bar-label');
+        var fill = bar.querySelector('.tctp-bar-fill, .tc-bar-fill');
+        var labelEl = bar.querySelector('.tctp-bar-label, .tc-bar-label');
         if (fill) fill.style.width = pct + '%';
         if (labelEl && label) {
             labelEl.innerHTML = label + ' <span class="tctp-bar-pct">' + pct + '%</span>';
@@ -258,7 +258,7 @@
     TCTP.initModeGroup = function (groupId, onChange) {
         var group = typeof groupId === 'string' ? document.getElementById(groupId) || document.querySelector(groupId) : groupId;
         if (!group) return;
-        group.querySelectorAll('.tctp-btn').forEach(function (btn) {
+        group.querySelectorAll('.tctp-btn, .tc-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 TCTP.activateBtn(btn);
                 if (onChange) onChange(btn.getAttribute('data-val') || btn.textContent.trim());

@@ -12,7 +12,7 @@
 
     var file = null;
     var compressedBlob = null;
-    var quality = 72;
+    var quality = 92;
 
     var qualitySlider = document.getElementById('tc-jpg-quality');
     var qualityVal = document.getElementById('tc-jpg-quality-val');
@@ -34,7 +34,7 @@
         TCTP.showFileRow('tc-jpg-file', f);
     }, 'image/jpeg,.jpg,.jpeg');
 
-    var removeBtn = document.querySelector('#tc-jpg-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-jpg-file .tctp-x, #tc-jpg-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         compressedBlob = null;

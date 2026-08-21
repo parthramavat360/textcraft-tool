@@ -1,68 +1,91 @@
+/**
+ * ASCII Art Generator — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
+
 (function(){
   'use strict';
-  var prefix = 'tc-aa-';
-  var dropEl = document.getElementById(prefix+'drop');
-  if(!dropEl) return;
+  var drop = document.getElementById('tc-ascii-drop');
+  if(!drop) return;
 
-  var convertBtn = document.getElementById(prefix+'convert');
-  var output     = document.getElementById(prefix+'output');
-  var densitySel = document.getElementById(prefix+'density');
-  var formatSel  = document.getElementById(prefix+'format');
-  var widthRange = document.getElementById(prefix+'width');
-  var fileRow    = document.getElementById(prefix+'file-row');
-  var progressWrap = document.getElementById(prefix+'progress');
-  var statsEl    = document.getElementById(prefix+'stats');
+  var generateBtn = document.getElementById('tc-ascii-generate');
+  var output      = document.getElementById('tc-ascii-output');
+  var densitySel  = document.getElementById('tc-ascii-density');
+  var formatSel   = document.getElementById('tc-ascii-format');
+  var widthRange  = document.getElementById('tc-ascii-width');
+  var statusEl    = document.getElementById('tc-ascii-status');
+  var copyBtn     = document.getElementById('tc-ascii-copy');
 
   var file = null;
 
-  var loaded = false;
-  function loadLib(cb){
-    if(loaded){ cb(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = function(){ loaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load html2canvas','error'); };
-    document.head.appendChild(s);
-  }
-
   var CHARS_LIGHT = ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
   var CHARS_DARK  = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,"^`\'. ';
+  var CHARS_BLOCKS  = '\u2588\u2593\u2592\u2591 ';
+  var CHARS_SYMBOLS = '$@#%*+=-:.!~ ';
 
-  TCTP.initDropZone(dropEl, function(f){
+  function charSetFor(fmt){
+    if(fmt === 'blocks') return CHARS_BLOCKS;
+    if(fmt === 'symbols') return CHARS_SYMBOLS;
+    if(fmt === 'dark') return CHARS_DARK;
+    return CHARS_LIGHT;
+  }
+
+  function densityTarget(val){
+    if(val === 'detailed') return 200;
+    if(val === 'simple') return 60;
+    return 120;
+  }
+
+  TCTP.initDropZone('tc-ascii-drop', 'tc-ascii-drop-input', function(f){
+    if(!f.type.match(/image\//)){
+      TCTP.toast('Please select an image file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
-    TCTP.showFileRow(fileRow, f.name);
-    if(output) output.innerHTML = '';
-    if(statsEl) statsEl.textContent = '';
-  });
+    TCTP.showFileRow('tc-ascii-file', f);
+    if(output) output.value = '';
+    if(statusEl) statusEl.textContent = '';
+  }, 'image/*');
 
-  if(convertBtn){
-    convertBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please drop an image first','warning'); return; }
-      loadLib(function(){ doConvert(); });
+  var removeBtn = document.querySelector('#tc-ascii-file .tc-x');
+  if(removeBtn){
+    removeBtn.addEventListener('click', function(){
+      file = null;
+      TCTP.hideFileRow('tc-ascii-file');
+      if(output) output.value = '';
+      if(statusEl) statusEl.textContent = '';
+    });
+  }
+
+  if(generateBtn){
+    generateBtn.addEventListener('click', function(){
+      if(!file){ TCTP.toast('Please drop an image first', '\u26A0\uFE0F'); return; }
+      doConvert();
     });
   }
 
   function doConvert(){
-    var density = densitySel ? parseInt(densitySel.value,10) : 80;
-    var fmt     = formatSel  ? formatSel.value : 'light';
-    var maxW    = widthRange ? parseInt(widthRange.value,10) : 100;
-    var charSet = fmt === 'dark' ? CHARS_DARK : CHARS_LIGHT;
+    var densityVal = densitySel ? densitySel.value : 'medium';
+    var fmt        = formatSel  ? formatSel.value : 'characters';
+    var maxW       = widthRange ? parseInt(widthRange.value, 10) : 120;
+    var charSet    = charSetFor(fmt);
+    var target     = Math.min(densityTarget(densityVal), maxW);
 
-    TCTP.showProgress(progressWrap);
-    TCTP.setProgress(progressWrap, 10);
+    TCTP.showProgress('tc-ascii-progress');
+    TCTP.setProgress('tc-ascii-progress', 10, 'Generating...');
 
     var img = new Image();
     img.onload = function(){
-      TCTP.setProgress(progressWrap, 30);
-      var scale = density / Math.max(img.naturalWidth, img.naturalHeight);
-      var w = Math.round(img.naturalWidth * scale);
-      var h = Math.round(img.naturalHeight * scale * 0.55);
+      TCTP.setProgress('tc-ascii-progress', 30, 'Generating...');
+      var scale = target / Math.max(img.naturalWidth, img.naturalHeight);
+      var w = Math.max(1, Math.round(img.naturalWidth * scale));
+      var h = Math.max(1, Math.round(img.naturalHeight * scale * 0.55));
 
       var c = document.createElement('canvas');
       c.width = w; c.height = h;
       var ctx = c.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
-      TCTP.setProgress(progressWrap, 50);
+      TCTP.setProgress('tc-ascii-progress', 50, 'Generating...');
 
       var data = ctx.getImageData(0, 0, w, h).data;
       var lines = [];
@@ -77,27 +100,24 @@
         lines.push(row);
       }
 
-      TCTP.setProgress(progressWrap, 90);
+      TCTP.setProgress('tc-ascii-progress', 90, 'Generating...');
       var ascii = lines.join('\n');
-      if(output){
-        var pre = document.createElement('pre');
-        pre.className = 'tctp-ascii-output';
-        pre.textContent = ascii;
-        output.innerHTML = '';
-        output.appendChild(pre);
-      }
-
-      if(statsEl){
-        statsEl.textContent = w + 'x' + h + ' chars | ' + ascii.length + ' total characters';
-      }
-      TCTP.setProgress(progressWrap, 100);
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('ASCII art generated');
+      if(output) output.value = ascii;
+      if(statusEl) statusEl.textContent = w + '\u00D7' + h + ' chars | ' + ascii.length + ' total characters';
+      TCTP.setProgress('tc-ascii-progress', 100, 'Done!');
+      TCTP.hideProgress('tc-ascii-progress');
+      TCTP.toast('ASCII art generated!');
     };
     img.onerror = function(){
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('Failed to load image','error');
+      TCTP.hideProgress('tc-ascii-progress');
+      TCTP.toast('Failed to load image', '\u274C');
     };
     img.src = URL.createObjectURL(file);
+  }
+
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      TCTP.copyText(output ? output.value : '', 'ASCII art');
+    });
   }
 })();

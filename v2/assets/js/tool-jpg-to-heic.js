@@ -1,17 +1,17 @@
+/**
+ * JPG to HEIC Converter — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
+
 (function(){
   'use strict';
-  var prefix = 'tc-j2heic-';
-  var dropEl = document.getElementById(prefix+'drop');
-  if(!dropEl) return;
+  var drop = document.getElementById('tc-j2h-drop');
+  if(!drop) return;
 
-  var convertBtn   = document.getElementById(prefix+'convert');
-  var qualityRange = document.getElementById(prefix+'quality');
-  var qualityVal   = document.getElementById(prefix+'quality-val');
-  var downloadBtn  = document.getElementById(prefix+'download');
-  var preview      = document.getElementById(prefix+'preview');
-  var fileRow      = document.getElementById(prefix+'file-row');
-  var progressWrap = document.getElementById(prefix+'progress');
-  var statsEl      = document.getElementById(prefix+'stats');
+  var convertBtn   = document.getElementById('tc-j2h-convert');
+  var qualityRange = document.getElementById('tc-j2h-quality');
+  var qualityVal   = document.getElementById('tc-j2h-quality-val');
+  var downloadBtn  = document.getElementById('tc-j2h-download');
 
   var file = null;
   var resultBlob = null;
@@ -22,20 +22,40 @@
     var s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/libheif-js@1.17.6/libheif-js/libheif.js';
     s.onload = function(){ loaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load HEIC encoder','error'); };
+    s.onerror = function(){ TCTP.toast('Failed to load HEIC encoder', '\u274C'); };
     document.head.appendChild(s);
   }
 
-  TCTP.initDropZone(dropEl, function(f){
+  function setStat(id, val){
+    var el = document.getElementById(id);
+    if(el) el.textContent = val;
+  }
+
+  TCTP.initDropZone('tc-j2h-drop', 'tc-j2h-drop-input', function(f){
+    if(!f.type.match(/image\/jpe?g/) && !/\.jpe?g$/i.test(f.name)){
+      TCTP.toast('Please select a JPG/JPEG file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
     resultBlob = null;
-    TCTP.showFileRow(fileRow, f.name);
-    if(preview) preview.innerHTML = '';
-    if(statsEl) statsEl.textContent = '';
+    TCTP.showFileRow('tc-j2h-file', f);
     if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+    setStat('tc-j2h-stat-comp', '-');
+    setStat('tc-j2h-stat-saved', '-');
+  }, 'image/jpeg,.jpg,.jpeg');
+
+  var removeBtn = document.querySelector('#tc-j2h-file .tc-x');
+  if(removeBtn){
+    removeBtn.addEventListener('click', function(){
+      file = null;
+      resultBlob = null;
+      TCTP.hideFileRow('tc-j2h-file');
+      if(downloadBtn) downloadBtn.style.display = 'none';
+    });
+  }
 
   if(qualityRange && qualityVal){
+    qualityVal.textContent = qualityRange.value + '%';
     qualityRange.addEventListener('input', function(){
       qualityVal.textContent = qualityRange.value + '%';
     });
@@ -43,60 +63,61 @@
 
   if(convertBtn){
     convertBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please drop an image first','warning'); return; }
-      loadLib(function(){ doConvert(); });
+      if(!file){ TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
+      loadLib(doConvert);
     });
   }
 
   if(downloadBtn){
     downloadBtn.addEventListener('click', function(){
-      if(resultBlob) TCTP.downloadBlob(resultBlob, 'converted.heic');
+      if(!resultBlob){ TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+      var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.heic';
+      TCTP.downloadBlob(resultBlob, name);
     });
   }
 
   function doConvert(){
-    var q = qualityRange ? parseInt(qualityRange.value,10) : 80;
-    TCTP.showProgress(progressWrap);
-    TCTP.setProgress(progressWrap, 10);
+    var q = qualityRange ? parseInt(qualityRange.value, 10) : 85;
+    TCTP.showProgress('tc-j2h-progress');
+    TCTP.setProgress('tc-j2h-progress', 30, 'Converting...');
 
     var img = new Image();
     img.onload = function(){
-      TCTP.setProgress(progressWrap, 30);
       var c = document.createElement('canvas');
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
       var ctx = c.getContext('2d');
       ctx.drawImage(img, 0, 0);
 
-      TCTP.setProgress(progressWrap, 50);
+      TCTP.setProgress('tc-j2h-progress', 50, 'Encoding...');
 
       try {
-        var encoder = new libheif.HeifEncoder();
+        var encoder = new window.libheif.HeifEncoder();
         var imageData = ctx.getImageData(0, 0, c.width, c.height);
         var heifBuffer = encoder.encode(imageData.data, c.width, c.height, q);
 
         resultBlob = new Blob([heifBuffer], { type: 'image/heic' });
-        TCTP.setProgress(progressWrap, 100);
-        TCTP.hideProgress(progressWrap);
+        TCTP.setProgress('tc-j2h-progress', 100, 'Done!');
+        TCTP.hideProgress('tc-j2h-progress');
 
-        if(preview){
-          preview.innerHTML = '';
-          var prevImg = document.createElement('img');
-          prevImg.src = URL.createObjectURL(resultBlob);
-          preview.appendChild(prevImg);
+        setStat('tc-j2h-stat-orig', file ? TCTP.formatSize(file.size) : '-');
+        setStat('tc-j2h-stat-comp', TCTP.formatSize(resultBlob.size));
+        if(file && file.size > 0){
+          var saved = file.size > resultBlob.size ? ((1 - resultBlob.size / file.size) * 100).toFixed(1) : '0';
+          setStat('tc-j2h-stat-saved', saved + '%');
+        } else {
+          setStat('tc-j2h-stat-saved', '-');
         }
         if(downloadBtn) downloadBtn.style.display = '';
-        if(statsEl) statsEl.textContent = TCTP.formatSize(resultBlob.size) + ' | HEIC';
-        TCTP.toast('Image converted to HEIC');
+        TCTP.toast('Converted to HEIC!');
       } catch(err){
-        TCTP.hideProgress(progressWrap);
-        TCTP.toast('HEIC encoding failed: ' + err.message, 'error');
+        TCTP.hideProgress('tc-j2h-progress');
+        TCTP.toast('HEIC encoding failed: ' + err.message, '\u274C');
       }
-      URL.revokeObjectURL(img.src);
     };
     img.onerror = function(){
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('Failed to load image','error');
+      TCTP.hideProgress('tc-j2h-progress');
+      TCTP.toast('Failed to load image', '\u274C');
     };
     img.src = URL.createObjectURL(file);
   }

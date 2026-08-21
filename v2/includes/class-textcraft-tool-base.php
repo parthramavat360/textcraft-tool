@@ -97,6 +97,34 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'tool_category',
+            [
+                'label'       => esc_html__('Category', 'textcrafttoolspro'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'Tools',
+                'options'     => [
+                    'PDF Tools'       => 'PDF Tools',
+                    'Image Tools'     => 'Image Tools',
+                    'Text Tools'      => 'Text Tools',
+                    'Compression'     => 'Compression',
+                    'Generator Tools' => 'Generator Tools',
+                    'Developer Tools' => 'Developer Tools',
+                ],
+                'label_block' => true,
+            ]
+        );
+
+        $this->add_control(
+            'panel_meta',
+            [
+                'label'       => esc_html__('Panel Meta (right side)', 'textcrafttoolspro'),
+                'type'        => Controls_Manager::TEXT,
+                'default'     => '',
+                'description' => esc_html__('e.g., "PDF up to 200 MB"', 'textcrafttoolspro'),
+            ]
+        );
+
         $this->register_tool_controls();
 
         $this->end_controls_section();
@@ -263,9 +291,12 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
         <div class="tc-workspace-wrap">
             <?php $this->render_hero($settings); ?>
             <div class="tc-workspace">
-                <div class="tc-panel tc-panel--input">
+                <div class="tc-panel">
                     <div class="tc-panel-head">
                         <h3><?php echo esc_html($settings['tool_title'] ?? $this->get_title()); ?></h3>
+                        <?php if (!empty($settings['panel_meta'])): ?>
+                            <span><?php echo esc_html($settings['panel_meta']); ?></span>
+                        <?php endif; ?>
                     </div>
                     <div class="tc-panel-body">
                         <?php $this->render_tool_content($settings); ?>
@@ -281,17 +312,24 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
     // ── Hero section ───────────────────────────────────────────
 
     protected function render_hero(array $settings): void {
-        $show_badge = ($settings['show_badge'] ?? '') === 'yes';
-        $badge      = $settings['badge_text'] ?? 'Free · Instant · No Signup';
-        $subtitle   = $settings['tool_subtitle'] ?? '';
+        $title    = $settings['tool_title'] ?? $this->get_title();
+        $subtitle = $settings['tool_subtitle'] ?? '';
+        $category = $settings['tool_category'] ?? 'Tools';
         ?>
         <div class="tc-tool-hero">
-            <?php if ($show_badge && $badge): ?>
-                <span class="tc-badge"><?php echo esc_html($badge); ?></span>
-            <?php endif; ?>
-            <h1 class="tc-tool-h1"><?php echo esc_html($settings['tool_title'] ?? $this->get_title()); ?></h1>
+            <div class="tc-crumbs">
+                <a href="<?php echo esc_url(home_url('/')); ?>">Home</a> /
+                <a href="<?php echo esc_url(home_url('/tools/')); ?>"><?php echo esc_html($category); ?></a> /
+                <span><?php echo esc_html($title); ?></span>
+            </div>
+            <div class="tc-pills">
+                <span class="tc-pill tc-pill--ok"><span class="tc-dot"></span> Runs locally in your browser</span>
+                <span class="tc-pill">Free forever</span>
+                <span class="tc-pill">No signup</span>
+            </div>
+            <h1><?php echo esc_html($title); ?></h1>
             <?php if ($subtitle): ?>
-                <p class="tc-tool-subtitle"><?php echo esc_html($subtitle); ?></p>
+                <p class="tc-lede"><?php echo esc_html($subtitle); ?></p>
             <?php endif; ?>
         </div>
         <?php
@@ -302,48 +340,59 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
     protected function render_result(array $settings): void {
         ?>
         <div class="tc-result-col">
-            <div class="tc-panel tc-panel--result">
+            <div class="tc-panel">
                 <div class="tc-panel-head">
-                    <h3>Result</h3>
+                    <h3>2 &middot; Result</h3>
+                    <span id="tc-status-chip">Idle</span>
                 </div>
                 <div class="tc-panel-body">
                     <?php if (method_exists($this, 'render_result_content')): ?>
                         <?php $this->render_result_content($settings); ?>
                     <?php else: ?>
-                        <div class="tc-result-area" id="tc-result">
-                            <textarea class="tc-textarea" id="tc-result-text" placeholder="Result will appear here..." readonly></textarea>
+                        <div class="tc-stats">
+                            <div><span>Input</span><b id="tc-stat-input">—</b></div>
+                            <div><span>Output</span><b id="tc-stat-output">—</b></div>
+                            <div class="saved"><span>Saved</span><b id="tc-stat-saved">—</b></div>
                         </div>
+                        <div class="tc-tabs-header">
+                            <h4>Preview</h4>
+                            <div class="tc-tabs">
+                                <button class="on" data-tab="original">Original</button>
+                                <button data-tab="result">Result</button>
+                            </div>
+                        </div>
+                        <div class="tc-preview" id="tc-preview">Preview appears after processing</div>
                     <?php endif; ?>
                 </div>
             </div>
-            <?php $this->render_stats_panel($settings); ?>
+            <?php $this->render_side_panel($settings); ?>
         </div>
         <?php
     }
 
-    // ── Stats panel ────────────────────────────────────────────
+    // ── Side panel (What stays intact / tips) ──────────────────
 
-    protected function render_stats_panel(array $settings): void {
+    protected function render_side_panel(array $settings): void {
+        $side_items = $settings['side_list_items'] ?? null;
+        if (!$side_items) {
+            $side_items = [
+                'No file uploads required',
+                'Works entirely in your browser',
+                'Free forever, no limits',
+                'Results appear instantly',
+            ];
+        }
         ?>
-        <div class="tc-panel tc-panel--stats">
+        <div class="tc-panel">
             <div class="tc-panel-head">
-                <h3>Statistics</h3>
+                <h3>What stays intact</h3>
             </div>
-            <div class="tc-panel-body">
-                <div class="tc-stats">
-                    <div class="tc-stat">
-                        <span class="tc-stat-label">Input</span>
-                        <span class="tc-stat-value" id="tc-input-count">0 chars</span>
-                    </div>
-                    <div class="tc-stat">
-                        <span class="tc-stat-label">Output</span>
-                        <span class="tc-stat-value" id="tc-output-count">0 chars</span>
-                    </div>
-                    <div class="tc-stat tc-stat--saved">
-                        <span class="tc-stat-label">Saved</span>
-                        <span class="tc-stat-value" id="tc-saved">0%</span>
-                    </div>
-                </div>
+            <div class="tc-panel-body" style="padding-top:4px">
+                <ul class="tc-side-list">
+                    <?php foreach ($side_items as $item): ?>
+                        <li><em>&checkmark;</em> <?php echo esc_html($item); ?></li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
         <?php

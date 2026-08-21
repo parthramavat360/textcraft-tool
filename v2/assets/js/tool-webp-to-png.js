@@ -27,7 +27,7 @@
         if (statsEl) statsEl.style.display = 'none';
     }, 'image/webp,.webp');
 
-    var removeBtn = document.querySelector('#tc-w2p-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-w2p-file .tctp-x, #tc-w2p-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         convertedBlob = null;

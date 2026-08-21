@@ -12,7 +12,7 @@
 
     var file = null;
     var convertedBlob = null;
-    var quality = 82;
+    var quality = 92;
 
     var qualitySlider = document.getElementById('tc-j2w-quality');
     var qualityVal = document.getElementById('tc-j2w-quality-val');
@@ -24,10 +24,12 @@
     });
 
     // Quality presets
-    document.querySelectorAll('.tctp-modes[data-group="j2w-quality"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('[data-group="j2w-quality"] .tc-btn, [data-group="j2w-quality"] .tctp-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            quality = parseInt(btn.getAttribute('data-val')) || 82;
+            var group = btn.closest('[data-group="j2w-quality"]');
+            if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
+            quality = parseInt(btn.getAttribute('data-val')) || 92;
             qualitySlider.value = quality;
             qualityVal.textContent = quality;
         });
@@ -44,7 +46,7 @@
         TCTP.showFileRow('tc-j2w-file', f);
     }, 'image/jpeg,.jpg,.jpeg');
 
-    var removeBtn = document.querySelector('#tc-j2w-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-j2w-file .tctp-x, #tc-j2w-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         convertedBlob = null;

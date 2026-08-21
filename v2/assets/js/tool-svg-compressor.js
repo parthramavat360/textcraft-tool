@@ -38,7 +38,7 @@
         if (statsEl) statsEl.style.display = 'none';
     }, 'image/svg+xml,.svg');
 
-    var removeBtn = document.querySelector('#tc-svgc-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-svgc-file .tctp-x, #tc-svgc-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         optimizedSvg = null;

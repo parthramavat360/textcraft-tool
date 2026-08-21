@@ -17,14 +17,18 @@
   var file = null;
   var resultBlob = null;
 
-  TCTP.initDropZone(dropEl, function(f){
+  TCTP.initDropZone(prefix+'drop', prefix+'drop-input', function(f){
+    if (!f.type.match(/image\/webp/) && !/\.webp$/i.test(f.name)) {
+      TCTP.toast('Please select a WebP file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
     resultBlob = null;
-    TCTP.showFileRow(fileRow, f.name);
+    TCTP.showFileRow(prefix+'file-row', f);
     if(preview) preview.innerHTML = '';
     if(statsEl) statsEl.textContent = '';
     if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+  }, 'image/webp,.webp');
 
   if(qualityRange && qualityVal){
     qualityRange.addEventListener('input', function(){

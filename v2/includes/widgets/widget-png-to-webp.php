@@ -30,7 +30,7 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-p2w-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <?php $this->render_range('tc-p2w-quality', 1, 100, 82, 'Quality', '%'); ?>
+            <?php $this->render_range('tc-p2w-quality', 1, 100, 92, 'Quality', '%'); ?>
         </div>
 
         <div class="tc-input-group">
@@ -38,7 +38,7 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
             <div class="tc-modes" data-group="p2w-quality">
                 <button class="tc-btn tc-btn--ghost" data-val="60" type="button">Small (60%)</button>
                 <button class="tc-btn tc-btn--ghost" data-val="75" type="button">Good (75%)</button>
-                <button class="tc-btn tc-btn--ghost sel" data-val="82" type="button">Best (82%)</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="92" type="button">Best (92%)</button>
                 <button class="tc-btn tc-btn--ghost" data-val="95" type="button">HQ (95%)</button>
                 <button class="tc-btn tc-btn--ghost" data-val="100" type="button">Lossless</button>
             </div>

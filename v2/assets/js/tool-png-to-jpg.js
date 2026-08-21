@@ -17,14 +17,18 @@
   var file = null;
   var resultBlob = null;
 
-  TCTP.initDropZone(dropEl, function(f){
+  TCTP.initDropZone(prefix+'drop', prefix+'drop-input', function(f){
+    if (f.type !== 'image/png' && !/\.png$/i.test(f.name)) {
+      TCTP.toast('Please select a PNG file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
     resultBlob = null;
-    TCTP.showFileRow(fileRow, f.name);
+    TCTP.showFileRow(prefix+'file-row', f);
     if(preview) preview.innerHTML = '';
     if(statsEl) statsEl.textContent = '';
     if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+  }, 'image/png,.png');
 
   if(qualityRange && qualityVal){
     qualityRange.addEventListener('input', function(){

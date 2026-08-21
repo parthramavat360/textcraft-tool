@@ -23,14 +23,18 @@
     { label: 'Max (95%)',  value: 0.95 }
   ];
 
-  TCTP.initDropZone(dropEl, function(f){
+  TCTP.initDropZone(prefix+'drop', prefix+'drop-input', function(f){
+    if (f.type !== 'image/png' && !/\.png$/i.test(f.name)) {
+      TCTP.toast('Please select a PNG file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
     resultBlob = null;
-    TCTP.showFileRow(fileRow, f.name);
+    TCTP.showFileRow(prefix+'file-row', f);
     if(preview) preview.innerHTML = '';
     if(statsEl) statsEl.textContent = '';
     if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+  }, 'image/png,.png');
 
   if(qualityRange && qualityVal){
     qualityRange.addEventListener('input', function(){
@@ -53,7 +57,7 @@
   }
 
   function doConvert(){
-    var q = qualityRange ? parseInt(qualityRange.value,10) / 100 : 0.85;
+    var q = qualityRange ? parseInt(qualityRange.value,10) / 100 : 0.92;
 
     TCTP.showProgress(progressWrap);
     TCTP.setProgress(progressWrap, 10);

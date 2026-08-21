@@ -23,7 +23,7 @@
         TCTP.showFileRow('tc-j2p-file', f);
     }, 'image/jpeg,.jpg,.jpeg');
 
-    var removeBtn = document.querySelector('#tc-j2p-file .tctp-x');
+    var removeBtn = document.querySelector('#tc-j2p-file .tctp-x, #tc-j2p-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         convertedBlob = null;

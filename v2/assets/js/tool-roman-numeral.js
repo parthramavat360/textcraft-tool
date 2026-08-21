@@ -6,20 +6,14 @@ var convertBtn = document.getElementById('tc-'+prefix+'-convert');
 var copyBtn = document.getElementById('tc-'+prefix+'-copy');
 if(!input||!output||!convertBtn||!copyBtn) return;
 
-var modeToRoman = document.querySelector('.tc-'+prefix+'-mode[data-mode="to-roman"]');
-var modeFromRoman = document.querySelector('.tc-'+prefix+'-mode[data-mode="from-roman"]');
-var currentMode = 'to-roman';
+var currentMode = 'to_roman';
 
-if(modeToRoman){ modeToRoman.addEventListener('click',function(){
-  currentMode='to-roman';
-  modeToRoman.classList.add('active');
-  modeFromRoman.classList.remove('active');
-}); }
-if(modeFromRoman){ modeFromRoman.addEventListener('click',function(){
-  currentMode='from-roman';
-  modeFromRoman.classList.add('active');
-  modeToRoman.classList.remove('active');
-}); }
+document.querySelectorAll('.tc-modes[data-group="rn-mode"] .tc-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    TCTP.activateBtn(btn);
+    currentMode = btn.getAttribute('data-val') || 'to_roman';
+  });
+});
 
 var lookup=[
   [1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],
@@ -50,22 +44,21 @@ function fromRoman(str){
 
 convertBtn.addEventListener('click',function(){
   var val=input.value.trim();
-  if(!val){ TCTP.toast('Please enter a value.','warning'); return; }
-  if(currentMode==='to-roman'){
+  if(!val){ TCTP.toast('Please enter a value.','\u26A0\uFE0F'); return; }
+  if(currentMode==='to_roman'){
     var num=parseInt(val,10);
-    if(isNaN(num)||num<1||num>3999){ TCTP.toast('Enter a number between 1 and 3999.','warning'); return; }
+    if(isNaN(num)||num<1||num>3999){ TCTP.toast('Enter a number between 1 and 3999.','\u26A0\uFE0F'); return; }
     output.value=toRoman(num);
   } else {
-    if(!/^[IVXLCDMivxlcdm]+$/i.test(val)){ TCTP.toast('Enter a valid Roman numeral.','warning'); return; }
-    var num=fromRoman(val);
-    if(num<1||num>3999){ TCTP.toast('Result out of range (1-3999).','warning'); return; }
-    output.value=num;
+    if(!/^[IVXLCDMivxlcdm]+$/i.test(val)){ TCTP.toast('Enter a valid Roman numeral.','\u26A0\uFE0F'); return; }
+    var result=fromRoman(val);
+    if(result<1||result>3999){ TCTP.toast('Result out of range (1-3999).','\u26A0\uFE0F'); return; }
+    output.value=result;
   }
-  TCTP.activateBtn(convertBtn);
   TCTP.toast('Conversion complete.');
 });
 
 copyBtn.addEventListener('click',function(){
-  TCTP.copyText(output.value);
+  TCTP.copyText(output.value,'Result');
 });
 })();

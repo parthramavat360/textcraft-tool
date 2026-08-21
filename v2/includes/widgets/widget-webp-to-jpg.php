@@ -30,7 +30,7 @@ class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-w2j-file'); ?>
 
         <div class="tc-input-group" style="margin-top:16px">
-            <?php $this->render_range('tc-w2j-quality', 1, 100, 90, 'Quality', '%'); ?>
+            <?php $this->render_range('tc-w2j-quality', 1, 100, 92, 'Quality', '%'); ?>
         </div>
 
         <div class="tc-input-group">

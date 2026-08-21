@@ -6,9 +6,10 @@ var institutionInput = document.getElementById('tc-'+prefix+'-institution');
 var courseInput = document.getElementById('tc-'+prefix+'-course');
 var instructorInput = document.getElementById('tc-'+prefix+'-instructor');
 var dateInput = document.getElementById('tc-'+prefix+'-date');
-var runningHeadInput = document.getElementById('tc-'+prefix+'-running-head');
+var runningHeadInput = document.getElementById('tc-'+prefix+'-running');
 var generateBtn = document.getElementById('tc-'+prefix+'-generate');
 var output = document.getElementById('tc-'+prefix+'-output');
+var preview = document.getElementById('tc-'+prefix+'-preview');
 var copyBtn = document.getElementById('tc-'+prefix+'-copy');
 if(!generateBtn||!output) return;
 
@@ -55,6 +56,19 @@ generateBtn.addEventListener('click',function(){
   lines.push('');
 
   output.value=lines.join('\n');
+  if(preview){
+    preview.innerHTML='';
+    lines.forEach(function(line){
+      if(line==='') return;
+      var p=document.createElement('p');
+      p.style.margin='6px 0';
+      p.style.textAlign='center';
+      p.style.fontFamily='"Times New Roman", Times, serif';
+      p.style.fontSize='12pt';
+      p.textContent=line;
+      preview.appendChild(p);
+    });
+  }
   TCTP.activateBtn(generateBtn);
   TCTP.toast('APA title page generated.');
 });

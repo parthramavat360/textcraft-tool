@@ -1,17 +1,19 @@
+/**
+ * JPG to SVG Converter — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
+
 (function(){
   'use strict';
-  var prefix = 'tc-j2s-';
-  var dropEl = document.getElementById(prefix+'drop');
-  if(!dropEl) return;
+  var drop = document.getElementById('tc-j2svg-drop');
+  if(!drop) return;
 
-  var convertBtn    = document.getElementById(prefix+'convert');
-  var detailSel     = document.getElementById(prefix+'detail');
-  var colorModeSel  = document.getElementById(prefix+'color-mode');
-  var downloadBtn   = document.getElementById(prefix+'download');
-  var preview       = document.getElementById(prefix+'preview');
-  var fileRow       = document.getElementById(prefix+'file-row');
-  var progressWrap  = document.getElementById(prefix+'progress');
-  var statsEl       = document.getElementById(prefix+'stats');
+  var convertBtn   = document.getElementById('tc-j2svg-convert');
+  var detailSel    = document.getElementById('tc-j2svg-detail');
+  var colorModeSel = document.getElementById('tc-j2svg-color');
+  var pathsRange   = document.getElementById('tc-j2svg-paths');
+  var pathsVal     = document.getElementById('tc-j2svg-paths-val');
+  var downloadBtn  = document.getElementById('tc-j2svg-download');
 
   var file = null;
   var resultSVG = null;
@@ -22,85 +24,112 @@
     var s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js';
     s.onload = function(){ loaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load imagetracerjs','error'); };
+    s.onerror = function(){ TCTP.toast('Failed to load imagetracerjs', '\u274C'); };
     document.head.appendChild(s);
   }
 
+  function setStat(id, val){
+    var el = document.getElementById(id);
+    if(el) el.textContent = val;
+  }
+
   var DETAIL_PRESETS = {
-    'high':   { scale: 1,    colorsampling: 2, numberofcolors: 16, mincolorratio: 0, colorquantcycles: 3, pathomit: 0 },
-    'medium': { scale: 1,    colorsampling: 2, numberofcolors: 8,  mincolorratio: 0, colorquantcycles: 3, pathomit: 4 },
-    'low':    { scale: 1,    colorsampling: 0, numberofcolors: 4,  mincolorratio: 0, colorquantcycles: 2, pathomit: 8 },
-    'minimal':{ scale: 0.5,  colorsampling: 0, numberofcolors: 2,  mincolorratio: 0, colorquantcycles: 1, pathomit: 16 }
+    'high':   { scale: 1,   colorsampling: 2, numberofcolors: 16, mincolorratio: 0, colorquantcycles: 3, pathomit: 0 },
+    'medium': { scale: 1,   colorsampling: 2, numberofcolors: 8,  mincolorratio: 0, colorquantcycles: 3, pathomit: 4 },
+    'low':    { scale: 1,   colorsampling: 0, numberofcolors: 4,  mincolorratio: 0, colorquantcycles: 2, pathomit: 8 }
   };
 
-  TCTP.initDropZone(dropEl, function(f){
+  TCTP.initDropZone('tc-j2svg-drop', 'tc-j2svg-drop-input', function(f){
+    if(!f.type.match(/image\/jpe?g/) && !/\.jpe?g$/i.test(f.name)){
+      TCTP.toast('Please select a JPG/JPEG file.', '\u26A0\uFE0F');
+      return;
+    }
     file = f;
     resultSVG = null;
-    TCTP.showFileRow(fileRow, f.name);
-    if(preview) preview.innerHTML = '';
-    if(statsEl) statsEl.textContent = '';
+    TCTP.showFileRow('tc-j2svg-file', f);
     if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+    setStat('tc-j2svg-stat-comp', '-');
+    setStat('tc-j2svg-stat-saved', '-');
+  }, 'image/jpeg,.jpg,.jpeg');
+
+  var removeBtn = document.querySelector('#tc-j2svg-file .tc-x');
+  if(removeBtn){
+    removeBtn.addEventListener('click', function(){
+      file = null;
+      resultSVG = null;
+      TCTP.hideFileRow('tc-j2svg-file');
+      if(downloadBtn) downloadBtn.style.display = 'none';
+    });
+  }
+
+  if(pathsRange && pathsVal){
+    pathsVal.textContent = pathsRange.value + ' paths';
+    pathsRange.addEventListener('input', function(){
+      pathsVal.textContent = pathsRange.value + ' paths';
+    });
+  }
 
   if(convertBtn){
     convertBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please drop a JPG image first','warning'); return; }
-      loadLib(function(){ doConvert(); });
+      if(!file){ TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
+      loadLib(doConvert);
     });
   }
 
   if(downloadBtn){
     downloadBtn.addEventListener('click', function(){
-      if(resultSVG){
-        var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
-        TCTP.downloadBlob(blob, 'converted.svg');
-      }
+      if(!resultSVG){ TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+      var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
+      var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.svg';
+      TCTP.downloadBlob(blob, name);
     });
   }
 
   function doConvert(){
-    var detailKey  = detailSel ? detailSel.value : 'medium';
-    var colorMode  = colorModeSel ? colorModeSel.value : 'color';
+    var detailKey = detailSel ? detailSel.value : 'medium';
+    var colorMode = colorModeSel ? colorModeSel.value : 'color';
     var opts = DETAIL_PRESETS[detailKey] || DETAIL_PRESETS['medium'];
 
-    if(colorMode === 'monochrome'){
+    if(colorMode === 'bw'){
       opts.numberofcolors = 2;
     } else if(colorMode === 'grayscale'){
       opts.numberofcolors = 4;
     }
 
-    TCTP.showProgress(progressWrap);
-    TCTP.setProgress(progressWrap, 10);
+    TCTP.showProgress('tc-j2svg-progress');
+    TCTP.setProgress('tc-j2svg-progress', 30, 'Tracing...');
 
     var img = new Image();
     img.onload = function(){
-      TCTP.setProgress(progressWrap, 30);
       var c = document.createElement('canvas');
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
       var ctx = c.getContext('2d');
       ctx.drawImage(img, 0, 0);
-      TCTP.setProgress(progressWrap, 50);
 
-      var imgData = ctx.getImageData(0, 0, c.width, c.height);
-      var svgStr = ImageTracer.imagedataToSVG(imgData, opts);
+      TCTP.setProgress('tc-j2svg-progress', 50, 'Tracing...');
 
-      resultSVG = svgStr;
-      TCTP.setProgress(progressWrap, 100);
-      TCTP.hideProgress(progressWrap);
+      try {
+        var imgData = ctx.getImageData(0, 0, c.width, c.height);
+        var svgStr = window.ImageTracer.imagedataToSVG(imgData, opts);
 
-      if(preview){
-        preview.innerHTML = '';
-        preview.innerHTML = svgStr;
+        resultSVG = svgStr;
+        TCTP.setProgress('tc-j2svg-progress', 100, 'Done!');
+        TCTP.hideProgress('tc-j2svg-progress');
+
+        setStat('tc-j2svg-stat-orig', file ? TCTP.formatSize(file.size) : '-');
+        setStat('tc-j2svg-stat-comp', (svgStr.length / 1024).toFixed(1) + ' KB');
+        setStat('tc-j2svg-stat-saved', 'SVG');
+        if(downloadBtn) downloadBtn.style.display = '';
+        TCTP.toast('Converted to SVG!');
+      } catch(err){
+        TCTP.hideProgress('tc-j2svg-progress');
+        TCTP.toast('Conversion failed: ' + err.message, '\u274C');
       }
-      if(downloadBtn) downloadBtn.style.display = '';
-      if(statsEl) statsEl.textContent = (svgStr.length / 1024).toFixed(1) + ' KB | SVG';
-      TCTP.toast('JPG traced to SVG');
-      URL.revokeObjectURL(img.src);
     };
     img.onerror = function(){
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('Failed to load image','error');
+      TCTP.hideProgress('tc-j2svg-progress');
+      TCTP.toast('Failed to load image', '\u274C');
     };
     img.src = URL.createObjectURL(file);
   }
