@@ -142,7 +142,7 @@
 /* =========================================================================
    11b. STATS ROW (input text stats: chars, words, sentences, lines)
    ========================================================================= */
-.tc-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.tc-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 18px}
 .tc-stat-item{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;transition:border-color .15s,box-shadow .15s}
 .tc-stat-item:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .tc-stat-label{font-family:var(--font-body);font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;line-height:1}
