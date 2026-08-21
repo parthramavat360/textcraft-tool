@@ -9,7 +9,8 @@
     var numType = 'integer';
     var sepMode = 'newline';
     var out = document.getElementById('tc-rn-output');
-    if (!out) return;
+    var generateBtn = document.getElementById('tc-rn-generate');
+    if (!out || !generateBtn) return;
 
     var PRESETS = {
         dice:    { min: 1,  max: 6,  count: 1,  unique: false, sort: false },
@@ -20,7 +21,7 @@
     };
 
     // Type buttons
-    document.querySelectorAll('.tctp-modes[data-group="rn-type"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('.tc-modes[data-group="rn-type"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             numType = btn.getAttribute('data-val');
@@ -30,7 +31,7 @@
     });
 
     // Separator buttons
-    document.querySelectorAll('.tctp-modes[data-group="rn-sep"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('.tc-modes[data-group="rn-sep"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             sepMode = btn.getAttribute('data-val');
@@ -72,7 +73,7 @@
         return n.toLocaleString('en-US');
     }
 
-    document.getElementById('tc-rn-generate').addEventListener('click', function () {
+    generateBtn.addEventListener('click', function () {
         var minVal = parseFloat(document.getElementById('tc-rn-min').value);
         var maxVal = parseFloat(document.getElementById('tc-rn-max').value);
         var count = Math.max(1, Math.min(1000, parseInt(document.getElementById('tc-rn-count').value) || 10));
@@ -107,15 +108,22 @@
         var maxRes = Math.max.apply(null, numbers);
         var sum = numbers.reduce(function (s, n) { return s + n; }, 0);
 
-        document.getElementById('tc-rn-stat-count').textContent = numbers.length;
-        document.getElementById('tc-rn-stat-min').textContent = formatNum(minRes);
-        document.getElementById('tc-rn-stat-max').textContent = formatNum(maxRes);
-        document.getElementById('tc-rn-stat-avg').textContent = (sum / numbers.length).toFixed(2);
+        var statCount = document.getElementById('tc-rn-stat-count');
+        var statMin = document.getElementById('tc-rn-stat-min');
+        var statMax = document.getElementById('tc-rn-stat-max');
+        var statAvg = document.getElementById('tc-rn-stat-avg');
+        if (statCount) statCount.textContent = numbers.length;
+        if (statMin) statMin.textContent = formatNum(minRes);
+        if (statMax) statMax.textContent = formatNum(maxRes);
+        if (statAvg) statAvg.textContent = (sum / numbers.length).toFixed(2);
         TCTP.toast(numbers.length + ' numbers generated!');
     });
 
-    document.getElementById('tc-rn-copy').addEventListener('click', function () {
-        TCTP.copyText(out.value, 'Numbers');
-    });
+    var copyBtn = document.getElementById('tc-rn-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(out.value, 'Numbers');
+        });
+    }
 
 })();

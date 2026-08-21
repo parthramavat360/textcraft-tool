@@ -37,7 +37,7 @@
         }
     }
 
-    document.querySelectorAll('.tctp-modes[data-group="p2j-dpi"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('.tc-modes[data-group="p2j-dpi"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             dpi = parseInt(btn.getAttribute('data-val')) || 150;

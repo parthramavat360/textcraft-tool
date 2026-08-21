@@ -1,64 +1,120 @@
-(function(){ 'use strict';
-var inp = document.getElementById('tc-pt-input'); if (!inp) return;
-var out = document.getElementById('tc-pt-output');
-var btnConvert = document.getElementById('tc-pt-convert');
-var btnCopy = document.getElementById('tc-pt-copy');
-var btnClear = document.getElementById('tc-pt-clear');
-var chkHtml = document.getElementById('tc-pt-html');
-var chkEntities = document.getElementById('tc-pt-entities');
-var chkBlank = document.getElementById('tc-pt-blank-lines');
-var chkTrim = document.getElementById('tc-pt-trim-spaces');
-var chkUnicode = document.getElementById('tc-pt-unicode');
-var elTags = document.getElementById('tc-pt-tags');
-var elBefore = document.getElementById('tc-pt-before');
-var elAfter = document.getElementById('tc-pt-after');
+/**
+ * Plain Text Converter — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
 
-btnConvert.addEventListener('click', function(){
-    var text = inp.value;
-    var tagsBefore = 0;
-    if(chkHtml && chkHtml.checked){
-        var before = text.length;
-        text = text.replace(/<[^>]+>/g, '');
-        tagsBefore = (before - text.length);
-    }
-    if(chkEntities && chkEntities.checked){
-        var ta = document.createElement('textarea');
-        ta.innerHTML = text;
-        text = ta.value;
-        text = text.replace(/&#(\d+);/g, function(m, code){ return String.fromCharCode(parseInt(code, 10)); });
-        text = text.replace(/&#x([0-9a-f]+);/gi, function(m, code){ return String.fromCharCode(parseInt(code, 16)); });
-    }
-    if(chkUnicode && chkUnicode.checked){
-        text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
-        text = text.replace(/\u00A0/g, ' ');
-        text = text.replace(/[\u2000-\u200A\u202F\u205F\u3000]/g, ' ');
-    }
-    if(chkBlank && chkBlank.checked){
-        text = text.replace(/([ \t]*\n){2,}/g, '\n');
-    }
-    if(chkTrim && chkTrim.checked){
-        text = text.replace(/[ \t]+/g, ' ');
-        text = text.split('\n').map(function(l){ return l.trim(); }).join('\n');
-    }
-    if(chkBlank && chkBlank.checked){
-        text = text.replace(/\n{3,}/g, '\n\n');
-    }
-    text = text.trim();
-    out.value = text;
-    if(elTags) elTags.textContent = tagsBefore;
-    if(elBefore) elBefore.textContent = inp.value.length;
-    if(elAfter) elAfter.textContent = text.length;
-    if(TCTP && TCTP.activateBtn) TCTP.activateBtn(btnCopy);
-});
+(function () {
+    'use strict';
 
-btnCopy.addEventListener('click', function(){
-    if(TCTP && TCTP.copyText) TCTP.copyText(out.value);
-});
-btnClear.addEventListener('click', function(){
-    inp.value = '';
-    out.value = '';
-    if(elTags) elTags.textContent = '0';
-    if(elBefore) elBefore.textContent = '0';
-    if(elAfter) elAfter.textContent = '0';
-});
+    function init() {
+        var inp = document.getElementById('tc-pt-input');
+        var out = document.getElementById('tc-pt-output');
+        var btnConvert = document.getElementById('tc-pt-convert');
+        if (!inp || !btnConvert || inp.dataset.tcInit) return;
+        inp.dataset.tcInit = '1';
+
+        var statusEl = document.getElementById('tc-pt-status');
+
+        // Option defaults mirror the Elementor controls
+        // (pt_strip_html=yes, pt_decode_entities=yes, pt_remove_blanks='',
+        //  pt_trim_spaces=yes, pt_normalize_unicode='').
+        var stripHtml = true;
+        var decodeEntities = true;
+        var removeBlanks = false;
+        var trimSpaces = true;
+        var normalizeUnicode = false;
+
+        function setStat(ids, val) {
+            for (var i = 0; i < ids.length; i++) {
+                var el = document.getElementById(ids[i]);
+                if (el) { el.textContent = val; return; }
+            }
+        }
+
+        function convert() {
+            var text = inp.value;
+            if (!text.trim()) {
+                TCTP.toast('Paste some HTML or rich text first.', '\u26A0\uFE0F');
+                return;
+            }
+
+            TCTP.showProgress('tc-pt-bar');
+            TCTP.setProgress('tc-pt-bar', 40, 'Converting...');
+
+            var tagsRemoved = 0;
+
+            if (stripHtml) {
+                var before = text.length;
+                text = text.replace(/<[^>]+>/g, '');
+                tagsRemoved = before - text.length;
+            }
+            if (decodeEntities) {
+                var ta = document.createElement('textarea');
+                ta.innerHTML = text;
+                text = ta.value;
+                text = text.replace(/&#(\d+);/g, function (m, code) { return String.fromCharCode(parseInt(code, 10)); });
+                text = text.replace(/&#x([0-9a-f]+);/gi, function (m, code) { return String.fromCharCode(parseInt(code, 16)); });
+            }
+            if (normalizeUnicode) {
+                text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+                text = text.replace(/\u00A0/g, ' ');
+                text = text.replace(/[\u2000-\u200A\u202F\u205F\u3000]/g, ' ');
+            }
+            if (removeBlanks) {
+                text = text.replace(/([ \t]*\n){2,}/g, '\n');
+            }
+            if (trimSpaces) {
+                text = text.replace(/[ \t]+/g, ' ');
+                text = text.split('\n').map(function (l) { return l.trim(); }).join('\n');
+            }
+            if (removeBlanks) {
+                text = text.replace(/\n{3,}/g, '\n\n');
+            }
+            text = text.trim();
+
+            if (out) out.value = text;
+            setStat(['tc-pt-stats-tags_removed', 'tc-pt-stats-tags-removed', 'tc-pt-stat-tags'], tagsRemoved.toLocaleString());
+            setStat(['tc-pt-stats-before', 'tc-pt-stat-before'], inp.value.length.toLocaleString());
+            setStat(['tc-pt-stats-after', 'tc-pt-stat-after'], text.length.toLocaleString());
+            if (statusEl) statusEl.textContent = 'Converted to plain text.';
+
+            TCTP.setProgress('tc-pt-bar', 100, 'Done!');
+            TCTP.hideProgress('tc-pt-bar');
+            TCTP.toast('Converted to plain text!');
+        }
+
+        btnConvert.addEventListener('click', convert);
+
+        // Drop zone + file row
+        function onFile(file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                inp.value = String(reader.result || '');
+                TCTP.showFileRow('tc-pt-file', file);
+                convert();
+            };
+            reader.readAsText(file);
+        }
+        TCTP.initDropZone('tc-pt-drop', 'tc-pt-drop-input', onFile);
+
+        var fileRow = document.getElementById('tc-pt-file');
+        if (fileRow) {
+            var closeBtn = fileRow.querySelector('.tc-x');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function () {
+                    TCTP.hideFileRow('tc-pt-file');
+                });
+            }
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Re-init after Elementor AJAX re-render
+    new MutationObserver(function () { init(); })
+        .observe(document.documentElement, { childList: true, subtree: true });
 })();

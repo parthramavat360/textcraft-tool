@@ -114,7 +114,7 @@
     });
 
     // Level buttons
-    document.querySelectorAll('.tctp-modes[data-group="pdf-level"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('.tc-modes[data-group="pdf-level"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             level = parseInt(btn.getAttribute('data-val')) || 2;

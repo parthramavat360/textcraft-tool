@@ -241,9 +241,9 @@
      * Activate a button in a group and deactivate siblings.
      */
     TCTP.activateBtn = function (btn) {
-        var group = btn.closest('.tctp-modes');
+        var group = btn.closest('.tc-modes') || btn.closest('.tctp-modes');
         if (group) {
-            group.querySelectorAll('.tctp-btn').forEach(function (b) {
+            group.querySelectorAll('.tc-btn, .tctp-btn').forEach(function (b) {
                 b.classList.remove('sel');
             });
         }
@@ -258,7 +258,7 @@
     TCTP.initModeGroup = function (groupId, onChange) {
         var group = typeof groupId === 'string' ? document.getElementById(groupId) || document.querySelector(groupId) : groupId;
         if (!group) return;
-        group.querySelectorAll('.tctp-btn, .tc-btn').forEach(function (btn) {
+        group.querySelectorAll('.tc-btn, .tctp-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 TCTP.activateBtn(btn);
                 if (onChange) onChange(btn.getAttribute('data-val') || btn.textContent.trim());

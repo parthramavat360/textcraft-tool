@@ -12,7 +12,7 @@
 
     var currentType = 'uuid_v4';
 
-    document.querySelectorAll('.tctp-modes[data-group="uid-type"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('.tc-modes[data-group="uid-type"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             currentType = btn.getAttribute('data-val');
@@ -139,8 +139,11 @@
         TCTP.toast(count + ' ID(s) generated!');
     });
 
-    document.getElementById('tc-uid-copy').addEventListener('click', function () {
-        TCTP.copyText(out.value, 'IDs');
-    });
+    var copyBtn = document.getElementById('tc-uid-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(out.value, 'IDs');
+        });
+    }
 
 })();

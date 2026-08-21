@@ -74,8 +74,11 @@
         TCTP.toast('Conversion complete!');
     });
 
-    document.getElementById('tc-url-copy').addEventListener('click', function () {
-        TCTP.copyText(out.value, 'URL text');
-    });
+    var copyBtn = document.getElementById('tc-url-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(out.value, 'URL text');
+        });
+    }
 
 })();

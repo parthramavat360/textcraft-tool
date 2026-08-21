@@ -14,11 +14,11 @@
     var optimizedSvg = null;
     var precision = 2;
 
-    var drop = document.getElementById('tc-svgc-drop');
+    var drop = document.getElementById('tc-svg-drop');
     if (!drop) return;
 
-    var precisionSlider = document.getElementById('tc-svgc-precision');
-    var precisionVal = document.getElementById('tc-svgc-precision-val');
+    var precisionSlider = document.getElementById('tc-svg-precision');
+    var precisionVal = document.getElementById('tc-svg-precision-val');
     if (precisionSlider) {
         precisionSlider.addEventListener('input', function () {
             precision = parseInt(precisionSlider.value);
@@ -26,24 +26,24 @@
         });
     }
 
-    TCTP.initDropZone('tc-svgc-drop', 'tc-svgc-drop-input', function (f) {
+    TCTP.initDropZone('tc-svg-drop', 'tc-svg-drop-input', function (f) {
         if (!f.type.match(/image\/svg\+xml/) && !/\.svg$/i.test(f.name)) {
             TCTP.toast('Please select an SVG file.', '\u26A0\uFE0F');
             return;
         }
         file = f;
         optimizedSvg = null;
-        TCTP.showFileRow('tc-svgc-file', f);
-        var statsEl = document.getElementById('tc-svgc-stats');
+        TCTP.showFileRow('tc-svg-file', f);
+        var statsEl = document.getElementById('tc-svg-stats');
         if (statsEl) statsEl.style.display = 'none';
     }, 'image/svg+xml,.svg');
 
-    var removeBtn = document.querySelector('#tc-svgc-file .tctp-x, #tc-svgc-file .tc-x');
+    var removeBtn = document.querySelector('#tc-svg-file .tctp-x, #tc-svg-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         optimizedSvg = null;
-        TCTP.hideFileRow('tc-svgc-file');
-        var statsEl = document.getElementById('tc-svgc-stats');
+        TCTP.hideFileRow('tc-svg-file');
+        var statsEl = document.getElementById('tc-svg-stats');
         if (statsEl) statsEl.style.display = 'none';
     });
 
@@ -73,16 +73,16 @@
         return result.trim();
     }
 
-    var compressBtn = document.getElementById('tc-svgc-compress');
+    var compressBtn = document.getElementById('tc-svg-compress');
     if (compressBtn) compressBtn.addEventListener('click', function () {
         if (!file) { TCTP.toast('Please select an SVG file first.', '\u26A0\uFE0F'); return; }
 
-        TCTP.showProgress('tc-svgc-progress');
-        TCTP.setProgress('tc-svgc-progress', 30, 'Reading SVG...');
+        TCTP.showProgress('tc-svg-progress');
+        TCTP.setProgress('tc-svg-progress', 30, 'Reading SVG...');
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            TCTP.setProgress('tc-svgc-progress', 60, 'Optimizing...');
+            TCTP.setProgress('tc-svg-progress', 60, 'Optimizing...');
             var svgText = e.target.result;
             var origSize = new Blob([svgText]).size;
 
@@ -90,23 +90,23 @@
             var compSize = new Blob([optimizedSvg]).size;
             var saved = origSize > compSize ? ((1 - compSize / origSize) * 100).toFixed(1) : '0';
 
-            var origEl = document.getElementById('tc-svgc-stat-orig');
-            var compEl = document.getElementById('tc-svgc-stat-comp');
-            var savedEl = document.getElementById('tc-svgc-stat-saved');
+            var origEl = document.getElementById('tc-svg-stat-orig');
+            var compEl = document.getElementById('tc-svg-stat-comp');
+            var savedEl = document.getElementById('tc-svg-stat-saved');
             if (origEl) origEl.textContent = TCTP.formatSize(origSize);
             if (compEl) compEl.textContent = TCTP.formatSize(compSize);
             if (savedEl) savedEl.textContent = saved + '%';
 
-            var statsEl = document.getElementById('tc-svgc-stats');
+            var statsEl = document.getElementById('tc-svg-stats');
             if (statsEl) statsEl.style.display = '';
 
-            TCTP.setProgress('tc-svgc-progress', 100, 'Done!');
+            TCTP.setProgress('tc-svg-progress', 100, 'Done!');
             TCTP.toast('Optimized! Saved ' + saved + '%');
         };
         reader.readAsText(file);
     });
 
-    var downloadBtn = document.getElementById('tc-svgc-download');
+    var downloadBtn = document.getElementById('tc-svg-download');
     if (downloadBtn) downloadBtn.addEventListener('click', function () {
         if (!optimizedSvg) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
         var name = (file ? file.name.replace(/\.svg$/i, '') : 'image') + '-compressed.svg';

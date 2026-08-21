@@ -1,56 +1,81 @@
-(function(){ 'use strict';
-var inp = document.getElementById('tc-dl-input'); if (!inp) return;
-var out = document.getElementById('tc-dl-output');
-var btnRemove = document.getElementById('tc-dl-remove');
-var btnCopy = document.getElementById('tc-dl-copy');
-var btnClear = document.getElementById('tc-dl-clear');
-var chkCase = document.getElementById('tc-dl-case');
-var chkTrim = document.getElementById('tc-dl-trim');
-var chkBlank = document.getElementById('tc-dl-blank');
-var chkSort = document.getElementById('tc-dl-sort');
-var elTotal = document.getElementById('tc-dl-total');
-var elUnique = document.getElementById('tc-dl-unique');
-var elRemoved = document.getElementById('tc-dl-removed');
+/**
+ * Duplicate Line Remover — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
 
-btnRemove.addEventListener('click', function(){
-    var lines = inp.value.split(/\r?\n/);
-    var doTrim = chkTrim && chkTrim.checked;
-    var caseInsensitive = chkCase && chkCase.checked;
-    var removeBlanks = chkBlank && chkBlank.checked;
-    var doSort = chkSort && chkSort.checked;
+(function () {
+    'use strict';
 
-    if(doTrim) lines = lines.map(function(l){ return l.trim(); });
-    if(removeBlanks) lines = lines.filter(function(l){ return l !== ''; });
+    function init() {
+        var inp = document.getElementById('tc-dl-input');
+        var out = document.getElementById('tc-dl-output');
+        var btnRemove = document.getElementById('tc-dl-remove');
+        if (!inp || !btnRemove || inp.dataset.tcInit) return;
+        inp.dataset.tcInit = '1';
 
-    var total = lines.length;
-    var seen = {};
-    var unique = [];
-    lines.forEach(function(line){
-        var key = caseInsensitive ? line.toLowerCase() : line;
-        if(!seen[key]){
-            seen[key] = 1;
-            unique.push(line);
+        var statusEl = document.getElementById('tc-dl-status');
+
+        function setStat(ids, val) {
+            for (var i = 0; i < ids.length; i++) {
+                var el = document.getElementById(ids[i]);
+                if (el) { el.textContent = val; return; }
+            }
         }
-    });
 
-    if(doSort) unique.sort(function(a,b){ return a.localeCompare(b); });
+        btnRemove.addEventListener('click', function () {
+            var text = inp.value;
+            if (!text.trim()) {
+                TCTP.toast('Paste some text with duplicate lines first.', '\u26A0\uFE0F');
+                return;
+            }
 
-    var removed = total - unique.length;
-    out.value = unique.join('\n');
-    if(elTotal) elTotal.textContent = total;
-    if(elUnique) elUnique.textContent = unique.length;
-    if(elRemoved) elRemoved.textContent = removed;
-    if(TCTP && TCTP.activateBtn) TCTP.activateBtn(btnCopy);
-});
+            TCTP.showProgress('tc-dl-bar');
+            TCTP.setProgress('tc-dl-bar', 50, 'Processing...');
 
-btnCopy.addEventListener('click', function(){
-    if(TCTP && TCTP.copyText) TCTP.copyText(out.value);
-});
-btnClear.addEventListener('click', function(){
-    inp.value = '';
-    out.value = '';
-    if(elTotal) elTotal.textContent = '0';
-    if(elUnique) elUnique.textContent = '0';
-    if(elRemoved) elRemoved.textContent = '0';
-});
+            var lines = text.split(/\r?\n/);
+            var doTrim = true;
+            var caseInsensitive = false;
+            var removeBlanks = false;
+            var doSort = false;
+
+            if (doTrim) lines = lines.map(function (l) { return l.trim(); });
+            if (removeBlanks) lines = lines.filter(function (l) { return l !== ''; });
+
+            var total = lines.length;
+            var seen = {};
+            var unique = [];
+            lines.forEach(function (line) {
+                var key = caseInsensitive ? line.toLowerCase() : line;
+                if (!seen[key]) {
+                    seen[key] = 1;
+                    unique.push(line);
+                }
+            });
+
+            if (doSort) unique.sort(function (a, b) { return a.localeCompare(b); });
+
+            var removed = total - unique.length;
+            if (out) out.value = unique.join('\n');
+            setStat(['tc-dl-stats-total', 'tc-dl-stat-total'], total.toLocaleString());
+            setStat(['tc-dl-stats-unique', 'tc-dl-stat-unique'], unique.length.toLocaleString());
+            setStat(['tc-dl-stats-removed', 'tc-dl-stat-removed'], removed.toLocaleString());
+            if (statusEl) statusEl.textContent = removed + ' duplicate line' + (removed === 1 ? '' : 's') + ' removed.';
+
+            TCTP.setProgress('tc-dl-bar', 100, 'Done!');
+            TCTP.hideProgress('tc-dl-bar');
+            TCTP.toast(removed > 0
+                ? removed + ' duplicate line' + (removed === 1 ? '' : 's') + ' removed!'
+                : 'No duplicates found.', removed > 0 ? '\u2705' : '\u26A0\uFE0F');
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Re-init after Elementor AJAX re-render
+    new MutationObserver(function () { init(); })
+        .observe(document.documentElement, { childList: true, subtree: true });
 })();

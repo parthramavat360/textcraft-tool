@@ -683,6 +683,43 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
         <?php
     }
 
+    /**
+     * Render a stats panel row with labeled stat items.
+     *
+     * Supports two calling conventions:
+     *  - render_stats_panel_row('tc-prefix-stats', ['key' => 'Label', ...])
+     *    → generates IDs tc-prefix-stats-key
+     *  - render_stats_panel_row([['id' => '...', 'label' => '...'], ...])
+     *    → uses explicit IDs
+     */
+    protected function render_stats_panel_row($arg1, array $arg2 = []): void {
+        $items = [];
+
+        if (is_string($arg1)) {
+            $container_id = $arg1;
+            foreach ($arg2 as $key => $label) {
+                $items[] = [
+                    'id'    => $container_id . '-' . $key,
+                    'label' => $label,
+                ];
+            }
+        } elseif (is_array($arg1)) {
+            $items = $arg1;
+        }
+
+        if (empty($items)) return;
+        ?>
+        <div class="tc-stats-row">
+            <?php foreach ($items as $item): ?>
+                <div class="tc-stat-item">
+                    <span class="tc-stat-label"><?php echo esc_html($item['label']); ?></span>
+                    <span class="tc-stat-value" id="<?php echo esc_attr($item['id']); ?>">0</span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+    }
+
     // ── Abstract method for child widgets ──────────────────────
 
     /**

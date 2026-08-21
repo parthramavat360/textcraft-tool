@@ -87,9 +87,12 @@
         TCTP.toast('Translation complete!');
     });
 
-    document.getElementById('tc-morse-copy').addEventListener('click', function () {
-        TCTP.copyText(out.value, 'Morse code');
-    });
+    var copyBtn = document.getElementById('tc-morse-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(out.value, 'Morse code');
+        });
+    }
 
     buildRef();
 

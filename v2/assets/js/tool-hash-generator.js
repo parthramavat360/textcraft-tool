@@ -136,9 +136,12 @@
         TCTP.toast('Hashes generated!');
     });
 
-    document.getElementById('tc-hash-copy-all').addEventListener('click', function () {
-        var resultsEl = document.getElementById('tc-hash-results');
-        TCTP.copyText(resultsEl ? resultsEl.innerText : '', 'All hashes');
-    });
+    var copyAllBtn = document.getElementById('tc-hash-copy-all');
+    if (copyAllBtn) {
+        copyAllBtn.addEventListener('click', function () {
+            var resultsEl = document.getElementById('tc-hash-results');
+            TCTP.copyText(resultsEl ? resultsEl.innerText : '', 'All hashes');
+        });
+    }
 
 })();

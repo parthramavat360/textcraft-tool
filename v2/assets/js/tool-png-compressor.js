@@ -47,7 +47,7 @@
 
     // Level buttons: Light = fast browser encode,
     // Balanced/Strong = additional UPNG lossless optimization.
-    document.querySelectorAll('[data-group="png-level"] .tc-btn, [data-group="png-level"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('[data-group="png-level"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var group = btn.closest('[data-group="png-level"]');
             if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });

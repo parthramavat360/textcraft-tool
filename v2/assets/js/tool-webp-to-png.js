@@ -23,8 +23,6 @@
         file = f;
         convertedBlob = null;
         TCTP.showFileRow('tc-w2p-file', f);
-        var statsEl = document.getElementById('tc-w2p-stats');
-        if (statsEl) statsEl.style.display = 'none';
     }, 'image/webp,.webp');
 
     var removeBtn = document.querySelector('#tc-w2p-file .tctp-x, #tc-w2p-file .tc-x');
@@ -32,8 +30,6 @@
         file = null;
         convertedBlob = null;
         TCTP.hideFileRow('tc-w2p-file');
-        var statsEl = document.getElementById('tc-w2p-stats');
-        if (statsEl) statsEl.style.display = 'none';
     });
 
     var convertBtn = document.getElementById('tc-w2p-convert');
@@ -67,11 +63,8 @@
                     var sign = diff >= 0 ? '-' : '+';
 
                     document.getElementById('tc-w2p-stat-orig').textContent = TCTP.formatSize(origSize);
-                    document.getElementById('tc-w2p-stat-conv').textContent = TCTP.formatSize(compSize);
+                    document.getElementById('tc-w2p-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-w2p-stat-diff').textContent = sign + TCTP.formatSize(Math.abs(diff));
-
-                    var statsEl = document.getElementById('tc-w2p-stats');
-                    if (statsEl) statsEl.style.display = '';
 
                     TCTP.setProgress('tc-w2p-progress', 100, 'Done!');
                     TCTP.toast('Converted to PNG!');

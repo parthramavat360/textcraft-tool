@@ -24,7 +24,7 @@
     });
 
     // Quality presets
-    document.querySelectorAll('[data-group="j2w-quality"] .tc-btn, [data-group="j2w-quality"] .tctp-btn').forEach(function (btn) {
+    document.querySelectorAll('[data-group="j2w-quality"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var group = btn.closest('[data-group="j2w-quality"]');
             if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });

@@ -54,10 +54,10 @@
     });
   }
 
-  if(qualityRange && qualityVal){
-    qualityVal.textContent = qualityRange.value + '%';
+  if(qualityRange){
+    if(qualityVal) qualityVal.textContent = qualityRange.value + '%';
     qualityRange.addEventListener('input', function(){
-      qualityVal.textContent = qualityRange.value + '%';
+      if(qualityVal) qualityVal.textContent = qualityRange.value + '%';
     });
   }
 

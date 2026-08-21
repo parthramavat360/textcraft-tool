@@ -322,12 +322,15 @@
         }
     });
 
-    document.getElementById('tc-qr-download-svg').addEventListener('click', function () {
-        if (!lastSvg) {
-            TCTP.toast('Generate a QR code first.', '\u26A0\uFE0F');
-            return;
-        }
-        TCTP.downloadText(lastSvg, 'qrcode.svg', 'image/svg+xml');
-    });
+    var downloadBtn = document.getElementById('tc-qr-download-svg');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            if (!lastSvg) {
+                TCTP.toast('Generate a QR code first.', '\u26A0\uFE0F');
+                return;
+            }
+            TCTP.downloadText(lastSvg, 'qrcode.svg', 'image/svg+xml');
+        });
+    }
 
 })();
