@@ -56,6 +56,7 @@
 
             var removed = total - unique.length;
             if (out) out.value = unique.join('\n');
+            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', unique.join('\n').length.toLocaleString() + ' chars', (unique.join('\n').length < text.length ? ((1 - unique.join('\n').length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
             setStat(['tc-dl-stats-total', 'tc-dl-stat-total'], total.toLocaleString());
             setStat(['tc-dl-stats-unique', 'tc-dl-stat-unique'], unique.length.toLocaleString());
             setStat(['tc-dl-stats-removed', 'tc-dl-stat-removed'], removed.toLocaleString());

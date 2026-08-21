@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace TextCraft_Tools_Pro;
+
+use Elementor\Controls_Manager;
 defined('ABSPATH') || exit;
 
 class Widget_Pig_Latin extends TextCraft_Tool_Base {

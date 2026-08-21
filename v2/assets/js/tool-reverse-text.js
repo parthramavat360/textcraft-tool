@@ -6,12 +6,6 @@
 (function () {
     'use strict';
 
-    var inp = document.getElementById('tc-rvt-input');
-    var out = document.getElementById('tc-rvt-output');
-    if (!inp) return;
-
-    var mode = 'chars';
-
     var FLIP_MAP = {
         'a': '\u0250', 'b': 'q', 'c': '\u0254', 'd': 'p', 'e': '\u01DD', 'f': '\u025F',
         'g': '\u0183', 'h': '\u0265', 'i': '\u0131', 'j': '\u027E', 'k': '\u029E',
@@ -28,45 +22,75 @@
         '.': '\u02D9', ',': '\\', '?': '\u00BF', '!': '\u00A1', '(': ')', ')': '(', ' ': ' '
     };
 
-    // Mode buttons
-    document.querySelectorAll('.tctp-modes[data-group="rev-mode"] .tctp-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            mode = btn.getAttribute('data-val');
-        });
-    });
+    function init() {
+        var inp = document.getElementById('tc-rvt-input');
+        var out = document.getElementById('tc-rvt-output');
+        var reverseBtn = document.getElementById('tc-rvt-reverse');
+        if (!inp || !out || !reverseBtn || inp.dataset.tcInit) return;
+        inp.dataset.tcInit = '1';
 
-    // Reverse button
-    document.getElementById('tc-rvt-reverse').addEventListener('click', function () {
-        var text = inp.value;
-        if (!text) { TCTP.toast('Enter some text above to start reversing.', '\u26A0\uFE0F'); return; }
+        var mode = 'chars';
 
-        var result = '';
-        switch (mode) {
-            case 'chars':
-                result = Array.from(text).reverse().join('');
-                break;
-            case 'words':
-                result = text.split('\n').map(function (line) {
-                    return line.split(' ').reverse().join(' ');
-                }).join('\n');
-                break;
-            case 'lines':
-                result = text.split('\n').reverse().join('\n');
-                break;
-            case 'flip':
-                result = Array.from(text).reverse().map(function (c) {
-                    return FLIP_MAP[c] || c;
-                }).join('');
-                break;
+        // Mode buttons (PHP renders .tc-modes[data-group="rev-mode"] .tc-btn)
+        var group = document.querySelector('.tc-modes[data-group="rev-mode"]');
+        if (group && !group.dataset.tcModes) {
+            group.dataset.tcModes = '1';
+            var modeBtns = group.querySelectorAll('.tc-btn');
+            modeBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    modeBtns.forEach(function (b) { b.classList.remove('sel'); });
+                    btn.classList.add('sel');
+                    mode = btn.getAttribute('data-val') || 'chars';
+                });
+            });
+            var selected = group.querySelector('.tc-btn.sel');
+            if (selected) mode = selected.getAttribute('data-val') || 'chars';
         }
-        out.value = result;
-        TCTP.toast('Text reversed!');
-    });
 
-    // Copy
-    document.getElementById('tc-rvt-copy').addEventListener('click', function () {
-        TCTP.copyText(out.value, 'Reversed text');
-    });
+        reverseBtn.addEventListener('click', function () {
+            var text = inp.value;
+            if (!text) { TCTP.toast('Enter some text above to start reversing.', '\u26A0\uFE0F'); return; }
 
+            var result = '';
+            switch (mode) {
+                case 'words':
+                    result = text.split('\n').map(function (line) {
+                        return line.split(/\s+/).filter(Boolean).reverse().join(' ');
+                    }).join('\n');
+                    break;
+                case 'lines':
+                    result = text.split('\n').reverse().join('\n');
+                    break;
+                case 'flip':
+                    result = Array.from(text).reverse().map(function (c) {
+                        return FLIP_MAP[c] || c;
+                    }).join('');
+                    break;
+                case 'chars':
+                default:
+                    result = Array.from(text).reverse().join('');
+                    break;
+            }
+            out.value = result;
+            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < text.length ? ((1 - result.length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
+            TCTP.toast('Text reversed!');
+        });
+
+        var copyBtn = document.getElementById('tc-rvt-copy');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function () {
+                TCTP.copyText(out.value, 'Reversed text');
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Re-init after Elementor AJAX re-render
+    new MutationObserver(function () { init(); })
+        .observe(document.documentElement, { childList: true, subtree: true });
 })();

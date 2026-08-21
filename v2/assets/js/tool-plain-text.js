@@ -78,6 +78,8 @@
             setStat(['tc-pt-stats-after', 'tc-pt-stat-after'], text.length.toLocaleString());
             if (statusEl) statusEl.textContent = 'Converted to plain text.';
 
+            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', text.length.toLocaleString() + ' chars', (text.length < inp.value.length ? ((1 - text.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
+
             TCTP.setProgress('tc-pt-bar', 100, 'Done!');
             TCTP.hideProgress('tc-pt-bar');
             TCTP.toast('Converted to plain text!');

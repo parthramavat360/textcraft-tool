@@ -90,6 +90,7 @@
         }
         if(downloadBtn) downloadBtn.style.display = '';
         if(statsEl) statsEl.textContent = TCTP.formatSize(resultBlob.size) + ' | AVIF';
+        TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(resultBlob.size), (file.size > 0 ? ((1 - resultBlob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
         TCTP.toast('Image converted to AVIF');
       } catch(err){
         TCTP.hideProgress(progressWrap);

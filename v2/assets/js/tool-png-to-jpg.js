@@ -82,6 +82,7 @@
         }
         if(downloadBtn) downloadBtn.style.display = '';
         if(statsEl) statsEl.textContent = TCTP.formatSize(blob.size) + ' | JPG';
+        TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > 0 ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
         TCTP.toast('PNG converted to JPG');
         URL.revokeObjectURL(img.src);
       }, 'image/jpeg', q);

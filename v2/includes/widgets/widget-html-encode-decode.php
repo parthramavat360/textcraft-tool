@@ -45,10 +45,15 @@ class Widget_HTML_Encode_Decode extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-html-convert', 'Convert', 'tc-html-copy', 'Copy'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Output</div>
-        <textarea class="tc-textarea" id="tc-html-output" rows="10" readonly placeholder="Result will appear here..."></textarea>
-
         <?php $this->render_status('tc-html-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-html-result">
+            <textarea class="tc-textarea" id="tc-html-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

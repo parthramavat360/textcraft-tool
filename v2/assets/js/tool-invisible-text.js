@@ -1,50 +1,71 @@
-(function(){ 'use strict';
-var cards = document.querySelectorAll('.tc-invis-card-copy'); if (!cards.length) return;
-var typeSelect = document.getElementById('tc-it-type');
-var countInput = document.getElementById('tc-it-count');
-var btnGenerate = document.getElementById('tc-it-generate');
+/**
+ * Invisible Text Generator — Tool JS
+ * @package TextCraft_Tools_Pro
+ */
 
-var charMap = {
-    'space': '\u00A0',
-    'zero-width-space': '\u200B',
-    'zero-width-joiner': '\u200D',
-    'zero-width-non-joiner': '\u200C',
-    'soft-hyphen': '\u00AD',
-    'ogham-space': '\u1680',
-    'en-quad': '\u2000',
-    'em-quad': '\u2001',
-    'en-space': '\u2002',
-    'em-space': '\u2003',
-    'three-per-em': '\u2004',
-    'four-per-em': '\u2005',
-    'six-per-em': '\u2006',
-    'figure-space': '\u2007',
-    'punctuation-space': '\u2008',
-    'thin-space': '\u2009',
-    'hair-space': '\u200A',
-    'narrow-no-break': '\u202F',
-    'mathematical-space': '\u205F',
-    'ideographic-space': '\u3000',
-    'braille-empty': '\u2800',
-    'zero-width-joiner-dup': '\uFEFF'
-};
+(function () {
+    'use strict';
 
-cards.forEach(function(card){
-    card.addEventListener('click', function(){
-        var type = card.getAttribute('data-type') || (typeSelect ? typeSelect.value : 'space');
-        var char = charMap[type] || '\u200B';
-        if(TCTP && TCTP.copyText) TCTP.copyText(char);
-    });
-});
+    function init() {
+        var grid = document.getElementById('tc-invisible-grid');
+        var btnGenerate = document.getElementById('tc-it-generate');
+        var anchor = grid || btnGenerate;
+        if (!anchor || anchor.dataset.tcInit) return;
+        anchor.dataset.tcInit = '1';
 
-if(btnGenerate){
-    btnGenerate.addEventListener('click', function(){
-        var type = typeSelect ? typeSelect.value : 'space';
-        var count = parseInt(countInput.value, 10) || 1;
-        var char = charMap[type] || '\u200B';
-        var result = '';
-        for(var i = 0; i < count; i++) result += char;
-        if(TCTP && TCTP.copyText) TCTP.copyText(result);
-    });
-}
+        var countInput = document.getElementById('tc-it-count');
+        var resultArea = document.getElementById('tc-it-result-area');
+        var generated = document.getElementById('tc-it-generated');
+        var btnCopyAll = document.getElementById('tc-it-copy');
+        var statusEl = document.getElementById('tc-it-status');
+
+        function setStatus(msg) {
+            if (statusEl) statusEl.textContent = msg;
+        }
+
+        if (grid) {
+            grid.querySelectorAll('.tc-invisible-item').forEach(function (item) {
+                var btn = item.querySelector('button[data-copy]');
+                if (!btn) return;
+                btn.addEventListener('click', function () {
+                    var name = item.getAttribute('data-name') || 'Character';
+                    TCTP.copyText(item.getAttribute('data-char') || btn.getAttribute('data-copy'), name);
+                    setStatus('Copied ' + name + '.');
+                });
+            });
+        }
+
+        if (btnGenerate) {
+            btnGenerate.addEventListener('click', function () {
+                var count = parseInt(countInput && countInput.value, 10);
+                if (isNaN(count) || count < 1) count = 1;
+                if (count > 1000) count = 1000;
+
+                var result = '';
+                for (var i = 0; i < count; i++) result += '\u200B';
+
+                if (generated) generated.value = result;
+                if (resultArea) resultArea.style.display = '';
+                TCTP.updateResultPanel(count.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', '0%', 'Done');
+                setStatus('Generated ' + count + ' invisible character' + (count === 1 ? '' : 's') + '.');
+                TCTP.toast('Generated ' + count + ' invisible character' + (count === 1 ? '' : 's') + '!');
+            });
+        }
+
+        if (btnCopyAll) {
+            btnCopyAll.addEventListener('click', function () {
+                TCTP.copyText(generated ? generated.value : '', 'Invisible text');
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Re-init after Elementor AJAX re-render
+    new MutationObserver(function () { init(); })
+        .observe(document.documentElement, { childList: true, subtree: true });
 })();

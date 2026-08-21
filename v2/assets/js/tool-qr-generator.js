@@ -316,6 +316,7 @@
                 statusEl.textContent = 'QR code generated (' + mat.size + 'x' + mat.size + ' modules)';
                 statusEl.className = 'tc-status tc-status--success';
             }
+            TCTP.updateResultPanel(content.length.toLocaleString() + ' chars', 'QR Code', 'N/A', 'Done');
             TCTP.toast('QR code generated!');
         } catch (e) {
             TCTP.toast('Error generating QR: ' + e.message, '\u274C');

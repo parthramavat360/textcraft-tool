@@ -45,4 +45,12 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-jpg-result">
+            <div class="tc-preview" id="tc-jpg-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

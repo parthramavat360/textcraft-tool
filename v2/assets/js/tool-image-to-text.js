@@ -78,6 +78,7 @@
       TCTP.hideProgress('tc-ocr-progress');
       var text = result.data.text || '';
       if(output) output.value = text;
+      TCTP.updateResultPanel((file.size / 1024).toFixed(1) + ' KB', text.length.toLocaleString() + ' chars', '\u2014', 'Done');
       if(statusEl){
         var words = text.trim() ? text.trim().split(/\s+/).length : 0;
         statusEl.textContent = words + ' words | ' + text.length + ' characters extracted';

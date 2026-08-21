@@ -32,10 +32,13 @@ class Widget_Reverse_Text extends TextCraft_Tool_Base {
         <?php $this->render_textarea('tc-rvt-input', 'Type or paste text to reverse...', 7); ?>
 
         <?php $this->render_actions('tc-rvt-reverse', 'Reverse', 'tc-rvt-copy', 'Copy'); ?>
+        <?php
+    }
 
-        <div class="tc-result-area" style="margin-top:20px">
-            <div class="tc-label">Reversed Text</div>
-            <textarea class="tc-textarea" id="tc-rvt-output" readonly rows="7"></textarea>
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-rvt-result">
+            <textarea class="tc-textarea" id="tc-rvt-output" placeholder="Reversed text will appear here..." readonly rows="8"></textarea>
         </div>
         <?php
     }

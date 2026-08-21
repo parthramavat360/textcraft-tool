@@ -187,6 +187,8 @@
             if (downloadBtn) downloadBtn.style.display = '';
             TCTP.downloadBlob(blob, name);
             TCTP.toast(keepPages.length + ' pages remaining. Downloaded!');
+            var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
         } catch (err) {
             TCTP.toast('Failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-dp-progress');

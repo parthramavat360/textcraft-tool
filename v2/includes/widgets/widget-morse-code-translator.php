@@ -44,13 +44,18 @@ class Widget_Morse_Code_Translator extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-morse-translate', 'Translate', 'tc-morse-copy', 'Copy'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Output</div>
-        <textarea class="tc-textarea" id="tc-morse-output" rows="8" readonly placeholder="Translation will appear here..."></textarea>
-
         <div class="tc-label" style="margin-top:16px">Morse Code Reference</div>
         <div class="tc-morse-ref" id="tc-morse-ref"></div>
 
         <?php $this->render_status('tc-morse-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-morse-result">
+            <textarea class="tc-textarea" id="tc-morse-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

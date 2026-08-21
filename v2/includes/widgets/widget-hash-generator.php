@@ -46,10 +46,15 @@ class Widget_Hash_Generator extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-hash-generate', 'Generate Hashes', 'tc-hash-copy-all', 'Copy All'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Hash Results</div>
-        <div class="tc-hash-results" id="tc-hash-results"></div>
-
         <?php $this->render_status('tc-hash-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-hash-result">
+            <textarea class="tc-textarea" id="tc-hash-results" placeholder="Hash results will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

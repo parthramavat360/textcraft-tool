@@ -66,6 +66,7 @@
       }
       if(downloadBtn) downloadBtn.style.display = '';
       if(statsEl) statsEl.textContent = TCTP.formatSize(blob.size) + ' | PNG';
+      TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > 0 ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
       TCTP.toast('HEIC converted to PNG');
     }).catch(function(err){
       TCTP.hideProgress(progressWrap);

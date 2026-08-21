@@ -79,6 +79,7 @@
         var sep = getSep();
         var result = currentDirection === 'to-morse' ? toMorse(text, sep) : fromMorse(text);
         out.value = result;
+        TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < inp.value.length ? ((1 - result.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
         var statusEl = document.getElementById('tc-morse-status');
         if (statusEl) {
             statusEl.textContent = 'Translated ' + text.length + ' characters';

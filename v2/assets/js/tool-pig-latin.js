@@ -49,6 +49,8 @@
             if (out) out.value = result;
             if (statusEl) statusEl.textContent = 'Translated to Pig Latin.';
 
+            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < inp.value.length ? ((1 - result.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
+
             TCTP.setProgress('tc-pl-bar', 100, 'Done!');
             TCTP.hideProgress('tc-pl-bar');
             TCTP.toast('Translated to Pig Latin!');

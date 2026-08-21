@@ -103,6 +103,8 @@
             }), null, 2);
         }
 
+        TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', matches.length.toLocaleString() + ' match(es)', '\u2014', 'Done');
+
         TCTP.toast(matches.length + ' match(es) found!');
     }
 

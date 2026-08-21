@@ -71,6 +71,8 @@
             output.value = joined;
             if (resultText) resultText.value = joined;
 
+            TCTP.updateResultPanel('N/A', count + ' date(s)', 'N/A', 'Done');
+
             TCTP.toast(count + ' random dates generated!');
         });
 

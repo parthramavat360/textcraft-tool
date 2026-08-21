@@ -55,10 +55,13 @@ class Widget_Find_Replace extends TextCraft_Tool_Base {
                 <span class="tc-stat-value" id="tc-fr-replaced">0</span>
             </div>
         </div>
+        <?php
+    }
 
-        <div class="tc-result-area" style="margin-top:16px">
-            <div class="tc-label">Result</div>
-            <textarea class="tc-textarea" id="tc-fr-output" readonly rows="6"></textarea>
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-fr-result">
+            <textarea class="tc-textarea" id="tc-fr-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
         </div>
         <?php
     }

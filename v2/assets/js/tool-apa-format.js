@@ -70,6 +70,8 @@ generateBtn.addEventListener('click',function(){
     });
   }
   TCTP.activateBtn(generateBtn);
+  var origLen=(titleInput?titleInput.value.length:0)+(authorInput?authorInput.value.length:0)+(institutionInput?institutionInput.value.length:0)+(courseInput?courseInput.value.length:0)+(instructorInput?instructorInput.value.length:0);
+  TCTP.updateResultPanel(origLen.toLocaleString()+' chars',output.value.length.toLocaleString()+' chars',(output.value.length<origLen?((1-output.value.length/origLen)*100).toFixed(1)+'%':'0%'),'Done');
   TCTP.toast('APA title page generated.');
 });
 

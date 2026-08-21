@@ -93,6 +93,8 @@
             out.value = joined;
             if (resultText) resultText.value = joined;
 
+            TCTP.updateResultPanel('N/A', count + ' month(s)', 'N/A', 'Done');
+
             TCTP.toast(count + ' random month(s) generated!');
         });
 

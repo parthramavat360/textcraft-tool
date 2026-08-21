@@ -44,4 +44,12 @@ class Widget_Heic_To_Jpg extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-heic2j-result">
+            <div class="tc-preview" id="tc-heic2j-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

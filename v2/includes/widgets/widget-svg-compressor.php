@@ -37,10 +37,18 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-svg-compress', 'Compress SVG', 'tc-svg-download', 'Download'); ?>
 
-        <div class="tc-stats-row">
+        <div class="tc-stats-row" id="tc-svg-stats">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-svg-stat-orig">-</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Compressed</span><span class="tc-stat-value" id="tc-svg-stat-comp">-</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Saved</span><span class="tc-stat-value" id="tc-svg-stat-saved">-</span></div>
+        </div>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-svg-result">
+            <div class="tc-preview" id="tc-svg-preview">Upload a file to see preview</div>
         </div>
         <?php
     }

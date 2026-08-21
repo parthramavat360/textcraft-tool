@@ -55,4 +55,12 @@ class Widget_Character_Frequency_Counter extends TextCraft_Tool_Base {
         <?php $this->render_status('tc-freq-status'); ?>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-freq-result">
+            <textarea class="tc-textarea" id="tc-freq-output" placeholder="Frequency results will appear here..." readonly rows="8"></textarea>
+        </div>
+        <?php
+    }
 }

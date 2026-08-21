@@ -147,6 +147,7 @@
                 document.getElementById('tc-pdf-stat-orig').textContent = formatSize(ab.byteLength);
                 document.getElementById('tc-pdf-stat-comp').textContent = formatSize(best.byteLength);
                 document.getElementById('tc-pdf-stat-saved').textContent = saved + '%';
+                TCTP.updateResultPanel(formatSize(ab.byteLength), formatSize(best.byteLength), saved + '%', 'Done');
                 TCTP.setProgress('tc-pdf-progress', 100, 'Done!');
                 TCTP.toast('Compressed! Saved ' + saved + '%');
             } else {

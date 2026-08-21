@@ -66,6 +66,7 @@
             case 'encode-full': result = encodeFullURL(text); break;
         }
         out.value = result;
+        TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < text.length ? ((1 - result.length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
         var statusEl = document.getElementById('tc-url-status');
         if (statusEl) {
             statusEl.textContent = 'Converted ' + text.length + ' characters';

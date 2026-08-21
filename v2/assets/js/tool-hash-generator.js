@@ -128,6 +128,7 @@
             }
         }
         if (resultsEl) resultsEl.innerHTML = html;
+        TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', algos.length + ' hash(es)', 'N/A', 'Done');
         var statusEl = document.getElementById('tc-hash-status');
         if (statusEl) {
             statusEl.textContent = 'Generated ' + algos.length + ' hash(es) from ' + text.length + ' characters';

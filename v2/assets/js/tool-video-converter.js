@@ -190,6 +190,7 @@
                     TCTP.formatSize(convertedBlob.size) + ' (' + fmt.ext.toUpperCase() + ')'
                 );
                 setDownloadEnabled(true);
+                TCTP.updateResultPanel(TCTP.formatSize(inputFile.size), TCTP.formatSize(convertedBlob.size), (inputFile.size > convertedBlob.size ? ((1 - convertedBlob.size / inputFile.size) * 100).toFixed(1) + '%' : '0%'), 'Done');
                 TCTP.toast('Video converted to ' + fmt.ext.toUpperCase() + '!');
             } catch (e) {
                 setStatus('Conversion failed: ' + e.message);

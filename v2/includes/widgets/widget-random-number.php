@@ -87,9 +87,14 @@ class Widget_Random_Number extends TextCraft_Tool_Base {
             <div class="tc-stat-item"><span class="tc-stat-label">Max Result</span><span class="tc-stat-value" id="tc-rn-stat-max">-</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Average</span><span class="tc-stat-value" id="tc-rn-stat-avg">-</span></div>
         </div>
+        <?php
+    }
 
-        <div class="tc-label" style="margin-top:16px">Generated Numbers</div>
-        <textarea class="tc-textarea" id="tc-rn-output" rows="10" readonly placeholder="Your random numbers will appear here..."></textarea>
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-rn-result">
+            <textarea class="tc-textarea" id="tc-rn-output" placeholder="Generated numbers will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

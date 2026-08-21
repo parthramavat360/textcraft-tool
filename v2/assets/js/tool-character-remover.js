@@ -45,6 +45,7 @@
             var removed = origLen - result.length;
 
             if (out) out.value = result;
+            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < text.length ? ((1 - result.length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
             setStat(['tc-cr-stats-removed', 'tc-cr-stat-removed'], removed.toLocaleString());
             setStat(['tc-cr-stats-original', 'tc-cr-stat-original', 'tc-cr-stat-orig'], origLen.toLocaleString());
             setStat(['tc-cr-stats-result', 'tc-cr-stat-result'], result.length.toLocaleString());

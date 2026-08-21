@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace TextCraft_Tools_Pro;
+
+use Elementor\Controls_Manager;
 defined('ABSPATH') || exit;
 
 class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
@@ -50,7 +52,7 @@ class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
         $this->add_control(
             'edr_remove_em_dash',
             [
-                'label'        => esc_html__('Em Dash (—)', 'textcrafttoolspro'),
+                'label'        => esc_html__('Em Dash (â€”)', 'textcrafttoolspro'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => 'yes',
@@ -60,7 +62,7 @@ class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
         $this->add_control(
             'edr_remove_en_dash',
             [
-                'label'        => esc_html__('En Dash (–)', 'textcrafttoolspro'),
+                'label'        => esc_html__('En Dash (â€“)', 'textcrafttoolspro'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => 'yes',

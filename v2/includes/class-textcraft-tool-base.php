@@ -346,29 +346,33 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                     <span id="tc-status-chip">Idle</span>
                 </div>
                 <div class="tc-panel-body">
-                    <?php if (method_exists($this, 'render_result_content')): ?>
-                        <?php $this->render_result_content($settings); ?>
-                    <?php else: ?>
-                        <div class="tc-stats">
-                            <div><span>Input</span><b id="tc-stat-input">—</b></div>
-                            <div><span>Output</span><b id="tc-stat-output">—</b></div>
-                            <div class="saved"><span>Saved</span><b id="tc-stat-saved">—</b></div>
+                    <div class="tc-stats">
+                        <div><span>Original</span><b id="tc-stat-orig">—</b></div>
+                        <div><span>Compressed</span><b id="tc-stat-comp">—</b></div>
+                        <div class="saved"><span>Saved</span><b id="tc-stat-saved">—</b></div>
+                    </div>
+                    <div class="tc-tabs-header">
+                        <h4>Preview</h4>
+                        <div class="tc-tabs">
+                            <button class="on" data-tab="original">Original</button>
+                            <button data-tab="result">Compressed</button>
                         </div>
-                        <div class="tc-tabs-header">
-                            <h4>Preview</h4>
-                            <div class="tc-tabs">
-                                <button class="on" data-tab="original">Original</button>
-                                <button data-tab="result">Result</button>
-                            </div>
-                        </div>
-                        <div class="tc-preview" id="tc-preview">Preview appears after processing</div>
-                    <?php endif; ?>
+                    </div>
+                    <div class="tc-preview" id="tc-preview">Preview appears after processing</div>
+                    <?php $this->render_result_content($settings); ?>
                 </div>
             </div>
             <?php $this->render_side_panel($settings); ?>
         </div>
         <?php
     }
+
+    /**
+     * Override in child to add extra content below the standard result panel.
+     * The standard stats (tc-stat-orig/comp/saved), preview tabs, and preview
+     * area are always rendered by render_result().
+     */
+    protected function render_result_content(array $settings): void {}
 
     // ── Side panel (What stays intact / tips) ──────────────────
 

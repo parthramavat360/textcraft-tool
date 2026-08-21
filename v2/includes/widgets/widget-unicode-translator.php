@@ -37,13 +37,18 @@ class Widget_Unicode_Translator extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-unicode-convert', 'Convert', 'tc-unicode-copy', 'Copy'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Output</div>
-        <textarea class="tc-textarea" id="tc-unicode-output" rows="8" readonly placeholder="Result will appear here..."></textarea>
-
         <div class="tc-label" style="margin-top:16px">Character Details</div>
         <div class="tc-unicode-details" id="tc-unicode-details"></div>
 
         <?php $this->render_status('tc-unicode-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-unicode-result">
+            <textarea class="tc-textarea" id="tc-unicode-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

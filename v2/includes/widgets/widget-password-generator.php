@@ -81,8 +81,14 @@ class Widget_Password_Generator extends TextCraft_Tool_Base {
             <div class="tc-strength-label" id="tc-pw-strength-label"></div>
         </div>
 
-        <div class="tc-label" style="margin-top:16px">Generated Password(s)</div>
-        <textarea class="tc-textarea" id="tc-pw-output" rows="5" readonly placeholder="Your generated password will appear here..."></textarea>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-pw-result">
+            <textarea class="tc-textarea" id="tc-pw-output" placeholder="Generated password will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

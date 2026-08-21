@@ -54,4 +54,12 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-pdf-result">
+            <div class="tc-preview">Upload a file to see preview. Compression stats appear beside the controls, and the page-1 preview renders in the tool panel.</div>
+        </div>
+        <?php
+    }
 }

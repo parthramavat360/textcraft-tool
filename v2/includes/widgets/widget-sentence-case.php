@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace TextCraft_Tools_Pro;
+
+use Elementor\Controls_Manager;
+
 defined('ABSPATH') || exit;
 
 class Widget_Sentence_Case extends TextCraft_Tool_Base {

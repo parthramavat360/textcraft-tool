@@ -156,6 +156,8 @@
             out.value = joined;
             if (resultText) resultText.value = joined;
 
+            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', joined.length.toLocaleString() + ' chars', (joined.length < inp.value.length ? ((1 - joined.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
+
             TCTP.toast('Phonetic spelling generated!');
         });
 

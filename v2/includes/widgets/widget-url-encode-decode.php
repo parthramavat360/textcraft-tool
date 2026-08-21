@@ -37,10 +37,15 @@ class Widget_URL_Encode_Decode extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-url-convert', 'Convert', 'tc-url-copy', 'Copy'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Output</div>
-        <textarea class="tc-textarea" id="tc-url-output" rows="8" readonly placeholder="Result will appear here..."></textarea>
-
         <?php $this->render_status('tc-url-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-url-result">
+            <textarea class="tc-textarea" id="tc-url-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

@@ -155,6 +155,10 @@
             if (mergedEl) mergedEl.textContent = TCTP.formatSize(mergedBlob.size);
             if (downloadBtn) downloadBtn.style.display = '';
             TCTP.toast('Merged ' + files.length + ' PDFs!');
+            var totalIn = 0;
+            files.forEach(function (f) { totalIn += f.size; });
+            var saved = totalIn > mergedBlob.size ? ((1 - mergedBlob.size / totalIn) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedBlob.size), saved + '%', 'Done');
         } catch (err) {
             TCTP.toast('Merge failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-pm-progress');

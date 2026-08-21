@@ -51,4 +51,12 @@ class Widget_Pdf_To_Png extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-p2p-result">
+            <div class="tc-preview" id="tc-p2p-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

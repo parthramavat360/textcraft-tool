@@ -44,4 +44,12 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-pm-result">
+            <div class="tc-preview" id="tc-pm-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

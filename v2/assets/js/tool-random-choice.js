@@ -109,6 +109,8 @@
                 if (output) output.value = output.value ? output.value + '\n' + entry : entry;
                 if (resultText) resultText.value = winners.join('\n');
 
+                TCTP.updateResultPanel(choices.length + ' choice(s)', howMany + ' winner(s)', 'N/A', 'Done');
+
                 TCTP.toast('Picked: ' + winners.join(', '));
             }
         });

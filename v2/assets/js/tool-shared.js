@@ -267,6 +267,23 @@
     };
 
     // ═══════════════════════════════════════════════════════════
+    //  RESULT PANEL STATS (shared right-col panel)
+    // ═══════════════════════════════════════════════════════════
+
+    TCTP.updateResultPanel = function (orig, comp, saved, status) {
+        var el = function (id, v) { var x = document.getElementById(id); if (x) x.textContent = v; };
+        el('tc-stat-orig', orig);
+        el('tc-stat-comp', comp);
+        el('tc-stat-saved', saved);
+        el('tc-status-chip', status || 'Done');
+    };
+
+    TCTP.setResultStatus = function (text) {
+        var el = document.getElementById('tc-status-chip');
+        if (el) el.textContent = text;
+    };
+
+    // ═══════════════════════════════════════════════════════════
     //  SCOPING HELPER
     // ═══════════════════════════════════════════════════════════
 

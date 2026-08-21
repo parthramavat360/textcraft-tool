@@ -81,6 +81,8 @@
             out.value = result;
             if (resultText) resultText.value = result;
 
+            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < inp.value.length ? ((1 - result.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
+
             TCTP.toast('NATO conversion complete!');
         });
 

@@ -101,6 +101,8 @@
             var resultText = document.getElementById('tc-rip-result-text');
             if (resultText) resultText.value = joined;
 
+            TCTP.updateResultPanel('N/A', count + ' IP address(es)', 'N/A', 'Done');
+
             TCTP.toast(count + ' ' + ipMode.toUpperCase() + ' addresses generated!');
         });
 

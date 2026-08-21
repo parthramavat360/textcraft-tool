@@ -45,10 +45,15 @@ class Widget_Binary_Translator extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-bin-convert', 'Convert', 'tc-bin-copy', 'Copy'); ?>
 
-        <div class="tc-label" style="margin-top:16px">Output</div>
-        <textarea class="tc-textarea" id="tc-bin-output" rows="8" readonly placeholder="Result will appear here..."></textarea>
-
         <?php $this->render_status('tc-bin-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-bin-result">
+            <textarea class="tc-textarea" id="tc-bin-output" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

@@ -104,6 +104,7 @@
       var ascii = lines.join('\n');
       if(output) output.value = ascii;
       if(statusEl) statusEl.textContent = w + '\u00D7' + h + ' chars | ' + ascii.length + ' total characters';
+      TCTP.updateResultPanel((file.size / 1024).toFixed(1) + ' KB', ascii.length.toLocaleString() + ' chars', '\u2014', 'Done');
       TCTP.setProgress('tc-ascii-progress', 100, 'Done!');
       TCTP.hideProgress('tc-ascii-progress');
       TCTP.toast('ASCII art generated!');

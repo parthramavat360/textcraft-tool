@@ -136,6 +136,7 @@
         }
 
         out.value = ids.join('\n');
+        TCTP.updateResultPanel('N/A', count + ' ID(s)', 'N/A', 'Done');
         TCTP.toast(count + ' ID(s) generated!');
     });
 

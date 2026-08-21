@@ -98,9 +98,15 @@ class Widget_QR_Generator extends TextCraft_Tool_Base {
 
         <?php $this->render_actions('tc-qr-generate', 'Generate QR Code', 'tc-qr-download-svg', 'Download SVG'); ?>
 
-        <div class="tc-qr-preview" id="tc-qr-preview"></div>
-
         <?php $this->render_status('tc-qr-status'); ?>
+        <?php
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-qr-result">
+            <textarea class="tc-textarea" id="tc-qr-preview" placeholder="QR code will appear here..." readonly rows="8"></textarea>
+        </div>
         <?php
     }
 }

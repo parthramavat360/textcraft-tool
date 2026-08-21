@@ -52,4 +52,12 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-rp-result">
+            <div class="tc-preview" id="tc-rp-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

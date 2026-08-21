@@ -52,4 +52,12 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-p2j-result">
+            <div class="tc-preview" id="tc-p2j-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

@@ -70,6 +70,7 @@
                     document.getElementById('tc-jpg-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-jpg-stat-saved').textContent = saved + '%';
 
+                    TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
                     TCTP.setProgress('tc-jpg-progress', 100, 'Done!');
                     TCTP.toast('Compressed! Saved ' + saved + '%');
                 }, 'image/jpeg', quality / 100);

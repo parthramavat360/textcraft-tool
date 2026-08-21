@@ -68,6 +68,8 @@
             output.value = result;
             if (resultText) resultText.value = result;
 
+            TCTP.updateResultPanel('N/A', count + ' character(s)', 'N/A', 'Done');
+
             TCTP.toast('Random characters generated!');
         });
 

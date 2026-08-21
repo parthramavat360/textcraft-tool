@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace TextCraft_Tools_Pro;
+
+use Elementor\Controls_Manager;
 defined('ABSPATH') || exit;
 
 class Widget_Invisible_Text extends TextCraft_Tool_Base {
@@ -53,32 +55,32 @@ class Widget_Invisible_Text extends TextCraft_Tool_Base {
         ?>
         <div class="tc-invisible-grid" id="tc-invisible-grid">
             <div class="tc-invisible-item" data-char="&#x200B;" data-name="Zero-Width Space">
-                <span class="tc-invisible-preview">​</span>
+                <span class="tc-invisible-preview">â€‹</span>
                 <span class="tc-invisible-label">U+200B</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x200B;">Copy</button>
             </div>
             <div class="tc-invisible-item" data-char="&#x200D;" data-name="Zero-Width Joiner">
-                <span class="tc-invisible-preview">‍</span>
+                <span class="tc-invisible-preview">â€</span>
                 <span class="tc-invisible-label">U+200D</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x200D;">Copy</button>
             </div>
             <div class="tc-invisible-item" data-char="&#x200C;" data-name="Zero-Width Non-Joiner">
-                <span class="tc-invisible-preview">‌</span>
+                <span class="tc-invisible-preview">â€Œ</span>
                 <span class="tc-invisible-label">U+200C</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x200C;">Copy</button>
             </div>
             <div class="tc-invisible-item" data-char="&#x2800;" data-name="Braille Blank">
-                <span class="tc-invisible-preview">⠀</span>
+                <span class="tc-invisible-preview">â €</span>
                 <span class="tc-invisible-label">U+2800</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x2800;">Copy</button>
             </div>
             <div class="tc-invisible-item" data-char="&#x1680;" data-name="Ogham Space Mark">
-                <span class="tc-invisible-preview"> </span>
+                <span class="tc-invisible-preview">áš€</span>
                 <span class="tc-invisible-label">U+1680</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x1680;">Copy</button>
             </div>
             <div class="tc-invisible-item" data-char="&#x180E;" data-name="Mongolian Vowel Separator">
-                <span class="tc-invisible-preview">᠎</span>
+                <span class="tc-invisible-preview">á Ž</span>
                 <span class="tc-invisible-label">U+180E</span>
                 <button class="tc-btn tc-btn--ghost tc-btn--sm" type="button" data-copy="&#x180E;">Copy</button>
             </div>
@@ -88,11 +90,15 @@ class Widget_Invisible_Text extends TextCraft_Tool_Base {
             <input type="number" class="tc-input tc-input--sm" id="tc-it-count" min="1" max="1000" value="10">
             <button class="tc-btn tc-btn--accent" id="tc-it-generate" type="button">Generate</button>
         </div>
-        <div class="tc-result-area" id="tc-it-result-area" style="display:none">
-            <textarea class="tc-textarea" id="tc-it-generated" readonly></textarea>
-            <button class="tc-btn tc-btn--ghost" id="tc-it-copy" type="button">Copy All</button>
-        </div>
         <?php
         $this->render_status('tc-it-status');
+    }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-it-result">
+            <textarea class="tc-textarea" id="tc-it-result-area" placeholder="Result will appear here..." readonly rows="8"></textarea>
+        </div>
+        <?php
     }
 }

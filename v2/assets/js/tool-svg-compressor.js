@@ -100,6 +100,7 @@
             var statsEl = document.getElementById('tc-svg-stats');
             if (statsEl) statsEl.style.display = '';
 
+            TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
             TCTP.setProgress('tc-svg-progress', 100, 'Done!');
             TCTP.toast('Optimized! Saved ' + saved + '%');
         };

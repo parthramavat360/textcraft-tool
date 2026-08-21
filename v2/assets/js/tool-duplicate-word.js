@@ -80,6 +80,7 @@
                 ? dupCount + ' duplicate word' + (dupCount === 1 ? '' : 's') + ' found.'
                 : 'No duplicate words found.';
 
+            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', words.length.toLocaleString() + ' words', (dupCount > 0 ? dupCount.toLocaleString() + ' dups' : '0%'), 'Done');
             TCTP.setProgress('tc-dw-bar', 100, 'Done!');
             TCTP.hideProgress('tc-dw-bar');
 

@@ -64,17 +64,4 @@ class Widget_Case_Converter extends TextCraft_Tool_Base {
         </div>
         <?php
     }
-
-    protected function render_stats_panel_row(array $items): void {
-        ?>
-        <div class="tc-stats-row">
-            <?php foreach ($items as $item): ?>
-                <div class="tc-stat-item">
-                    <span class="tc-stat-label"><?php echo esc_html($item['label']); ?></span>
-                    <span class="tc-stat-value" id="<?php echo esc_attr($item['id']); ?>">0</span>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <?php
-    }
 }

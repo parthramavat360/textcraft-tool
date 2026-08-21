@@ -56,4 +56,12 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-j2w-result">
+            <div class="tc-preview" id="tc-j2w-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }

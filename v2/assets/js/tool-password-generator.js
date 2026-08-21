@@ -157,6 +157,7 @@
             }
 
             out.value = passwords.join('\n');
+            TCTP.updateResultPanel('N/A', passwords.length + ' password(s)', 'N/A', 'Done');
 
             if (passwords.length === 1) {
                 var str = analyseStrength(passwords[0], pool);

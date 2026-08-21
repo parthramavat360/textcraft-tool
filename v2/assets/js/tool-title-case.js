@@ -44,6 +44,7 @@
             });
 
             if (out) out.value = result;
+            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < text.length ? ((1 - result.length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
             setStat(['tc-title-stats-words', 'tc-title-stat-words'], result.split(/\s+/).filter(Boolean).length.toLocaleString());
             setStat(['tc-title-stats-chars', 'tc-title-stat-chars'], result.length.toLocaleString());
             if (statusEl) statusEl.textContent = 'Converted to Title Case.';

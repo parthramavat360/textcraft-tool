@@ -104,6 +104,8 @@
             default: out.value = formatted.join('\n');
         }
 
+        TCTP.updateResultPanel('N/A', numbers.length + ' number(s)', 'N/A', 'Done');
+
         var minRes = Math.min.apply(null, numbers);
         var maxRes = Math.max.apply(null, numbers);
         var sum = numbers.reduce(function (s, n) { return s + n; }, 0);

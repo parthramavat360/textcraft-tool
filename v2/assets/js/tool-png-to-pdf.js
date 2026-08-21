@@ -83,6 +83,10 @@
             if(downloadBtn) downloadBtn.style.display = '';
             if(statsEl) statsEl.textContent = TCTP.formatSize(resultBlob.size) + ' | ' + total + ' pages';
             TCTP.toast('PDF created');
+            var totalIn = 0;
+            files.forEach(function(f){ totalIn += f.size; });
+            var saved = totalIn > resultBlob.size ? ((1 - resultBlob.size / totalIn) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(resultBlob.size), saved + '%', 'Done');
           });
         }
 
