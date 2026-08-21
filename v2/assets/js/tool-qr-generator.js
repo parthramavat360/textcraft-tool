@@ -9,7 +9,6 @@
     'use strict';
 
     var generateBtn = document.getElementById('tc-qr-generate');
-    var previewEl = document.getElementById('tc-qr-preview');
     if (!generateBtn) return;
 
     var currentType = 'text';
@@ -308,9 +307,8 @@
             var sizeEl = document.getElementById('tc-qr-size');
             var size = sizeEl ? parseInt(sizeEl.value) || 256 : 256;
             lastSvg = renderSvg(mat, size);
-            if (previewEl) {
-                previewEl.innerHTML = lastSvg;
-            }
+            TCTP.showResultText(lastSvg);
+            TCTP.switchToResultTab();
             var statusEl = document.getElementById('tc-qr-status');
             if (statusEl) {
                 statusEl.textContent = 'QR code generated (' + mat.size + 'x' + mat.size + ' modules)';

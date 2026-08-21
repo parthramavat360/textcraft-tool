@@ -48,11 +48,5 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-p2s-result">
-            <div class="tc-preview" id="tc-p2s-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

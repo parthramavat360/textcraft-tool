@@ -1,5 +1,5 @@
 /**
- * JPG to SVG Converter — Tool JS
+ * JPG to SVG Converter â€” Tool JS
  * @package TextCraft_Tools_Pro
  */
 
@@ -121,6 +121,7 @@
         setStat('tc-j2svg-stat-comp', (svgStr.length / 1024).toFixed(1) + ' KB');
         setStat('tc-j2svg-stat-saved', 'SVG');
         TCTP.updateResultPanel(TCTP.formatSize(file.size), (svgStr.length / 1024).toFixed(1) + ' KB', 'SVG', 'Done');
+        TCTP.showResultText(resultSVG);
         TCTP.switchToResultTab();
         if(downloadBtn) downloadBtn.style.display = '';
         TCTP.toast('Converted to SVG!');

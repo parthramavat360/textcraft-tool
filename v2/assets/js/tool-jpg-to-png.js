@@ -1,5 +1,5 @@
 /**
- * JPG to PNG Converter — Tool JS
+ * JPG to PNG Converter â€” Tool JS
  *
  * Client-side JPG-to-PNG conversion using canvas.toBlob('image/png').
  *
@@ -12,7 +12,7 @@
     var file = null;
     var convertedBlob = null;
 
-    // ── Drop zone ────────────────────────────────────────────
+    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-j2p-drop', 'tc-j2p-drop-input', function (f) {
         if (!f.type.match(/image\/jpe?g/)) {
@@ -30,7 +30,7 @@
         TCTP.hideFileRow('tc-j2p-file');
     });
 
-    // ── Convert ──────────────────────────────────────────────
+    // â”€â”€ Convert â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     document.getElementById('tc-j2p-convert').addEventListener('click', function () {
         if (!file) { TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
@@ -59,6 +59,7 @@
                     document.getElementById('tc-j2p-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-j2p-stat-diff').textContent = (diff > 0 ? '+' : '') + diff + '%';
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), (diff > 0 ? '+' : '') + diff + '%', 'Done');
+                                        TCTP.showResultPreview(URL.createObjectURL(convertedBlob));
                     TCTP.switchToResultTab();
                     TCTP.setProgress('tc-j2p-progress', 100, 'Done!');
                     TCTP.toast('Converted to PNG!');

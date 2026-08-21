@@ -1,5 +1,5 @@
 /**
- * JPG Compressor — Tool JS
+ * JPG Compressor â€” Tool JS
  *
  * Client-side JPG compression using canvas.toDataURL with quality control.
  * Supports batch processing and ZIP download via JSZip.
@@ -23,7 +23,7 @@
         qualityVal.textContent = quality;
     });
 
-    // ── Drop zone ────────────────────────────────────────────
+    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-jpg-drop', 'tc-jpg-drop-input', function (f) {
         if (!f.type.match(/image\/jpe?g/)) {
@@ -41,7 +41,7 @@
         TCTP.hideFileRow('tc-jpg-file');
     });
 
-    // ── Compress ─────────────────────────────────────────────
+    // â”€â”€ Compress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     document.getElementById('tc-jpg-compress').addEventListener('click', function () {
         if (!file) { TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
@@ -71,6 +71,7 @@
                     document.getElementById('tc-jpg-stat-saved').textContent = saved + '%';
 
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                                        TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
                     TCTP.switchToResultTab();
                     TCTP.setProgress('tc-jpg-progress', 100, 'Done!');
                     TCTP.toast('Compressed! Saved ' + saved + '%');
@@ -81,7 +82,7 @@
         reader.readAsDataURL(file);
     });
 
-    // ── Download ─────────────────────────────────────────────
+    // â”€â”€ Download â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     document.getElementById('tc-jpg-download').addEventListener('click', function () {
         if (!compressedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }

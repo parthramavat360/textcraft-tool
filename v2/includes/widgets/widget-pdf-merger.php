@@ -25,7 +25,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Merge multiple PDF documents into a single file. Drag to reorder files before merging. Everything runs in your browser â€” your files are never uploaded.
+            Merge multiple PDF documents into a single file. Drag to reorder files before merging. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-pm-drop', '.pdf,application/pdf', 'Drag & drop multiple PDFs here or click to browse'); ?>
@@ -47,11 +47,5 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-pm-result">
-            <div class="tc-preview" id="tc-pm-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

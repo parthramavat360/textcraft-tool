@@ -1,5 +1,5 @@
 /**
- * GIF Compressor — Tool JS
+ * GIF Compressor â€” Tool JS
  *
  * Client-side GIF compression with gif.js. Animated GIFs are decoded
  * frame-by-frame (gifuct-js) so all frames, delays and disposal methods
@@ -58,7 +58,7 @@
         });
     }
 
-    // ── Quality slider ───────────────────────────────────────
+    // â”€â”€ Quality slider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // gif.js "quality" is a color-sampling threshold where LOWER
     // values produce BETTER output, so the UI % is inverted here.
 
@@ -75,7 +75,7 @@
         return Math.max(1, Math.round(20 - (qualityPct / 100) * 19));
     }
 
-    // ── Drop zone ────────────────────────────────────────────
+    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-gif-drop', 'tc-gif-drop-input', function (f) {
         if (!f.type.match(/image\/gif/) && !/\.gif$/i.test(f.name)) {
@@ -94,7 +94,7 @@
         TCTP.hideFileRow('tc-gif-file');
     });
 
-    // ── GIF parsing ──────────────────────────────────────────
+    // â”€â”€ GIF parsing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     function looksAnimated(buffer) {
         var bytes = new Uint8Array(buffer);
@@ -120,7 +120,7 @@
         }
     }
 
-    // ── Encoding ─────────────────────────────────────────────
+    // â”€â”€ Encoding â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     function makeEncoder(width, height) {
         return new GIF({
@@ -186,12 +186,13 @@
         if (compEl) compEl.textContent = TCTP.formatSize(compSize);
         if (savedEl) savedEl.textContent = saved + '%';
         TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                            TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
         TCTP.switchToResultTab();
         TCTP.setProgress('tc-gif-progress', 100, 'Done!');
         TCTP.toast('Compressed! Saved ' + saved + '%');
     }
 
-    // ── Compress ─────────────────────────────────────────────
+    // â”€â”€ Compress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     var compressBtn = document.getElementById('tc-gif-compress');
     if (compressBtn) compressBtn.addEventListener('click', async function () {
@@ -233,7 +234,7 @@
         }
 
         if (animated && !decoded) {
-            TCTP.toast('Could not decode animation frames — only the first frame will be kept.', '\u26A0\uFE0F', 5000);
+            TCTP.toast('Could not decode animation frames â€” only the first frame will be kept.', '\u26A0\uFE0F', 5000);
         }
 
         var url = URL.createObjectURL(file);
@@ -260,7 +261,7 @@
         img.src = url;
     });
 
-    // ── Download ─────────────────────────────────────────────
+    // â”€â”€ Download â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     var downloadBtn = document.getElementById('tc-gif-download');
     if (downloadBtn) downloadBtn.addEventListener('click', function () {

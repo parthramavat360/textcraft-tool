@@ -160,6 +160,14 @@
         if (sizeEl) sizeEl.textContent = TCTP.formatSize(file.size);
         row.style.display = '';
         row.classList.add('visible');
+        // Auto-show original preview for image files
+        if (file.type && file.type.match(/^image\//) && document.getElementById('tc-preview-orig')) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                TCTP.showOriginalPreview(ev.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     /**
@@ -296,11 +304,17 @@
                 // Toggle button active state
                 tabBtns.forEach(function (b) { b.classList.remove('on'); });
                 btn.classList.add('on');
-                // Show/hide preview panels
+                // Show/hide preview panels using class
                 var orig = document.getElementById('tc-preview-orig');
                 var result = document.getElementById('tc-preview-result');
-                if (orig) orig.style.display = tab === 'original' ? '' : 'none';
-                if (result) result.style.display = tab === 'result' ? '' : 'none';
+                if (orig) {
+                    if (tab === 'original') { orig.classList.remove('is-hidden'); }
+                    else { orig.classList.add('is-hidden'); }
+                }
+                if (result) {
+                    if (tab === 'result') { result.classList.remove('is-hidden'); }
+                    else { result.classList.add('is-hidden'); }
+                }
             });
         });
     };
@@ -324,6 +338,36 @@
         if (origBtn && !origBtn.classList.contains('on')) {
             origBtn.click();
         }
+    };
+
+    /**
+     * Show an image in the Original preview panel.
+     * @param {string} url - Object URL or data URL of the image
+     */
+    TCTP.showOriginalPreview = function (url) {
+        var el = document.getElementById('tc-preview-orig');
+        if (!el) return;
+        el.innerHTML = '<img src="' + url + '" alt="Original">';
+    };
+
+    /**
+     * Show an image in the Compressed/Result preview panel.
+     * @param {string} url - Object URL or data URL of the image
+     */
+    TCTP.showResultPreview = function (url) {
+        var el = document.getElementById('tc-preview-result');
+        if (!el) return;
+        el.innerHTML = '<img src="' + url + '" alt="Result">';
+    };
+
+    /**
+     * Show text content in the Result preview panel.
+     * @param {string} text - Text to display
+     */
+    TCTP.showResultText = function (text) {
+        var el = document.getElementById('tc-preview-result');
+        if (!el) return;
+        el.textContent = text;
     };
 
     // Auto-init tabs on DOMContentLoaded

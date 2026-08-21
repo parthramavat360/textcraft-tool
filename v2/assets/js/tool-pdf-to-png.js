@@ -1,5 +1,5 @@
 /**
- * PDF to PNG — Tool JS
+ * PDF to PNG â€” Tool JS
  *
  * Drop zone, DPI select, render pages to canvas, export as PNG,
  * download ZIP. Requires pdf.js, JSZip loaded dynamically.
@@ -122,6 +122,7 @@
             TCTP.toast('Exported ' + numPages + ' pages as PNG!');
             var saved = file.size > zipBlob.size ? ((1 - zipBlob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(zipBlob.size), saved + '%', 'Done');
+                                TCTP.showResultPreview(URL.createObjectURL(zipBlob));
             TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Conversion failed: ' + err.message, '\u274C');

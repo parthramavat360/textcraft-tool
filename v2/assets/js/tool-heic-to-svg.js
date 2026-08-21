@@ -99,6 +99,7 @@
         if(downloadBtn) downloadBtn.style.display = '';
         if(statsEl) statsEl.textContent = (resultSVG.length / 1024).toFixed(1) + ' KB | SVG';
         TCTP.updateResultPanel(TCTP.formatSize(file.size), (resultSVG.length / 1024).toFixed(1) + ' KB', 'SVG', 'Done');
+        TCTP.showResultText(resultSVG);
         TCTP.switchToResultTab();
         TCTP.toast('HEIC converted to SVG');
         URL.revokeObjectURL(img.src);

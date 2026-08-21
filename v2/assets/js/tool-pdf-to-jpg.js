@@ -1,5 +1,5 @@
 /**
- * PDF to JPG — Tool JS
+ * PDF to JPG â€” Tool JS
  *
  * Drop zone, DPI select, render each page to canvas, export as JPG,
  * download ZIP. Requires pdf.js, JSZip loaded dynamically.
@@ -102,6 +102,7 @@
             TCTP.toast('Exported ' + numPages + ' pages as JPG!');
             var saved = file.size > zipBlob.size ? ((1 - zipBlob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(zipBlob.size), saved + '%', 'Done');
+                                TCTP.showResultPreview(URL.createObjectURL(zipBlob));
             TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Conversion failed: ' + err.message, '\u274C');

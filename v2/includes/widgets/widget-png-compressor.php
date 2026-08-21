@@ -25,7 +25,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress PNG images losslessly at full original resolution â€” no quality loss, transparency preserved. Optional downscale available below.
+            Compress PNG images losslessly at full original resolution ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no quality loss, transparency preserved. Optional downscale available below.
         </div>
 
         <?php $this->render_drop_zone('tc-png-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>
@@ -56,11 +56,5 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-png-result">
-            <div class="tc-preview" id="tc-png-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

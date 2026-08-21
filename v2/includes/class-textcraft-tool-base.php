@@ -367,7 +367,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                         </div>
                     </div>
                     <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">Original preview will appear here</div>
-                    <div class="tc-preview" data-tab-content="result" id="tc-preview-result" style="display:none">Compressed preview will appear here</div>
+                    <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">Compressed preview will appear here</div>
                     <?php endif; ?>
                     <?php $this->render_result_content($settings); ?>
                 </div>

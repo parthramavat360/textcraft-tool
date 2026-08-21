@@ -43,14 +43,5 @@ class Widget_Remove_Background extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-rmbg-result" style="text-align:center;padding:20px;">
-            <div id="tc-rmbg-preview" style="display:none;background-image:linear-gradient(45deg,#e0e0e0 25%,transparent 25%,transparent 75%,#e0e0e0 75%,#e0e0e0),linear-gradient(45deg,#e0e0e0 25%,transparent 25%,transparent 75%,#e0e0e0 75%,#e0e0e0);background-size:20px 20px;background-position:0 0,10px 10px;padding:10px;border-radius:8px;">
-                <img id="tc-rmbg-img" src="" alt="Result" style="max-width:100%;border-radius:4px;">
-            </div>
-            <p id="tc-rmbg-placeholder" style="color:#999;margin-top:40px;">Result will appear here...</p>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

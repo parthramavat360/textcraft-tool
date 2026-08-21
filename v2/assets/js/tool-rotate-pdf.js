@@ -1,5 +1,5 @@
 /**
- * Rotate PDF — Tool JS
+ * Rotate PDF â€” Tool JS
  *
  * Drop zone, rotation mode buttons (90 CW, 90 CCW, 180),
  * apply button, download. Stats: pages rotated.
@@ -111,6 +111,7 @@
             if (downloadBtn) downloadBtn.style.display = '';
             var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
+                                TCTP.showResultPreview(URL.createObjectURL(lastBlob));
             TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Rotation failed: ' + err.message, '\u274C');

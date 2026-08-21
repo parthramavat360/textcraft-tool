@@ -1,10 +1,10 @@
 /**
- * PNG Compressor — Tool JS
+ * PNG Compressor â€” Tool JS
  *
  * Client-side LOSSLESS PNG compression: canvas re-encode at full original
  * resolution (downscale only if the user explicitly opts in), optionally
  * further optimized via UPNG.js with cnum=0 (lossless). No palette
- * quantization, no color reduction — output is pixel-identical.
+ * quantization, no color reduction â€” output is pixel-identical.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -27,7 +27,7 @@
         });
     }
 
-    // ── Drop zone ────────────────────────────────────────────
+    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-png-drop', 'tc-png-drop-input', function (f) {
         if (f.type !== 'image/png') {
@@ -56,7 +56,7 @@
         });
     });
 
-    // ── Compress ─────────────────────────────────────────────
+    // â”€â”€ Compress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     document.getElementById('tc-png-compress').addEventListener('click', async function () {
         if (!file) { TCTP.toast('Please select a PNG file first.', '\u26A0\uFE0F'); return; }
@@ -68,7 +68,7 @@
             try {
                 await loadScript('https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.js');
             } catch (e) {
-                // UPNG unavailable — plain canvas encoding is used below.
+                // UPNG unavailable â€” plain canvas encoding is used below.
             }
         }
 
@@ -134,6 +134,7 @@
         document.getElementById('tc-png-stat-comp').textContent = TCTP.formatSize(compSize);
         document.getElementById('tc-png-stat-saved').textContent = saved + '%';
         TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                            TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
         TCTP.switchToResultTab();
         TCTP.setProgress('tc-png-progress', 100, 'Done!');
         TCTP.toast('Compressed! Saved ' + saved + '%');

@@ -1,5 +1,5 @@
 /**
- * Image to Text (OCR) — Tool JS
+ * Image to Text (OCR) â€” Tool JS
  * @package TextCraft_Tools_Pro
  */
 
@@ -79,6 +79,7 @@
       var text = result.data.text || '';
       if(output) output.value = text;
       TCTP.updateResultPanel((file.size / 1024).toFixed(1) + ' KB', text.length.toLocaleString() + ' chars', '\u2014', 'Done');
+      TCTP.showResultText(text);
       TCTP.switchToResultTab();
       if(statusEl){
         var words = text.trim() ? text.trim().split(/\s+/).length : 0;

@@ -25,7 +25,7 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress SVG files by optimizing paths and removing unnecessary data. Adjust precision for finer control. Everything runs in your browser â€” your files are never uploaded.
+            Compress SVG files by optimizing paths and removing unnecessary data. Adjust precision for finer control. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-svg-drop', 'image/svg+xml,.svg', 'Drag & drop SVG files here or click to browse'); ?>
@@ -47,11 +47,5 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-svg-result">
-            <div class="tc-preview" id="tc-svg-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

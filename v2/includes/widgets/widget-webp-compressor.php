@@ -25,7 +25,7 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress WebP images to reduce file size while maintaining quality. Adjust the quality slider for lossy compression. Everything runs in your browser â€” your files are never uploaded.
+            Compress WebP images to reduce file size while maintaining quality. Adjust the quality slider for lossy compression. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-wp-drop', 'image/webp,.webp', 'Drag & drop WebP images here or click to browse'); ?>
@@ -47,11 +47,5 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-wp-result">
-            <div class="tc-preview" id="tc-wp-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

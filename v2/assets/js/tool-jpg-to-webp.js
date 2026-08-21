@@ -1,5 +1,5 @@
 /**
- * JPG to WebP Converter — Tool JS
+ * JPG to WebP Converter â€” Tool JS
  *
  * Client-side JPG-to-WebP conversion using canvas.toBlob('image/webp', quality).
  * Quality adjustable with presets.
@@ -35,7 +35,7 @@
         });
     });
 
-    // ── Drop zone ────────────────────────────────────────────
+    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-j2w-drop', 'tc-j2w-drop-input', function (f) {
         if (!f.type.match(/image\/jpe?g/)) {
@@ -53,7 +53,7 @@
         TCTP.hideFileRow('tc-j2w-file');
     });
 
-    // ── Convert ──────────────────────────────────────────────
+    // â”€â”€ Convert â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     document.getElementById('tc-j2w-convert').addEventListener('click', function () {
         if (!file) { TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
@@ -87,6 +87,7 @@
                     document.getElementById('tc-j2w-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-j2w-stat-saved').textContent = saved + '%';
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                                        TCTP.showResultPreview(URL.createObjectURL(convertedBlob));
                     TCTP.switchToResultTab();
                     TCTP.setProgress('tc-j2w-progress', 100, 'Done!');
                     TCTP.toast('Converted to WebP! Saved ' + saved + '%');

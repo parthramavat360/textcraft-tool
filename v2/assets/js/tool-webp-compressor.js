@@ -1,4 +1,4 @@
-﻿/**
+/**
  * WebP Compressor — Tool JS
  *
  * Client-side WebP compression via canvas re-encode with quality control.
@@ -87,6 +87,7 @@
                     if (statsEl) statsEl.style.display = '';
 
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                                        TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
                     TCTP.switchToResultTab();
                     TCTP.setProgress('tc-wp-progress', 100, 'Done!');
                     TCTP.toast('Compressed! Saved ' + saved + '%');

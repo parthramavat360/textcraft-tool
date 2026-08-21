@@ -54,11 +54,5 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-ocr-result">
-            <textarea class="tc-textarea" id="tc-ocr-output" placeholder="Extracted text will appear here..." readonly rows="12"></textarea>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

@@ -1,5 +1,5 @@
 /**
- * SVG Compressor — Tool JS
+ * SVG Compressor â€” Tool JS
  *
  * Client-side SVG optimization: remove comments, minify paths,
  * round decimals at configurable precision. No external libs.
@@ -101,6 +101,7 @@
             if (statsEl) statsEl.style.display = '';
 
             TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+            TCTP.showResultText(optimizedSvg);
             TCTP.switchToResultTab();
             TCTP.setProgress('tc-svg-progress', 100, 'Done!');
             TCTP.toast('Optimized! Saved ' + saved + '%');

@@ -9,9 +9,6 @@
   if(!drop) return;
 
   var removeBtn   = document.getElementById('tc-rmbg-remove');
-  var previewWrap = document.getElementById('tc-rmbg-preview');
-  var previewImg  = document.getElementById('tc-rmbg-img');
-  var placeholder = document.getElementById('tc-rmbg-placeholder');
   var downloadBtn = document.getElementById('tc-rmbg-download');
   var statusEl    = document.getElementById('tc-rmbg-status');
   var hqChk       = document.getElementById('tc-rmbg-highquality');
@@ -47,8 +44,6 @@
     file = f;
     resultBlob = null;
     TCTP.showFileRow('tc-rmbg-file', f);
-    if(previewWrap) previewWrap.style.display = 'none';
-    if(placeholder){ placeholder.style.display = ''; placeholder.textContent = 'Result will appear here...'; }
     if(downloadBtn) downloadBtn.style.display = 'none';
     if(statusEl) statusEl.textContent = '';
   }, 'image/*');
@@ -59,8 +54,6 @@
       file = null;
       resultBlob = null;
       TCTP.hideFileRow('tc-rmbg-file');
-      if(previewWrap) previewWrap.style.display = 'none';
-      if(placeholder){ placeholder.style.display = ''; placeholder.textContent = 'Result will appear here...'; }
       if(downloadBtn) downloadBtn.style.display = 'none';
     });
   }
@@ -86,7 +79,6 @@
 
     TCTP.showProgress('tc-rmbg-progress');
     TCTP.setProgress('tc-rmbg-progress', 5, 'Removing background...');
-    if(placeholder){ placeholder.style.display = ''; placeholder.textContent = 'Processing...'; }
 
     var options = {
       progress: function(key, current, total){
@@ -101,18 +93,15 @@
       TCTP.setProgress('tc-rmbg-progress', 100, 'Done!');
       TCTP.hideProgress('tc-rmbg-progress');
 
-      if(previewImg) previewImg.src = URL.createObjectURL(blob);
-      if(previewWrap) previewWrap.style.display = '';
-      if(placeholder) placeholder.style.display = 'none';
       if(downloadBtn) downloadBtn.style.display = '';
       if(statusEl) statusEl.textContent = 'Result: ' + TCTP.formatSize(blob.size);
       TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) + '%' : '0%'), 'Done');
+      TCTP.showResultPreview(URL.createObjectURL(resultBlob));
       TCTP.switchToResultTab();
       TCTP.toast('Background removed!');
     }).catch(function(err){
       TCTP.hideProgress('tc-rmbg-progress');
       TCTP.toast('Failed: ' + err.message, '\u274C');
-      if(placeholder){ placeholder.textContent = 'Result will appear here...'; }
       if(statusEl) statusEl.textContent = '';
     });
   }

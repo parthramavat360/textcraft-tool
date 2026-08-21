@@ -1,5 +1,5 @@
 /**
- * WebP to PNG Converter — Tool JS
+ * WebP to PNG Converter â€” Tool JS
  *
  * Canvas-based WebP to PNG conversion with stats.
  *
@@ -66,6 +66,7 @@
                     document.getElementById('tc-w2p-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-w2p-stat-diff').textContent = sign + TCTP.formatSize(Math.abs(diff));
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), sign + TCTP.formatSize(Math.abs(diff)), 'Done');
+                                        TCTP.showResultPreview(URL.createObjectURL(convertedBlob));
                     TCTP.switchToResultTab();
 
                     TCTP.setProgress('tc-w2p-progress', 100, 'Done!');

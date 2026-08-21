@@ -43,11 +43,5 @@ class Widget_Heic_To_Png extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-heic2p-result">
-            <div class="tc-preview" id="tc-heic2p-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

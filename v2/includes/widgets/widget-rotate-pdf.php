@@ -25,7 +25,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Rotate all pages in a PDF document. Choose 90Â° clockwise, 90Â° counter-clockwise, or 180Â° rotation. Everything runs in your browser â€” your files are never uploaded.
+            Rotate all pages in a PDF document. Choose 90Ãƒâ€šÃ‚Â° clockwise, 90Ãƒâ€šÃ‚Â° counter-clockwise, or 180Ãƒâ€šÃ‚Â° rotation. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-rp-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
@@ -34,9 +34,9 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         <div class="tc-input-group" style="margin-top:16px">
             <label class="tc-label">Rotation</label>
             <div class="tc-modes" data-group="rp-rotation">
-                <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">90Â° CW</button>
-                <button class="tc-btn tc-btn--ghost" data-val="270" type="button">90Â° CCW</button>
-                <button class="tc-btn tc-btn--ghost" data-val="180" type="button">180Â°</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">90Ãƒâ€šÃ‚Â° CW</button>
+                <button class="tc-btn tc-btn--ghost" data-val="270" type="button">90Ãƒâ€šÃ‚Â° CCW</button>
+                <button class="tc-btn tc-btn--ghost" data-val="180" type="button">180Ãƒâ€šÃ‚Â°</button>
             </div>
         </div>
 
@@ -55,11 +55,5 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         <?php
     }
 
-    protected function render_result_content(array $settings): void {
-        ?>
-        <div class="tc-result-area" id="tc-rp-result">
-            <div class="tc-preview" id="tc-rp-preview">Upload a file to see preview</div>
-        </div>
-        <?php
-    }
+    protected function render_result_content(array $settings): void {}
 }

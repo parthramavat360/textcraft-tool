@@ -1,5 +1,5 @@
 /**
- * PDF Merger — Tool JS
+ * PDF Merger â€” Tool JS
  *
  * Multi-file drop zone, file list with reorder (up/down buttons),
  * merge button, download. Stats: count, total size.
@@ -159,6 +159,7 @@
             files.forEach(function (f) { totalIn += f.size; });
             var saved = totalIn > mergedBlob.size ? ((1 - mergedBlob.size / totalIn) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedBlob.size), saved + '%', 'Done');
+                                TCTP.showResultPreview(URL.createObjectURL(mergedBlob));
             TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Merge failed: ' + err.message, '\u274C');

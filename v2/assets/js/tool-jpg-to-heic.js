@@ -1,5 +1,5 @@
 /**
- * JPG to HEIC Converter — Tool JS
+ * JPG to HEIC Converter â€” Tool JS
  * @package TextCraft_Tools_Pro
  */
 
@@ -109,6 +109,7 @@
           setStat('tc-j2h-stat-saved', '-');
         }
         TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(resultBlob.size), (file.size > resultBlob.size ? ((1 - resultBlob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
+                            TCTP.showResultPreview(URL.createObjectURL(resultBlob));
         TCTP.switchToResultTab();
         if(downloadBtn) downloadBtn.style.display = '';
         TCTP.toast('Converted to HEIC!');

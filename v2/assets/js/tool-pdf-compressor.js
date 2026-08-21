@@ -1,5 +1,5 @@
 /**
- * PDF Compressor — Tool JS
+ * PDF Compressor â€” Tool JS
  *
  * Client-side PDF compression using pdf.js + pdf-lib.
  * Two-pass: lossless metadata strip + visual re-raster at reduced quality.
@@ -14,7 +14,7 @@
     var compressedBlob = null;
     var level = 2;
 
-    // ── Load external libs ───────────────────────────────────
+    // â”€â”€ Load external libs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     function loadScript(src) {
         return new Promise(function (resolve, reject) {
@@ -37,7 +37,7 @@
         }
     }
 
-    // ── Compression logic ────────────────────────────────────
+    // â”€â”€ Compression logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     async function compressStructureOnly(arrayBuffer) {
         var pdfDoc = await window.PDFLib.PDFDocument.load(arrayBuffer);
@@ -94,7 +94,7 @@
         return (bytes / 1048576).toFixed(1) + ' MB';
     }
 
-    // ── Init ─────────────────────────────────────────────────
+    // â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     TCTP.initDropZone('tc-pdf-drop', 'tc-pdf-drop-input', function (f) {
         if (f.type !== 'application/pdf') {
@@ -148,6 +148,7 @@
                 document.getElementById('tc-pdf-stat-comp').textContent = formatSize(best.byteLength);
                 document.getElementById('tc-pdf-stat-saved').textContent = saved + '%';
                 TCTP.updateResultPanel(formatSize(ab.byteLength), formatSize(best.byteLength), saved + '%', 'Done');
+                                    TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
                 TCTP.switchToResultTab();
                 TCTP.setProgress('tc-pdf-progress', 100, 'Done!');
                 TCTP.toast('Compressed! Saved ' + saved + '%');
