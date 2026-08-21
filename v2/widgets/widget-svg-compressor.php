@@ -44,4 +44,12 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
         </div>
         <?php
     }
+
+    protected function render_result_content(array $settings): void {
+        ?>
+        <div class="tc-result-area" id="tc-svg-result">
+            <div class="tc-preview" id="tc-svg-preview">Upload a file to see preview</div>
+        </div>
+        <?php
+    }
 }
