@@ -159,6 +159,7 @@
             files.forEach(function (f) { totalIn += f.size; });
             var saved = totalIn > mergedBlob.size ? ((1 - mergedBlob.size / totalIn) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedBlob.size), saved + '%', 'Done');
+            TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Merge failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-pm-progress');

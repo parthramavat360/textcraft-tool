@@ -109,6 +109,7 @@
           setStat('tc-j2gif-stat-saved', '-');
         }
         TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
+        TCTP.switchToResultTab();
         if(downloadBtn) downloadBtn.style.display = '';
         TCTP.toast('Converted to GIF!');
       });

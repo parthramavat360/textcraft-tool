@@ -186,6 +186,7 @@
         if (compEl) compEl.textContent = TCTP.formatSize(compSize);
         if (savedEl) savedEl.textContent = saved + '%';
         TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+        TCTP.switchToResultTab();
         TCTP.setProgress('tc-gif-progress', 100, 'Done!');
         TCTP.toast('Compressed! Saved ' + saved + '%');
     }

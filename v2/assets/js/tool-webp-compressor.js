@@ -87,6 +87,7 @@
                     if (statsEl) statsEl.style.display = '';
 
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                    TCTP.switchToResultTab();
                     TCTP.setProgress('tc-wp-progress', 100, 'Done!');
                     TCTP.toast('Compressed! Saved ' + saved + '%');
                 }, 'image/webp', quality / 100);

@@ -292,15 +292,38 @@
         if (!tabBtns.length) return;
         tabBtns.forEach(function (btn) {
             btn.addEventListener('click', function () {
+                var tab = btn.getAttribute('data-tab');
+                // Toggle button active state
                 tabBtns.forEach(function (b) { b.classList.remove('on'); });
                 btn.classList.add('on');
-                var tab = btn.getAttribute('data-tab');
-                var preview = document.getElementById('tc-preview');
-                if (preview) {
-                    preview.setAttribute('data-active-tab', tab || 'original');
-                }
+                // Show/hide preview panels
+                var orig = document.getElementById('tc-preview-orig');
+                var result = document.getElementById('tc-preview-result');
+                if (orig) orig.style.display = tab === 'original' ? '' : 'none';
+                if (result) result.style.display = tab === 'result' ? '' : 'none';
             });
         });
+    };
+
+    /**
+     * Switch to the Compressed/Result tab. Called by tools after processing
+     * so the user sees the output automatically.
+     */
+    TCTP.switchToResultTab = function () {
+        var resultBtn = document.querySelector('.tc-tabs button[data-tab="result"]');
+        if (resultBtn && !resultBtn.classList.contains('on')) {
+            resultBtn.click();
+        }
+    };
+
+    /**
+     * Switch back to the Original tab.
+     */
+    TCTP.switchToOriginalTab = function () {
+        var origBtn = document.querySelector('.tc-tabs button[data-tab="original"]');
+        if (origBtn && !origBtn.classList.contains('on')) {
+            origBtn.click();
+        }
     };
 
     // Auto-init tabs on DOMContentLoaded

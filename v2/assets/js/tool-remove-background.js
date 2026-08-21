@@ -107,6 +107,7 @@
       if(downloadBtn) downloadBtn.style.display = '';
       if(statusEl) statusEl.textContent = 'Result: ' + TCTP.formatSize(blob.size);
       TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) + '%' : '0%'), 'Done');
+      TCTP.switchToResultTab();
       TCTP.toast('Background removed!');
     }).catch(function(err){
       TCTP.hideProgress('tc-rmbg-progress');

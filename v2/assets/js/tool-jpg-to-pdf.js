@@ -95,6 +95,7 @@
             files.forEach(function(f){ totalIn += f.size; });
             var saved = totalIn > resultBlob.size ? ((1 - resultBlob.size / totalIn) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(resultBlob.size), saved + '%', 'Done');
+            TCTP.switchToResultTab();
           });
         }
 

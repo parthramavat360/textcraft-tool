@@ -59,6 +59,7 @@
                     document.getElementById('tc-j2p-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-j2p-stat-diff').textContent = (diff > 0 ? '+' : '') + diff + '%';
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), (diff > 0 ? '+' : '') + diff + '%', 'Done');
+                    TCTP.switchToResultTab();
                     TCTP.setProgress('tc-j2p-progress', 100, 'Done!');
                     TCTP.toast('Converted to PNG!');
                 }, 'image/png');

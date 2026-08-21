@@ -91,6 +91,7 @@
         if(downloadBtn) downloadBtn.style.display = '';
         if(statsEl) statsEl.textContent = TCTP.formatSize(blob.size) + ' | WebP | ' + img.naturalWidth + 'x' + img.naturalHeight;
         TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > 0 ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
+        TCTP.switchToResultTab();
         TCTP.toast('PNG converted to WebP');
         URL.revokeObjectURL(img.src);
       }, 'image/webp', q);

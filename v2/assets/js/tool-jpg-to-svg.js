@@ -121,6 +121,7 @@
         setStat('tc-j2svg-stat-comp', (svgStr.length / 1024).toFixed(1) + ' KB');
         setStat('tc-j2svg-stat-saved', 'SVG');
         TCTP.updateResultPanel(TCTP.formatSize(file.size), (svgStr.length / 1024).toFixed(1) + ' KB', 'SVG', 'Done');
+        TCTP.switchToResultTab();
         if(downloadBtn) downloadBtn.style.display = '';
         TCTP.toast('Converted to SVG!');
       } catch(err){

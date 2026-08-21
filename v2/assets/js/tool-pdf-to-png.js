@@ -122,6 +122,7 @@
             TCTP.toast('Exported ' + numPages + ' pages as PNG!');
             var saved = file.size > zipBlob.size ? ((1 - zipBlob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(zipBlob.size), saved + '%', 'Done');
+            TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Conversion failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-p2p-progress');

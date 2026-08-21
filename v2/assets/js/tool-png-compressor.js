@@ -134,6 +134,7 @@
         document.getElementById('tc-png-stat-comp').textContent = TCTP.formatSize(compSize);
         document.getElementById('tc-png-stat-saved').textContent = saved + '%';
         TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+        TCTP.switchToResultTab();
         TCTP.setProgress('tc-png-progress', 100, 'Done!');
         TCTP.toast('Compressed! Saved ' + saved + '%');
     }

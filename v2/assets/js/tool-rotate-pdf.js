@@ -111,6 +111,7 @@
             if (downloadBtn) downloadBtn.style.display = '';
             var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
+            TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Rotation failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-rp-progress');

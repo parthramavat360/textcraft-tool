@@ -87,6 +87,7 @@
                     document.getElementById('tc-j2w-stat-comp').textContent = TCTP.formatSize(compSize);
                     document.getElementById('tc-j2w-stat-saved').textContent = saved + '%';
                     TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
+                    TCTP.switchToResultTab();
                     TCTP.setProgress('tc-j2w-progress', 100, 'Done!');
                     TCTP.toast('Converted to WebP! Saved ' + saved + '%');
                 }, 'image/webp', quality / 100);

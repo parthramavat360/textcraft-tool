@@ -197,6 +197,7 @@
             TCTP.toast('Split into ' + chunks.length + ' files!');
             var saved = file.size > zipBlob.size ? ((1 - zipBlob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(zipBlob.size), saved + '%', 'Done');
+            TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Split failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-ps-progress');
