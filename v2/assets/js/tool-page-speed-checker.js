@@ -172,7 +172,14 @@
                     return res.json();
                 })
                 .then(function (data) {
-                    if (!data || data.error) throw new Error((data && data.error && data.error.message) || 'Unknown API error');
+                    if (!data || !data.lighthouseResult) {
+                        var errMsg = 'No results returned. The URL may be unreachable or blocked by the server.';
+                        if (data && data.error && data.error.message) errMsg = data.error.message;
+                        throw new Error(errMsg);
+                    }
+                    if (data.lighthouseResult.httpStatus && data.lighthouseResult.httpStatus >= 400) {
+                        throw new Error('Page returned HTTP ' + data.lighthouseResult.httpStatus + '. Make sure the URL is accessible.');
+                    }
                     stopLoading();
                     renderResults(data, url);
                     isAnalyzing = false;
