@@ -135,6 +135,24 @@
 
     // ── Analyze ──────────────────────────────────────────────
 
+    var cooldownTimer = null;
+
+    function startCooldown(seconds) {
+        var remaining = seconds;
+        loadingText.textContent = 'Rate limited. Cooldown: ' + remaining + 's...';
+        progressBar.style.width = '30%';
+        cooldownTimer = setInterval(function () {
+            remaining--;
+            if (remaining <= 0) {
+                clearInterval(cooldownTimer);
+                cooldownTimer = null;
+                return;
+            }
+            loadingText.textContent = 'Rate limited. Cooldown: ' + remaining + 's...';
+            progressBar.style.width = (30 + ((seconds - remaining) / seconds) * 60) + '%';
+        }, 1000);
+    }
+
     analyzeBtn.addEventListener('click', function () {
         if (isAnalyzing) return;
 
@@ -153,22 +171,25 @@
         var apiUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' +
             encodeURIComponent(url) + '&strategy=' + strategy + '&category=performance&category=accessibility&category=seo&category=best-practices';
 
-        var retries = 3;
-        var delay = 5000;
+        var retries = 2;
 
         function attemptFetch(attempt) {
             fetch(apiUrl)
                 .then(function (res) {
                     if (res.status === 429) {
+                        if (cooldownTimer) clearInterval(cooldownTimer);
                         if (attempt < retries) {
-                            loadingText.textContent = 'Rate limited by Google. Retrying in ' + Math.round(delay/1000) + 's... (attempt ' + (attempt+1) + '/' + retries + ')';
-                            return new Promise(function (resolve) { setTimeout(resolve, delay); }).then(function () {
+                            var waitTime = 30 + (attempt * 15);
+                            startCooldown(waitTime);
+                            return new Promise(function (resolve) { setTimeout(resolve, waitTime * 1000); }).then(function () {
+                                if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
+                                loadingText.textContent = 'Retrying...';
                                 return attemptFetch(attempt + 1);
                             });
                         }
-                        throw new Error('Rate limited by Google. Please wait a minute and try again.');
+                        throw new Error('Rate limited by Google. Please wait 1 minute and try again.');
                     }
-                    if (!res.ok) throw new Error('API error: ' + res.status);
+                    if (!res.ok) throw new Error('API returned status ' + res.status);
                     return res.json();
                 })
                 .then(function (data) {
@@ -181,6 +202,7 @@
                         throw new Error('Page returned HTTP ' + data.lighthouseResult.httpStatus + '. Make sure the URL is accessible.');
                     }
                     stopLoading();
+                    if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
                     renderResults(data, url);
                     isAnalyzing = false;
                     analyzeBtn.disabled = false;
@@ -188,7 +210,8 @@
                 })
                 .catch(function (err) {
                     stopLoading();
-                    scoresEl.innerHTML = '<div class="tc-ps-error"><i class="fa-solid fa-circle-exclamation"></i><p>Analysis failed: ' + (err.message || 'Unknown error') + '</p><p style="font-size:12px;color:#94a3b8">Tip: Wait 1 minute between analyses. Google rate-limits free API requests.</p></div>';
+                    if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
+                    scoresEl.innerHTML = '<div class="tc-ps-error"><i class="fa-solid fa-circle-exclamation"></i><p>Analysis failed: ' + (err.message || 'Unknown error') + '</p><p style="font-size:12px;color:#94a3b8">Google limits free PageSpeed API to ~1 request per minute per IP. Wait 60s and try again.</p></div>';
                     isAnalyzing = false;
                     analyzeBtn.disabled = false;
                     analyzeBtn.innerHTML = '<i class="fa-solid fa-play"></i> Analyze';
