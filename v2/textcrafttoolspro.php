@@ -213,6 +213,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-border-radius-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-flexbox-playground.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-css-grid-playground.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-meta-tag-generator.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -360,6 +361,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Border_Radius_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Flexbox_Playground() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_CSS_Grid_Playground() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Meta_Tag_Generator() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -694,6 +696,7 @@ function tctp_enqueue_assets() {
         'tool-border-radius-generator',
         'tool-flexbox-playground',
         'tool-css-grid-playground',
+        'tool-meta-tag-generator',
     ];
 
     foreach ( $tool_js_files as $js_file ) {

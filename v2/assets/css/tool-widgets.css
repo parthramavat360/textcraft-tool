@@ -4780,25 +4780,26 @@
   .tc-fb-item-props { width: 100%; }
 }
 
-/* CSS Grid Playground */
-.tc-grid-controls { display: flex; flex-direction: column; gap: 12px; }
-.tc-grid-items-list { display: flex; flex-direction: column; gap: 8px; }
-.tc-grid-preview-container {
-  background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 10px;
-  padding: 16px; min-height: 200px;
+/* Meta Tag Generator */
+.tc-mtg-fields { display: flex; flex-direction: column; gap: 12px; }
+.tc-mtg-count { font-size: 11px; color: var(--muted, #64748b); margin-top: 4px; display: block; }
+.tc-mtg-preview { padding: 16px 0; }
+.tc-mtg-card {
+  border: 1px solid var(--border, #e2e8f0); border-radius: 12px; overflow: hidden;
+  max-width: 500px; background: #fff;
 }
-.tc-grid-preview-item {
-  min-height: 60px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 12px; font-weight: 700; padding: 8px 12px;
-}
-.tc-grid-code-area { display: flex; flex-direction: column; gap: 12px; }
-.tc-grid-code-output {
-  width: 100%; font-family: monospace; font-size: 12px;
+.tc-mtg-card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.tc-mtg-card-body { padding: 12px 16px; }
+.tc-mtg-card-url { font-size: 12px; color: var(--muted, #64748b); margin-bottom: 4px; }
+.tc-mtg-card-title { font-size: 16px; font-weight: 700; color: var(--ink, #1e293b); margin-bottom: 6px; line-height: 1.3; }
+.tc-mtg-card-desc { font-size: 13px; color: var(--muted, #64748b); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tc-mtg-code-area { display: flex; flex-direction: column; gap: 12px; }
+.tc-mtg-code-output {
+  width: 100%; font-family: monospace; font-size: 11px;
   background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 14px;
-  resize: vertical; line-height: 1.6;
+  resize: vertical; line-height: 1.6; min-height: 200px;
 }
-.tc-grid-code-actions { display: flex; gap: 10px; }
+.tc-mtg-code-actions { display: flex; gap: 10px; }
 
 @media (max-width: 768px) {
   .tc-fb-item-row { flex-direction: column; align-items: flex-start; }
