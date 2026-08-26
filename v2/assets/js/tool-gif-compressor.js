@@ -1,53 +1,9 @@
-/**
- * GIF Compressor â€” Tool JS
- *
- * Client-side GIF compression with gif.js. Animated GIFs are decoded
- * frame-by-frame (gifuct-js) so all frames, delays and disposal methods
- * are preserved. Falls back to first-frame-only output with a clear
- * warning when frame decoding is unavailable.
- *
- * @package TextCraft_Tools_Pro
- */
-
 (function () {
     'use strict';
-
-    var GIFJS_URL = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js';
-    var GIFJS_WORKER_URL = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js';
-    var DECODER_URLS = [
-        'https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/dist/gifuct-js.min.js',
-        'https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/dist/gifuct-js.js'
-    ];
-
     var file = null;
     var compressedBlob = null;
-    var qualityPct = 70;
-
     var drop = document.getElementById('tc-gif-drop');
     if (!drop) return;
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            var s = document.createElement('script');
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.appendChild(s);
-        });
-    }
-
-    function ensureScript(src) {
-        return document.querySelector('script[src="' + src + '"]')
-            ? Promise.resolve()
-            : loadScript(src);
-    }
-
-    function loadFirst(urls) {
-        return urls.reduce(function (chain, src) {
-            return chain.catch(function () { return ensureScript(src); });
-        }, Promise.reject());
-    }
-
     function readFileBuffer(blob) {
         return new Promise(function (resolve, reject) {
             if (blob.arrayBuffer) { blob.arrayBuffer().then(resolve, reject); return; }
@@ -57,217 +13,120 @@
             r.readAsArrayBuffer(blob);
         });
     }
-
-    // â”€â”€ Quality slider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // gif.js "quality" is a color-sampling threshold where LOWER
-    // values produce BETTER output, so the UI % is inverted here.
-
-    var qualitySlider = document.getElementById('tc-gif-quality');
-    var qualityVal = document.getElementById('tc-gif-quality-val');
-    if (qualitySlider) {
-        qualitySlider.addEventListener('input', function () {
-            qualityPct = parseInt(qualitySlider.value, 10);
-            if (qualityVal) qualityVal.textContent = qualityPct + '%';
+    function setStat(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+    var colorsSlider = document.getElementById('tc-gif-colors');
+    var colorsVal = document.getElementById('tc-gif-colors-val');
+    var scaleSlider = document.getElementById('tc-gif-scale');
+    var scaleVal = document.getElementById('tc-gif-scale-val');
+    var skipSlider = document.getElementById('tc-gif-skip');
+    var skipVal = document.getElementById('tc-gif-skip-val');
+    var loopCheck = document.getElementById('tc-gif-loop');
+    var SKIP_LABELS = ['None','1','2','3','4','5'];
+    if (colorsSlider && colorsVal) colorsSlider.addEventListener('input', function () { colorsVal.textContent = colorsSlider.value; });
+    if (scaleSlider && scaleVal) scaleSlider.addEventListener('input', function () { scaleVal.textContent = scaleSlider.value + '%'; });
+    if (skipSlider && skipVal) skipSlider.addEventListener('input', function () { skipVal.textContent = SKIP_LABELS[parseInt(skipSlider.value,10)] || 'None'; });
+    TCTP.initDropZone('tc-gif-drop','tc-gif-drop-input',function(f){
+        if(!f.type.match(/image\/gif/)&&!/\.gif$/i.test(f.name)){TCTP.toast('Please select a GIF file.','\u26A0\uFE0F');return;}
+        file=f;compressedBlob=null;
+        TCTP.showFileRow('tc-gif-file',f);
+        var dl=document.getElementById('tc-gif-download');if(dl)dl.style.display='none';
+        setStat('tc-gif-stat-orig','-');setStat('tc-gif-stat-comp','-');setStat('tc-gif-stat-saved','-');
+        var reader=new FileReader();reader.onload=function(ev){TCTP.showOriginalPreview(ev.target.result);TCTP.switchToOriginalTab();};reader.readAsDataURL(f);
+    },'image/gif,.gif');
+    var removeBtn=document.querySelector('#tc-gif-file .tc-x');
+    if(removeBtn)removeBtn.addEventListener('click',function(){file=null;compressedBlob=null;TCTP.hideFileRow('tc-gif-file');setStat('tc-gif-stat-orig','-');setStat('tc-gif-stat-comp','-');setStat('tc-gif-stat-saved','-');});
+    function decodeGif(buffer){
+        try{var bytes=new Uint8Array(buffer);var reader=new omggif.GifReader(bytes);var num=reader.numFrames();if(num<1)return null;
+        var tp=reader.width*reader.height*4;var frames=[];
+        for(var i=0;i<num;i++){try{var px=new Uint8Array(tp);reader.decodeAndBlitFrameRGBA(i,px);var info=reader.frameInfo(i);
+        frames.push({data:px,width:reader.width,height:reader.height,delay:(info.delay||10)*10,disposal:info.disposal});}catch(e){break;}}
+        var lc=typeof reader.loopCount==='function'?reader.loopCount():0;
+        return{width:reader.width,height:reader.height,frames:frames,loopCount:lc};}catch(e){return null;}
+    }
+    function medianCut(rgb,numColors){
+        if(rgb.length===0)return[[0,0,0]];if(numColors<=1){var r=0,g=0,b=0;for(var i=0;i<rgb.length;i++){r+=rgb[i][0];g+=rgb[i][1];b+=rgb[i][2];}var n=rgb.length||1;return[[Math.round(r/n),Math.round(g/n),Math.round(b/n)]];}
+        var buckets=[rgb];while(buckets.length<numColors){var maxR=-1,maxI=0;
+        for(var bi=0;bi<buckets.length;bi++){var mins=[255,255,255],maxs=[0,0,0];var bk=buckets[bi];
+        for(var i=0;i<bk.length;i++){for(var c=0;c<3;c++){if(bk[i][c]<mins[c])mins[c]=bk[i][c];if(bk[i][c]>maxs[c])maxs[c]=bk[i][c];}}
+        var rng=[maxs[0]-mins[0],maxs[1]-mins[1],maxs[2]-mins[2]];var mx=0,ch=0;
+        for(var c=0;c<3;c++){if(rng[c]>mx){mx=rng[c];ch=c;}}if(mx>maxR){maxR=mx;maxI=bi;}}
+        if(maxR<=0)break;var bucket=buckets.splice(maxI,1)[0];
+        var mins2=[255,255,255],maxs2=[0,0,0];for(var i=0;i<bucket.length;i++){for(var c=0;c<3;c++){if(bucket[i][c]<mins2[c])mins2[c]=bucket[i][c];if(bucket[i][c]>maxs2[c])maxs2[c]=bucket[i][c];}}
+        var rng2=[maxs2[0]-mins2[0],maxs2[1]-mins2[1],maxs2[2]-mins2[2]];var ch2=0;for(var c=1;c<3;c++){if(rng2[c]>rng2[ch2])ch2=c;}
+        bucket.sort(function(a,b){return a[ch2]-b[ch2];});var mid=Math.floor(bucket.length/2);buckets.push(bucket.slice(0,mid),bucket.slice(mid));}
+        var res=[];for(var bi=0;bi<buckets.length;bi++){var rr=0,gg=0,bb=0;for(var i=0;i<buckets[bi].length;i++){rr+=buckets[bi][i][0];gg+=buckets[bi][i][1];bb+=buckets[bi][i][2];}var n=buckets[bi].length||1;res.push([Math.round(rr/n),Math.round(gg/n),Math.round(bb/n)]);}return res;
+    }
+    function quantizePixels(pixels,numColors){
+        var len=pixels.length;var rgb=[];
+        for(var i=0;i<len;i+=4){if(pixels[i+3]===0)continue;rgb.push([pixels[i],pixels[i+1],pixels[i+2]]);}
+        if(rgb.length===0)return{palette:[0],map:new Uint8Array(len/4)};
+        var palette=medianCut(rgb,numColors);var map=new Uint8Array(len/4);
+        for(var i=0;i<len;i+=4){var idx=i/4;if(pixels[i+3]===0){map[idx]=0;continue;}
+        var best=0,bestD=Infinity;for(var p=0;p<palette.length;p++){
+        var dr=pixels[i]-palette[p][0],dg=pixels[i+1]-palette[p][1],db=pixels[i+2]-palette[p][2];var d=dr*dr+dg*dg+db*db;
+        if(d<bestD){bestD=d;best=p;}if(d===0)break;}map[idx]=best;}
+        var palPacked=[];for(var p=0;p<palette.length;p++){palPacked.push((palette[p][0]<<16)|(palette[p][1]<<8)|palette[p][2]);}
+        return{palette:palPacked,map:map};
+    }
+    function scaleCanvas(src,pct){if(pct>=100)return src;var w=Math.round(src.width*pct/100);var h=Math.round(src.height*pct/100);
+    if(w<1)w=1;if(h<1)h=1;var c=document.createElement('canvas');c.width=w;c.height=h;var ctx=c.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.drawImage(src,0,0,w,h);return c;}
+    function nextPow2(n){var p=2;while(p<n)p<<=1;return p;}
+    function encodeGif(decoded,numColors,scalePct,skipFrames,loop){
+        var outW=Math.round(decoded.width*scalePct/100);var outH=Math.round(decoded.height*scalePct/100);
+        if(outW<1)outW=1;if(outH<1)outH=1;
+        numColors=Math.max(2,Math.min(256,nextPow2(numColors)));
+        var bufSize=outW*outH*decoded.frames.length*5+1024;var buf=new Uint8Array(bufSize);
+        var writer=new omggif.GifWriter(buf,outW,outH,{loop:loop?0:null});
+        for(var i=0;i<decoded.frames.length;i++){
+            if(skipFrames>0&&i>0&&i%(skipFrames+1)!==0)continue;
+            var frame=decoded.frames[i];
+            var src=document.createElement('canvas');src.width=decoded.width;src.height=decoded.height;
+            var sCtx=src.getContext('2d');var imgD=sCtx.createImageData(decoded.width,decoded.height);imgD.data.set(frame.data);sCtx.putImageData(imgD,0,0);
+            var scaled=scaleCanvas(src,scalePct);
+            var sCtx2=scaled.getContext('2d');var sData=sCtx2.getImageData(0,0,scaled.width,scaled.height);
+            var qResult=quantizePixels(sData.data,numColors);
+            var delay=Math.round(frame.delay/10)||10;if(delay<2)delay=2;
+            var pw=nextPow2(Math.max(2,qResult.palette.length));
+            while(qResult.palette.length<pw)qResult.palette.push(0);
+            try{writer.addFrame(0,0,scaled.width,scaled.height,qResult.map,{palette:qResult.palette,delay:delay,disposal:2});}catch(e){break;}
+        }
+        var endPos=writer.end();
+        return new Uint8Array(buf.buffer,0,endPos);
+    }
+    function showResult(origSize,blob,usedOrig){
+        var cSize=blob.size;var saved=origSize>cSize?((1-cSize/origSize)*100).toFixed(1):'0';
+        setStat('tc-gif-stat-orig',TCTP.formatSize(origSize));setStat('tc-gif-stat-comp',TCTP.formatSize(cSize));setStat('tc-gif-stat-saved',saved+'%');
+        TCTP.updateResultPanel(TCTP.formatSize(origSize),TCTP.formatSize(cSize),saved+'%','Done');
+        TCTP.showResultPreview(URL.createObjectURL(blob));TCTP.switchToResultTab();TCTP.setProgress('tc-gif-progress',100,'Done!');
+        if(usedOrig){TCTP.toast('Original is already optimal. No compression applied.','\u2139\uFE0F');}
+        else if(saved!=='0'){TCTP.toast('Compressed! Saved '+saved+'%');}else{TCTP.toast('Image is already optimally compressed.');}
+        compressedBlob=blob;var dl=document.getElementById('tc-gif-download');if(dl)dl.style.display='';
+    }
+    var compressBtn=document.getElementById('tc-gif-compress');
+    if(compressBtn){compressBtn.addEventListener('click',function(){
+        if(!file){TCTP.toast('Please select a GIF file first.','\u26A0\uFE0F');return;}
+        if(typeof omggif==='undefined'){TCTP.toast('Library still loading, please try again.','\u26A0\uFE0F');return;}
+        var numColors=parseInt(colorsSlider?colorsSlider.value:'64',10)||64;
+        var scalePct=parseInt(scaleSlider?scaleSlider.value:'100',10)||100;
+        var skipFrames=parseInt(skipSlider?skipSlider.value:'0',10)||0;
+        var loop=loopCheck?loopCheck.checked:true;
+        TCTP.showProgress('tc-gif-progress');TCTP.setProgress('tc-gif-progress',10,'Reading GIF...');
+        readFileBuffer(file).then(function(buffer){
+            TCTP.setProgress('tc-gif-progress',25,'Decoding frames...');
+            var decoded=decodeGif(buffer);
+            if(!decoded||decoded.frames.length===0){TCTP.hideProgress('tc-gif-progress');TCTP.toast('Failed to decode GIF.','\u274C');return;}
+            TCTP.setProgress('tc-gif-progress',40,'Encoding with '+numColors+' colors...');
+            var encoded=encodeGif(decoded,numColors,scalePct,skipFrames,loop);
+            var blob=new Blob([encoded],{type:'image/gif'});
+            if(blob.size>=file.size){showResult(file.size,file,true);return;}
+            showResult(file.size,blob,false);
+        }).catch(function(err){
+            TCTP.hideProgress('tc-gif-progress');TCTP.toast('Failed: '+(err.message||'Unknown error'),'\u274C');
         });
-    }
-
-    function gifQuality() {
-        return Math.max(1, Math.round(20 - (qualityPct / 100) * 19));
-    }
-
-    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    TCTP.initDropZone('tc-gif-drop', 'tc-gif-drop-input', function (f) {
-        if (!f.type.match(/image\/gif/) && !/\.gif$/i.test(f.name)) {
-            TCTP.toast('Please select a GIF file.', '\u26A0\uFE0F');
-            return;
-        }
-        file = f;
-        compressedBlob = null;
-        TCTP.showFileRow('tc-gif-file', f);
-    }, 'image/gif,.gif');
-
-    var removeBtn = document.querySelector('#tc-gif-file .tctp-x, #tc-gif-file .tc-x');
-    if (removeBtn) removeBtn.addEventListener('click', function () {
-        file = null;
-        compressedBlob = null;
-        TCTP.hideFileRow('tc-gif-file');
-    });
-
-    // â”€â”€ GIF parsing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    function looksAnimated(buffer) {
-        var bytes = new Uint8Array(buffer);
-        var count = 0;
-        for (var i = 0; i < bytes.length - 1; i++) {
-            if (bytes[i] === 0x21 && bytes[i + 1] === 0xF9) {
-                count++;
-                if (count > 1) return true;
-            }
-        }
-        return false;
-    }
-
-    function decodeGif(buffer) {
-        var lib = window.gifuct || window.gifuctJs || window.GIFuct;
-        if (!lib || typeof lib.parseGIF !== 'function' || typeof lib.decompressFrames !== 'function') return null;
-        try {
-            var parsed = lib.parseGIF(buffer);
-            var frames = lib.decompressFrames(parsed, true);
-            return frames.length ? { lsd: parsed.lsd, frames: frames } : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    // â”€â”€ Encoding â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    function makeEncoder(width, height) {
-        return new GIF({
-            workers: 2,
-            quality: gifQuality(),
-            width: width,
-            height: height,
-            workerScript: GIFJS_WORKER_URL
-        });
-    }
-
-    function render(gif) {
-        gif.on('progress', function (p) {
-            TCTP.setProgress('tc-gif-progress', Math.round(40 + p * 55), 'Encoding...');
-        });
-        gif.on('finished', function (blob) {
-            compressedBlob = blob;
-            showResult(file.size, blob.size);
-        });
-        gif.render();
-    }
-
-    function addDecodedFrames(gif, decoded) {
-        var width = decoded.lsd.width;
-        var height = decoded.lsd.height;
-        var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext('2d');
-        var prevImage = null;
-
-        decoded.frames.forEach(function (frame) {
-            if (frame.disposalType === 3) {
-                prevImage = ctx.getImageData(0, 0, width, height);
-            }
-
-            var patch = document.createElement('canvas');
-            patch.width = frame.dims.width;
-            patch.height = frame.dims.height;
-            var pctx = patch.getContext('2d');
-            var patchData = pctx.createImageData(frame.dims.width, frame.dims.height);
-            patchData.data.set(frame.patch);
-            pctx.putImageData(patchData, 0, 0);
-
-            ctx.drawImage(patch, frame.dims.left, frame.dims.top);
-            gif.addFrame(canvas, { copy: true, delay: frame.delay || 100 });
-
-            if (frame.disposalType === 2) {
-                ctx.clearRect(frame.dims.left, frame.dims.top, frame.dims.width, frame.dims.height);
-            } else if (frame.disposalType === 3 && prevImage) {
-                ctx.putImageData(prevImage, 0, 0);
-                prevImage = null;
-            }
-        });
-    }
-
-    function showResult(origSize, compSize) {
-        var saved = origSize > compSize ? ((1 - compSize / origSize) * 100).toFixed(1) : '0';
-        var origEl = document.getElementById('tc-gif-stat-orig');
-        var compEl = document.getElementById('tc-gif-stat-comp');
-        var savedEl = document.getElementById('tc-gif-stat-saved');
-        if (origEl) origEl.textContent = TCTP.formatSize(origSize);
-        if (compEl) compEl.textContent = TCTP.formatSize(compSize);
-        if (savedEl) savedEl.textContent = saved + '%';
-        TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
-                            TCTP.showResultPreview(URL.createObjectURL(compressedBlob));
-        TCTP.switchToResultTab();
-        TCTP.setProgress('tc-gif-progress', 100, 'Done!');
-        TCTP.toast('Compressed! Saved ' + saved + '%');
-    }
-
-    // â”€â”€ Compress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    var compressBtn = document.getElementById('tc-gif-compress');
-    if (compressBtn) compressBtn.addEventListener('click', async function () {
-        if (!file) { TCTP.toast('Please select a GIF file first.', '\u26A0\uFE0F'); return; }
-
-        TCTP.showProgress('tc-gif-progress');
-        TCTP.setProgress('tc-gif-progress', 5, 'Loading libraries...');
-
-        try {
-            await ensureScript(GIFJS_URL);
-        } catch (e) {
-            TCTP.toast('Failed to load gif.js library.', '\u274C');
-            TCTP.hideProgress('tc-gif-progress');
-            return;
-        }
-
-        var decoderLoaded = true;
-        try {
-            await loadFirst(DECODER_URLS);
-        } catch (e) {
-            decoderLoaded = false;
-        }
-
-        TCTP.setProgress('tc-gif-progress', 15, 'Reading GIF...');
-
-        var buffer = await readFileBuffer(file);
-        var decoded = decoderLoaded ? decodeGif(buffer) : null;
-        var animated = decoded ? decoded.frames.length > 1 : looksAnimated(buffer);
-
-        var framesCheckbox = document.getElementById('tc-gif-frames');
-        var wantFrames = animated && (!framesCheckbox || framesCheckbox.checked);
-
-        if (wantFrames && decoded) {
-            TCTP.setProgress('tc-gif-progress', 30, 'Decoding ' + decoded.frames.length + ' frames...');
-            var agif = makeEncoder(decoded.lsd.width, decoded.lsd.height);
-            addDecodedFrames(agif, decoded);
-            render(agif);
-            return;
-        }
-
-        if (animated && !decoded) {
-            TCTP.toast('Could not decode animation frames â€” only the first frame will be kept.', '\u26A0\uFE0F', 5000);
-        }
-
-        var url = URL.createObjectURL(file);
-        var img = new Image();
-        img.onload = function () {
-            var w = img.naturalWidth;
-            var h = img.naturalHeight;
-            var canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            URL.revokeObjectURL(url);
-
-            TCTP.setProgress('tc-gif-progress', 40, 'Encoding...');
-            var gif = makeEncoder(w, h);
-            gif.addFrame(canvas, { copy: true, delay: 100 });
-            render(gif);
-        };
-        img.onerror = function () {
-            URL.revokeObjectURL(url);
-            TCTP.hideProgress('tc-gif-progress');
-            TCTP.toast('Failed to decode GIF image.', '\u274C');
-        };
-        img.src = url;
-    });
-
-    // â”€â”€ Download â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    var downloadBtn = document.getElementById('tc-gif-download');
-    if (downloadBtn) downloadBtn.addEventListener('click', function () {
-        if (!compressedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-        var name = (file ? file.name.replace(/\.gif$/i, '') : 'animation') + '-compressed.gif';
-        TCTP.downloadBlob(compressedBlob, name);
-    });
-
+    });}
+    var downloadBtn=document.getElementById('tc-gif-download');
+    if(downloadBtn){downloadBtn.addEventListener('click',function(){
+        if(!compressedBlob){TCTP.toast('Nothing to download yet.','\u26A0\uFE0F');return;}
+        var name=(file?file.name.replace(/\.gif$/i,''):'animation')+'-compressed.gif';TCTP.downloadBlob(compressedBlob,name);
+    });}
 })();

@@ -1,88 +1,221 @@
-(function(){
-  'use strict';
-  var prefix = 'tc-h2j-';
-  var dropEl = document.getElementById(prefix+'drop');
-  if(!dropEl) return;
+﻿/**
+ * HEIC to JPG Converter — Tool JS (Premium)
+ * Features: quality slider with presets, iOS downscale, preview tabs.
+ * Strategy: try native canvas decode first (Safari 11+), fallback to heic2any.
+ *
+ * @package TextCraft_Tools_Pro
+ */
+(function () {
+    'use strict';
 
-  var convertBtn = document.getElementById(prefix+'convert');
-  var qualityRange = document.getElementById(prefix+'quality');
-  var qualityVal   = document.getElementById(prefix+'quality-val');
-  var downloadBtn  = document.getElementById(prefix+'download');
-  var preview      = document.getElementById(prefix+'preview');
-  var fileRow      = document.getElementById(prefix+'file-row');
-  var progressWrap = document.getElementById(prefix+'progress');
-  var statsEl      = document.getElementById(prefix+'stats');
+    var prefix = 'tc-h2j-';
+    var dropEl = document.getElementById(prefix + 'drop');
+    if (!dropEl) return;
 
-  var file = null;
-  var resultBlob = null;
-  var loaded = false;
+    var convertBtn    = document.getElementById(prefix + 'convert');
+    var downloadBtn   = document.getElementById(prefix + 'download');
+    var qualitySlider = document.getElementById(prefix + 'quality');
+    var qualityBadge  = document.getElementById(prefix + 'quality-val');
+    var iosToggle     = document.getElementById(prefix + 'ios');
+    var PROGRESS_ID   = prefix + 'progress';
 
-  function loadLib(cb){
-    if(loaded){ cb(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-    s.onload = function(){ loaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load heic2any','error'); };
-    document.head.appendChild(s);
-  }
+    var file = null;
+    var convertedBlob = null;
+    var convertedUrl = null;
+    var quality = 92;
+    var libLoaded = false;
 
-  TCTP.initDropZone(dropEl, function(f){
-    file = f;
-    resultBlob = null;
-    TCTP.showFileRow(fileRow, f.name);
-    if(preview) preview.innerHTML = '';
-    if(statsEl) statsEl.textContent = '';
-    if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+    if (qualitySlider && qualityBadge) {
+        qualitySlider.addEventListener('input', function () {
+            quality = parseInt(qualitySlider.value, 10);
+            qualityBadge.textContent = quality;
+        });
+    }
 
-  if(qualityRange && qualityVal){
-    qualityRange.addEventListener('input', function(){
-      qualityVal.textContent = qualityRange.value + '%';
+    document.querySelectorAll('[data-group="h2j-quality"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var group = btn.closest('[data-group="h2j-quality"]');
+            if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
+            quality = parseInt(btn.getAttribute('data-val'), 10) || 92;
+            if (qualitySlider) qualitySlider.value = quality;
+            if (qualityBadge) qualityBadge.textContent = quality;
+        });
     });
-  }
 
-  if(convertBtn){
-    convertBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please drop a HEIC image first','warning'); return; }
-      loadLib(function(){ doConvert(); });
+    function loadLib(cb) {
+        if (libLoaded) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+        s.onload = function () { libLoaded = true; cb(); };
+        s.onerror = function () { TCTP.toast('Failed to load HEIC decoder.', '\u274C'); };
+        document.head.appendChild(s);
+    }
+
+    TCTP.initDropZone(prefix + 'drop', prefix + 'drop-input', function (f) {
+        if (!/\.heic$/i.test(f.name) && !/\.heif$/i.test(f.name) && f.type !== 'image/heic') {
+            TCTP.toast('Please select a HEIC/HEIF file.', '\u26A0\uFE0F');
+            return;
+        }
+        file = f;
+        convertedBlob = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.showFileRow(prefix + 'file', f);
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            TCTP.showOriginalPreview(ev.target.result);
+            TCTP.switchToOriginalTab();
+        };
+        reader.readAsDataURL(f);
+    }, 'image/heic,.heic,.HEIF,.heif');
+
+    var removeBtn = document.querySelector('#' + prefix + 'file .tc-x');
+    if (removeBtn) removeBtn.addEventListener('click', function () {
+        file = null;
+        convertedBlob = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.hideFileRow(prefix + 'file');
     });
-  }
 
-  if(downloadBtn){
-    downloadBtn.addEventListener('click', function(){
-      if(resultBlob) TCTP.downloadBlob(resultBlob, 'converted.jpg');
-    });
-  }
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            if (!file) { TCTP.toast('Please select a HEIC file first.', '\u26A0\uFE0F'); return; }
+            tryNativeFirst();
+        });
+    }
 
-  function doConvert(){
-    var q = qualityRange ? parseInt(qualityRange.value,10) / 100 : 0.92;
-    TCTP.showProgress(progressWrap);
-    TCTP.setProgress(progressWrap, 10);
+    function tryNativeFirst() {
+        TCTP.showProgress(PROGRESS_ID);
+        TCTP.setProgress(PROGRESS_ID, 10, 'Reading HEIC...');
 
-    heic2any({
-      blob: file,
-      toType: 'image/jpeg',
-      quality: q
-    }).then(function(blob){
-      resultBlob = blob;
-      TCTP.setProgress(progressWrap, 100);
-      TCTP.hideProgress(progressWrap);
+        var img = new Image();
+        var nativeFailed = false;
 
-      if(preview){
-        preview.innerHTML = '';
-        var img = document.createElement('img');
-        img.src = URL.createObjectURL(blob);
-        preview.appendChild(img);
-      }
-      if(downloadBtn) downloadBtn.style.display = '';
-      if(statsEl) statsEl.textContent = TCTP.formatSize(blob.size) + ' | JPG';
-      TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > 0 ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0') + '%', 'Done');
-                          TCTP.showResultPreview(URL.createObjectURL(resultBlob));
-      TCTP.switchToResultTab();
-      TCTP.toast('HEIC converted to JPG');
-    }).catch(function(err){
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('Conversion failed: ' + err.message, 'error');
-    });
-  }
+        img.onload = function () {
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                TCTP.setProgress(PROGRESS_ID, 40, 'Decoded natively, encoding JPG...');
+                encodeToJpg(img);
+            } else {
+                fallbackHeic2Any();
+            }
+            URL.revokeObjectURL(img.src);
+        };
+
+        img.onerror = function () {
+            URL.revokeObjectURL(img.src);
+            fallbackHeic2Any();
+        };
+
+        var blobUrl = URL.createObjectURL(file);
+        img.src = blobUrl;
+
+        setTimeout(function () {
+            if (!nativeFailed && !convertedBlob) {
+                try { URL.revokeObjectURL(blobUrl); } catch(e) {}
+                fallbackHeic2Any();
+            }
+        }, 5000);
+    }
+
+    function fallbackHeic2Any() {
+        TCTP.setProgress(PROGRESS_ID, 20, 'Loading HEIC library...');
+        loadLib(function () {
+            TCTP.setProgress(PROGRESS_ID, 40, 'Decoding with libheif...');
+            var q = quality / 100;
+
+            heic2any({
+                blob: file,
+                toType: 'image/jpeg',
+                quality: q
+            }).then(function (blob) {
+                if (!blob) {
+                    TCTP.hideProgress(PROGRESS_ID);
+                    TCTP.toast('HEIC decoding failed. This HEIC variant may not be supported.', '\u274C');
+                    return;
+                }
+                finishConvert(blob);
+            }).catch(function (err) {
+                TCTP.hideProgress(PROGRESS_ID);
+                var msg = err && err.message ? err.message : 'Unknown error';
+                if (msg.indexOf('format not supported') !== -1 || msg.indexOf('ERR_LIBHEIF') !== -1) {
+                    TCTP.toast('This HEIC variant is not supported by the decoder. Try converting to JPG on your device first, or use a different HEIC file.', '\u26A0\uFE0F');
+                } else {
+                    TCTP.toast('Conversion failed: ' + msg, '\u274C');
+                }
+            });
+        });
+    }
+
+    function encodeToJpg(img) {
+        var q = quality / 100;
+        var w = img.naturalWidth;
+        var h = img.naturalHeight;
+        var doDownscale = iosToggle ? iosToggle.checked : true;
+
+        if (doDownscale) {
+            var maxDim = 4096;
+            if (Math.max(w, h) > maxDim) {
+                var scale = maxDim / Math.max(w, h);
+                w = Math.round(w * scale);
+                h = Math.round(h * scale);
+            }
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        TCTP.setProgress(PROGRESS_ID, 70, 'Encoding JPG...');
+
+        canvas.toBlob(function (blob) {
+            if (!blob) {
+                TCTP.hideProgress(PROGRESS_ID);
+                TCTP.toast('JPG encoding failed.', '\u274C');
+                return;
+            }
+            finishConvert(blob);
+        }, 'image/jpeg', q);
+    }
+
+    function finishConvert(blob) {
+        convertedBlob = blob;
+        var origSize = file.size;
+        var compSize = blob.size;
+        var savedPct = origSize > 0 ? ((1 - compSize / origSize) * 100).toFixed(1) : '0';
+
+        var statOrig = document.getElementById(prefix + 'stat-orig');
+        var statComp = document.getElementById(prefix + 'stat-comp');
+        var statSaved = document.getElementById(prefix + 'stat-saved');
+        if (statOrig) statOrig.textContent = TCTP.formatSize(origSize);
+        if (statComp) statComp.textContent = TCTP.formatSize(compSize);
+        if (statSaved) statSaved.textContent = savedPct + '%';
+
+        TCTP.updateResultPanel(
+            TCTP.formatSize(origSize),
+            TCTP.formatSize(compSize),
+            savedPct + '%',
+            'Done'
+        );
+
+        if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+        convertedUrl = URL.createObjectURL(blob);
+        TCTP.showResultPreview(convertedUrl);
+        TCTP.switchToResultTab();
+
+        TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
+        setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
+        TCTP.toast('Converted to JPG! Saved ' + savedPct + '%');
+    }
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+            var name = (file ? file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '') : 'image') + '.jpg';
+            TCTP.downloadBlob(convertedBlob, name);
+        });
+    }
+
 })();

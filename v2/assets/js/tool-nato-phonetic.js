@@ -1,106 +1,166 @@
 /**
  * NATO Phonetic Alphabet — Tool JS
+ *
+ * Premium design: mode cards, toggles, preview tabs, copy, live stats.
+ *
  * @package TextCraft_Tools_Pro
  */
 
 (function () {
     'use strict';
 
-    function init() {
-        var inp = document.getElementById('tc-nato-input');
-        var out = document.getElementById('tc-nato-output');
-        var convertBtn = document.getElementById('tc-nato-convert');
-        if (!inp || !out || !convertBtn || inp.dataset.tcInit) return;
-        inp.dataset.tcInit = '1';
+    var PREFIX = 'tc-nato-';
+    var cleanedText = '';
 
-        var resultText = document.getElementById('tc-nato-result-text');
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        var NATO = {
-            'A': 'Alpha',    'B': 'Bravo',     'C': 'Charlie',  'D': 'Delta',
-            'E': 'Echo',     'F': 'Foxtrot',   'G': 'Golf',     'H': 'Hotel',
-            'I': 'India',    'J': 'Juliett',   'K': 'Kilo',     'L': 'Lima',
-            'M': 'Mike',     'N': 'November',  'O': 'Oscar',    'P': 'Papa',
-            'Q': 'Quebec',   'R': 'Romeo',     'S': 'Sierra',   'T': 'Tango',
-            'U': 'Uniform',  'V': 'Victor',    'W': 'Whiskey',  'X': 'X-ray',
-            'Y': 'Yankee',   'Z': 'Zulu',
-            '0': 'Zero',     '1': 'One',       '2': 'Two',      '3': 'Three',
-            '4': 'Four',     '5': 'Five',      '6': 'Six',      '7': 'Seven',
-            '8': 'Eight',    '9': 'Niner'
-        };
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
 
-        function convertToNATO(text, spaceSep, upperCase, showOriginal) {
-            var words = text.split(/\s+/);
-            var resultLines = [];
-
-            for (var w = 0; w < words.length; w++) {
-                var word = words[w];
-                var parts = [];
-                for (var i = 0; i < word.length; i++) {
-                    var ch = word[i].toUpperCase();
-                    var mapped = NATO[ch];
-                    if (mapped) {
-                        parts.push(mapped);
-                    } else {
-                        parts.push(word[i]);
-                    }
-                }
-                var line;
-                if (upperCase) {
-                    line = parts.join(spaceSep ? ' - ' : '-');
-                } else {
-                    line = parts.join(spaceSep ? ' - ' : '-').toLowerCase();
-                    line = line.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-                }
-                if (showOriginal) {
-                    line = word + ' -> ' + line;
-                }
-                resultLines.push(line);
-            }
-
-            return resultLines.join('\n');
-        }
-
-        convertBtn.addEventListener('click', function () {
-            var text = inp.value.trim();
-            if (!text) {
-                TCTP.toast('Please enter some text.', '\u26A0\uFE0F');
-                return;
-            }
-
-            var spaceSep = document.getElementById('tc-nato-include-space');
-            var upperCase = document.getElementById('tc-nato-uppercase');
-            var showOrig = document.getElementById('tc-nato-include-original');
-
-            var result = convertToNATO(
-                text,
-                spaceSep ? spaceSep.checked : true,
-                upperCase ? upperCase.checked : true,
-                showOrig ? showOrig.checked : false
-            );
-
-            out.value = result;
-            if (resultText) resultText.value = result;
-
-            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < inp.value.length ? ((1 - result.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-
-            TCTP.toast('NATO conversion complete!');
+    /* ── Mode cards ─────────────────────────────────────────── */
+    document.querySelectorAll('.tc-nato-modes .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-nato-modes .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
         });
+    });
 
-        var copyBtn = document.getElementById('tc-nato-copy');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', function () {
-                TCTP.copyText(out.value, 'NATO text');
-            });
+    function getMode() {
+        var s = document.querySelector('.tc-nato-modes .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'dash';
+    }
+
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
+    }
+
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+    }
+
+    /* ── NATO map ───────────────────────────────────────────── */
+    var NATO = {
+        'A': 'Alpha',    'B': 'Bravo',     'C': 'Charlie',  'D': 'Delta',
+        'E': 'Echo',     'F': 'Foxtrot',   'G': 'Golf',     'H': 'Hotel',
+        'I': 'India',    'J': 'Juliett',   'K': 'Kilo',     'L': 'Lima',
+        'M': 'Mike',     'N': 'November',  'O': 'Oscar',    'P': 'Papa',
+        'Q': 'Quebec',   'R': 'Romeo',     'S': 'Sierra',   'T': 'Tango',
+        'U': 'Uniform',  'V': 'Victor',    'W': 'Whiskey',  'X': 'X-ray',
+        'Y': 'Yankee',   'Z': 'Zulu',
+        '0': 'Zero',     '1': 'One',       '2': 'Two',      '3': 'Three',
+        '4': 'Four',     '5': 'Five',      '6': 'Six',      '7': 'Seven',
+        '8': 'Eight',    '9': 'Niner'
+    };
+
+    /* ── Perform convert ────────────────────────────────────── */
+    function performConvert() {
+        var text = inp.value;
+
+        if (!text.trim()) {
+            TCTP.toast('Paste some text first.', '\u26A0\uFE0F');
+            return;
         }
+
+        var mode = getMode();
+        var upperEl = document.getElementById(PREFIX + 'uppercase');
+        var doUpper = upperEl ? upperEl.checked : true;
+
+        var mapped = 0;
+        var words = text.split(/\s+/);
+        var resultLines = [];
+
+        for (var w = 0; w < words.length; w++) {
+            var word = words[w];
+            var parts = [];
+            for (var i = 0; i < word.length; i++) {
+                var ch = word[i].toUpperCase();
+                var natoWord = NATO[ch];
+                if (natoWord) {
+                    parts.push(doUpper ? natoWord : natoWord.charAt(0).toUpperCase() + natoWord.slice(1).toLowerCase());
+                    mapped++;
+                } else {
+                    parts.push(word[i]);
+                }
+            }
+            var line;
+            if (mode === 'dash') {
+                line = parts.join(' - ');
+            } else if (mode === 'nodash') {
+                line = parts.join('');
+            } else if (mode === 'newline') {
+                line = parts.join('\n');
+            } else if (mode === 'table') {
+                line = word + ' \u2192 ' + parts.join(' - ');
+            } else {
+                line = parts.join(' - ');
+            }
+            resultLines.push(line);
+        }
+
+        var result;
+        if (mode === 'newline' && resultLines.length > 1) {
+            result = resultLines.join('\n\n');
+        } else {
+            result = resultLines.join('\n');
+        }
+
+        cleanedText = result;
+
+        setStat(PREFIX + 'mapped', mapped.toLocaleString());
+        setStat(PREFIX + 'output-len', result.length.toLocaleString());
+
+        TCTP.updateResultPanel(
+            text.length.toLocaleString() + ' chars',
+            result.length.toLocaleString() + ' chars',
+            (text.length !== result.length
+                ? ((result.length < text.length ? '+' : '-') +
+                   Math.abs(((result.length - text.length) / text.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = text;
+        if (resultPreview) resultPreview.value = result;
+
+        TCTP.toast('NATO conversion complete!', '\u2705');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Convert button ─────────────────────────────────────── */
+    var convertBtn = document.getElementById(PREFIX + 'convert');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'bar');
+            TCTP.setProgress(PREFIX + 'bar', 50, 'Converting...');
+
+            setTimeout(function () {
+                performConvert();
+                TCTP.setProgress(PREFIX + 'bar', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'bar');
+                TCTP.switchToResultTab();
+            }, 80);
+        });
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(cleanedText, 'Result');
+        });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

@@ -1,13 +1,7 @@
 /**
  * Sort Words & Lines — Tool JS
  *
- * Sorts words or lines alphabetically, by length, or randomly.
- *
- * Widget IDs (widget-sort-words.php):
- *  - mode group .tc-modes[data-group="sw-sort"] → data-val: alpha_asc,
- *    alpha_desc, length_asc, length_desc, random
- *  - checkboxes: sw-lines (default on), sw-case
- *  - tc-sw-input, tc-sw-sort, tc-sw-copy, tc-sw-output
+ * Premium design: mode cards, toggles, preview tabs, copy, live stats.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -15,105 +9,150 @@
 (function () {
     'use strict';
 
-    function init() {
-        var inp = document.getElementById('tc-sw-input');
-        var sortBtn = document.getElementById('tc-sw-sort');
-        if (!inp || !sortBtn || inp.dataset.tcInit) return;
-        inp.dataset.tcInit = '1';
+    var PREFIX = 'tc-sw-';
+    var cleanedText = '';
 
-        var out = document.getElementById('tc-sw-output');
-        var copyBtn = document.getElementById('tc-sw-copy');
-        var sortLinesCheck = document.getElementById('sw-lines');
-        var caseSensitiveCheck = document.getElementById('sw-case');
-        var modeWrap = document.querySelector('.tc-modes[data-group="sw-sort"]');
-        var currentMode = 'alpha_asc';
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        // ── Mode buttons (.tc-modes / .tc-btn per widget markup) ──
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
 
-        function selectMode(btn) {
-            if (modeWrap) {
-                modeWrap.querySelectorAll('.tc-btn').forEach(function (b) {
-                    b.classList.remove('sel');
-                });
-            }
-            btn.classList.add('sel');
-        }
-
-        if (modeWrap) {
-            modeWrap.querySelectorAll('.tc-btn[data-val]').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    selectMode(btn);
-                    currentMode = btn.getAttribute('data-val') || 'alpha_asc';
-                });
-            });
-        }
-
-        // ── Comparison ───────────────────────────────────────────
-
-        function compareStr(a, b, mode, cs) {
-            var aVal = a, bVal = b;
-            if (!cs) { aVal = a.toLowerCase(); bVal = b.toLowerCase(); }
-            switch (mode) {
-                case 'alpha_desc': return bVal.localeCompare(aVal);
-                case 'length_asc': return a.length - b.length || aVal.localeCompare(bVal);
-                case 'length_desc': return b.length - a.length || aVal.localeCompare(bVal);
-                case 'random': return Math.random() - 0.5;
-                case 'alpha_asc':
-                default: return aVal.localeCompare(bVal);
-            }
-        }
-
-        // ── Sort button ──────────────────────────────────────────
-
-        sortBtn.addEventListener('click', function () {
-            var text = inp.value;
-            if (!text.trim()) {
-                TCTP.toast('Please enter some text.', '\u26A0\uFE0F');
-                return;
-            }
-            if (!out) return;
-
-            var sortLines = sortLinesCheck && sortLinesCheck.checked;
-            var caseSensitive = caseSensitiveCheck && caseSensitiveCheck.checked;
-
-            var lines = text.split('\n');
-            if (sortLines) {
-                lines.sort(function (a, b) {
-                    return compareStr(a, b, currentMode, caseSensitive);
-                });
-            } else {
-                var allWords = [];
-                lines.forEach(function (line) {
-                    var words = line.split(/\s+/).filter(function (w) { return w.length > 0; });
-                    allWords = allWords.concat(words);
-                });
-                allWords.sort(function (a, b) {
-                    return compareStr(a, b, currentMode, caseSensitive);
-                });
-                lines = [allWords.join(' ')];
-            }
-
-            out.value = lines.join('\n');
-            TCTP.updateResultPanel(text.length.toLocaleString() + ' chars', lines.join('\n').length.toLocaleString() + ' chars', (lines.join('\n').length < text.length ? ((1 - lines.join('\n').length / text.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-            TCTP.toast('Text sorted.');
+    /* ── Mode cards ─────────────────────────────────────────── */
+    document.querySelectorAll('.tc-sw-modes .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-sw-modes .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
         });
+    });
 
-        // ── Copy ─────────────────────────────────────────────────
+    function getMode() {
+        var s = document.querySelector('.tc-sw-modes .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'alpha_asc';
+    }
 
-        if (copyBtn) {
-            copyBtn.addEventListener('click', function () {
-                TCTP.copyText(out ? out.value : '', 'Sorted result');
-            });
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
+    }
+
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+        setStat(PREFIX + 'lines-count', s.lines.toLocaleString());
+
+        var words = text.trim() ? text.trim().split(/\s+/) : [];
+        var unique = {};
+        words.forEach(function (w) { unique[w.toLowerCase()] = true; });
+        setStat(PREFIX + 'unique', Object.keys(unique).length.toLocaleString());
+    }
+
+    /* ── Comparison ────────────────────────────────────────── */
+    function compareStr(a, b, mode, cs) {
+        var aVal = a, bVal = b;
+        if (!cs) { aVal = a.toLowerCase(); bVal = b.toLowerCase(); }
+        switch (mode) {
+            case 'alpha_desc': return bVal.localeCompare(aVal);
+            case 'length_asc': return a.length - b.length || aVal.localeCompare(bVal);
+            case 'length_desc': return b.length - a.length || aVal.localeCompare(bVal);
+            case 'random': return Math.random() - 0.5;
+            case 'alpha_asc':
+            default: return aVal.localeCompare(bVal);
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Perform sort ──────────────────────────────────────── */
+    function performSort() {
+        var text = inp.value;
+
+        if (!text.trim()) {
+            TCTP.toast('Paste some text first.', '\u26A0\uFE0F');
+            return;
+        }
+
+        var mode = getMode();
+        var sortLines = document.getElementById(PREFIX + 'lines');
+        var caseSensitive = document.getElementById(PREFIX + 'case');
+        var removeBlanks = document.getElementById(PREFIX + 'remove-blanks');
+
+        var doSortLines = sortLines ? sortLines.checked : true;
+        var doCaseSensitive = caseSensitive ? caseSensitive.checked : false;
+        var doRemoveBlanks = removeBlanks ? removeBlanks.checked : false;
+
+        var lines = text.split('\n');
+
+        if (doRemoveBlanks) {
+            lines = lines.filter(function (l) { return l.trim().length > 0; });
+        }
+
+        if (doSortLines) {
+            lines.sort(function (a, b) {
+                return compareStr(a, b, mode, doCaseSensitive);
+            });
+        } else {
+            var allWords = [];
+            lines.forEach(function (line) {
+                var words = line.split(/\s+/).filter(function (w) { return w.length > 0; });
+                allWords = allWords.concat(words);
+            });
+            allWords.sort(function (a, b) {
+                return compareStr(a, b, mode, doCaseSensitive);
+            });
+            lines = [allWords.join(' ')];
+        }
+
+        var result = lines.join('\n');
+        cleanedText = result;
+
+        TCTP.updateResultPanel(
+            text.length.toLocaleString() + ' chars',
+            result.length.toLocaleString() + ' chars',
+            (text.length !== result.length
+                ? ((result.length < text.length ? '+' : '-') +
+                   Math.abs(((result.length - text.length) / text.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = text;
+        if (resultPreview) resultPreview.value = result;
+
+        TCTP.toast('Text sorted!', '\u2705');
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Sort button ─────────────────────────────────────── */
+    var sortBtn = document.getElementById(PREFIX + 'sort');
+    if (sortBtn) {
+        sortBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'bar');
+            TCTP.setProgress(PREFIX + 'bar', 50, 'Sorting...');
+
+            setTimeout(function () {
+                performSort();
+                TCTP.setProgress(PREFIX + 'bar', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'bar');
+                TCTP.switchToResultTab();
+            }, 80);
+        });
+    }
+
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(cleanedText, 'Result');
+        });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

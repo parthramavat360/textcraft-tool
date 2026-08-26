@@ -25,13 +25,18 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Remove unwanted pages from a PDF document. Click on page thumbnails to select them for deletion, then download the remaining pages. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
+            Remove unwanted pages from a PDF document. Click on page thumbnails to select them for deletion, then download the remaining pages. Everything runs in your browser — your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-dp-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
         <?php $this->render_file_row('tc-dp-file'); ?>
 
-        <div class="tc-page-grid" id="tc-dp-grid" style="display:none"></div>
+        <div id="tc-dp-grid-wrap" style="display:none">
+            <div class="tc-input-group" style="margin-top:16px;margin-bottom:4px">
+                <label class="tc-label">Select Pages to Delete (click to toggle)</label>
+            </div>
+            <div class="tc-page-grid" id="tc-dp-grid"></div>
+        </div>
 
         <?php $this->render_progress_bar('tc-dp-progress', 'Processing...'); ?>
 

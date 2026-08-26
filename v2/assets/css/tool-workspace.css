@@ -576,7 +576,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: var(--ink);
+  background: #0b1220;
   color: #fff;
   padding: 12px 20px;
   border-radius: 12px;
@@ -592,7 +592,7 @@
   z-index: 9999;
 }
 
-.tctp-toast.show {
+.tctp-toast--show {
   transform: translateY(0);
   opacity: 1;
 }

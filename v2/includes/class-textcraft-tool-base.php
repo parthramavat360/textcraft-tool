@@ -304,7 +304,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                 </div>
                 <?php $this->render_result($settings); ?>
             </div>
-            <?php $this->render_seo($settings); ?>
+            <?php /* $this->render_seo($settings); */ ?>
         </div>
         <?php
     }
@@ -415,6 +415,8 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
     // ── SEO section ────────────────────────────────────────────
 
     protected function render_seo(array $settings): void {
+        return; // Disabled — SEO section removed from all tool pages
+        /*
         $seo_data = $this->get_seo_data();
         if (!$seo_data && ($settings['seo_override'] ?? '') !== 'yes') {
             return;
@@ -464,6 +466,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
 
         // JSON-LD schema
         $this->render_json_ld($settings, $seo_data);
+        */
     }
 
     // ── JSON-LD structured data ────────────────────────────────

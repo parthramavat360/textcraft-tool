@@ -86,8 +86,10 @@ class Widget_Invisible_Text extends TextCraft_Tool_Base {
             </div>
         </div>
         <div class="tc-generator-row">
-            <label class="tc-range-label"><?php echo esc_html__('Generate:', 'textcrafttoolspro'); ?></label>
-            <input type="number" class="tc-input tc-input--sm" id="tc-it-count" min="1" max="1000" value="10">
+            <div class="tc-input-group">
+                <label class="tc-label"><?php echo esc_html__('Generate:', 'textcrafttoolspro'); ?></label>
+                <input type="number" class="tc-input tc-input--sm" id="tc-it-count" min="1" max="1000" value="10">
+            </div>
             <button class="tc-btn tc-btn--accent" id="tc-it-generate" type="button">Generate</button>
         </div>
         <?php

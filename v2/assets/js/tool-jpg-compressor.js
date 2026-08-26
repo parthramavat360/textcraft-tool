@@ -1,5 +1,5 @@
 /**
- * JPG Compressor â€” Tool JS
+ * JPG Compressor — Tool JS
  *
  * Client-side JPG compression using canvas.toDataURL with quality control.
  * Supports batch processing and ZIP download via JSZip.

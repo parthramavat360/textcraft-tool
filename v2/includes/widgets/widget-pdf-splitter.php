@@ -25,7 +25,7 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Split a PDF into multiple files. Choose to split every N pages, extract a page range, or split into individual pages. Download as a ZIP archive. Everything runs in your browser ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â your files are never uploaded.
+            Split a PDF into multiple files. Choose to split every N pages, extract a page range, or split into individual pages. Download as a ZIP archive. Everything runs in your browser — your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-ps-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>

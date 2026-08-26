@@ -13,12 +13,19 @@
 
     var direction = 'encode';
 
-    document.querySelectorAll('.tc-modes[data-group="url-direction"] .tc-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            direction = btn.getAttribute('data-val');
+    var group = document.querySelector('.tc-modes[data-group="url-direction"]');
+    if (group) {
+        var dirBtns = group.querySelectorAll('.tc-btn');
+        dirBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                dirBtns.forEach(function (b) { b.classList.remove('sel'); });
+                btn.classList.add('sel');
+                direction = btn.getAttribute('data-val') || 'encode';
+            });
         });
-    });
+        var selected = group.querySelector('.tc-btn.sel');
+        if (selected) direction = selected.getAttribute('data-val') || 'encode';
+    }
 
     function encodeComponent(text) {
         return encodeURIComponent(text)

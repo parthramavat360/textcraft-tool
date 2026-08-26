@@ -1,9 +1,10 @@
 /**
- * Rotate PDF â€” Tool JS
+ * Rotate PDF — Tool JS
  *
  * Drop zone, rotation mode buttons (90 CW, 90 CCW, 180),
  * apply button, download. Stats: pages rotated.
- * Requires pdf-lib loaded dynamically.
+ * Both original and result previews rendered via pdf.js canvas.
+ * Requires pdf.js + pdf-lib loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -29,6 +30,43 @@
         });
     }
 
+    function renderPageToImage(arrayBuffer, pageNum) {
+        pageNum = pageNum || 1;
+        return window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise.then(function (pdf) {
+            if (pageNum > pdf.numPages) pageNum = 1;
+            return pdf.getPage(pageNum);
+        }).then(function (page) {
+            var vp = page.getViewport({ scale: 1.5 });
+            var canvas = document.createElement('canvas');
+            canvas.width = vp.width;
+            canvas.height = vp.height;
+            var ctx = canvas.getContext('2d');
+            return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                var dataUrl = canvas.toDataURL('image/png');
+                canvas.width = 0;
+                canvas.height = 0;
+                return dataUrl;
+            });
+        });
+    }
+
+    function ensurePdfJs() {
+        if (window.pdfjsLib) return Promise.resolve();
+        return loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js').then(function () {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        });
+    }
+
+    function ensurePdfLib() {
+        if (window.PDFLib) return Promise.resolve();
+        return loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+    }
+
+    function setStat(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
     document.querySelectorAll('.tc-modes[data-group="rp-rotation"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
@@ -42,22 +80,34 @@
             return;
         }
         file = f;
+        lastBlob = null;
         TCTP.showFileRow('tc-rp-file', f);
         var dlBtn = document.getElementById('tc-rp-download');
         if (dlBtn) dlBtn.style.display = 'none';
         setStat('tc-rp-stat-total', '-');
         setStat('tc-rp-stat-rotated', '0');
         setStat('tc-rp-stat-status', 'Ready');
-    }, '.pdf,application/pdf');
 
-    function setStat(id, val) {
-        var el = document.getElementById(id);
-        if (el) el.textContent = val;
-    }
+        ensurePdfJs().then(function () {
+            return file.arrayBuffer();
+        }).then(function (ab) {
+            TCTP.showProgress('tc-rp-progress');
+            TCTP.setProgress('tc-rp-progress', 20, 'Rendering preview...');
+            return renderPageToImage(ab.slice(0), 1);
+        }).then(function (dataUrl) {
+            TCTP.hideProgress('tc-rp-progress');
+            TCTP.showOriginalPreview(dataUrl);
+            TCTP.switchToOriginalTab();
+        }).catch(function (err) {
+            TCTP.hideProgress('tc-rp-progress');
+            TCTP.toast('Could not render preview: ' + err.message, '\u274C');
+        });
+    }, '.pdf,application/pdf');
 
     var removeBtn = document.querySelector('#tc-rp-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
+        lastBlob = null;
         TCTP.hideFileRow('tc-rp-file');
         setStat('tc-rp-stat-total', '-');
         setStat('tc-rp-stat-rotated', '0');
@@ -69,12 +119,11 @@
         if (!file) { TCTP.toast('Please select a PDF file first.', '\u26A0\uFE0F'); return; }
 
         TCTP.showProgress('tc-rp-progress');
-        TCTP.setProgress('tc-rp-progress', 10, 'Loading pdf-lib...');
+        TCTP.setProgress('tc-rp-progress', 10, 'Loading libraries...');
 
         try {
-            if (!window.PDFLib) {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
-            }
+            await ensurePdfJs();
+            await ensurePdfLib();
             TCTP.setProgress('tc-rp-progress', 30, 'Reading PDF...');
 
             var ab = await file.arrayBuffer();
@@ -94,7 +143,7 @@
             });
 
             TCTP.setProgress('tc-rp-progress', 75, 'Saving...');
-            var newBytes = await pdfDoc.save();
+            var newBytes = await pdfDoc.save({ useObjectStreams: false, updateMetadata: false });
             var blob = new Blob([newBytes], { type: 'application/pdf' });
 
             var countEl = document.getElementById('tc-rp-stat-total');
@@ -103,16 +152,22 @@
             if (rotEl) rotEl.textContent = rotatedCount;
             setStat('tc-rp-stat-status', 'Done');
 
+            TCTP.setProgress('tc-rp-progress', 90, 'Rendering result preview...');
+            lastBlob = blob;
+
+            var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
+
+            var resultAb = await blob.arrayBuffer();
+            var resultUrl = await renderPageToImage(resultAb, 1);
+            TCTP.showResultPreview(resultUrl);
+            TCTP.switchToResultTab();
+
             TCTP.setProgress('tc-rp-progress', 100, 'Done!');
             TCTP.toast('Rotated ' + rotatedCount + ' pages by ' + rotation + '\u00B0!');
 
-            lastBlob = blob;
             var downloadBtn = document.getElementById('tc-rp-download');
             if (downloadBtn) downloadBtn.style.display = '';
-            var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
-            TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
-                                TCTP.showResultPreview(URL.createObjectURL(lastBlob));
-            TCTP.switchToResultTab();
         } catch (err) {
             TCTP.toast('Rotation failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-rp-progress');

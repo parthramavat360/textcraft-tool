@@ -1,5 +1,5 @@
 /**
- * PDF Splitter â€” Tool JS
+ * PDF Splitter — Tool JS
  *
  * Drop zone, split mode select (every N pages, extract range, individual pages),
  * range input, split button, download ZIP.
@@ -49,6 +49,26 @@
         if (el) el.textContent = val;
     }
 
+    function renderPageToImage(arrayBuffer, pageNum) {
+        pageNum = pageNum || 1;
+        return window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise.then(function (pdf) {
+            if (pageNum > pdf.numPages) pageNum = 1;
+            return pdf.getPage(pageNum);
+        }).then(function (page) {
+            var vp = page.getViewport({ scale: 1.5 });
+            var canvas = document.createElement('canvas');
+            canvas.width = vp.width;
+            canvas.height = vp.height;
+            var ctx = canvas.getContext('2d');
+            return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                var dataUrl = canvas.toDataURL('image/png');
+                canvas.width = 0;
+                canvas.height = 0;
+                return dataUrl;
+            });
+        });
+    }
+
     function updateModeOpts() {
         var everyOpts = document.getElementById('tc-ps-every-opts');
         var rangeOpts = document.getElementById('tc-ps-range-opts');
@@ -90,10 +110,14 @@
         ensureLibs().then(function () {
             return file.arrayBuffer();
         }).then(function (ab) {
-            return window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise;
-        }).then(function (pdf) {
-            totalPages = pdf.numPages;
-            setStat('tc-ps-stat-total', totalPages + ' pages');
+            return window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise.then(function (pdf) {
+                totalPages = pdf.numPages;
+                setStat('tc-ps-stat-total', totalPages + ' pages');
+                return renderPageToImage(ab.slice(0), 1);
+            });
+        }).then(function (dataUrl) {
+            TCTP.showOriginalPreview(dataUrl);
+            TCTP.switchToOriginalTab();
         }).catch(function (err) {
             TCTP.toast('Failed to read PDF: ' + err.message, '\u274C');
         });
@@ -146,8 +170,8 @@
             TCTP.setProgress('tc-ps-progress', 25, 'Reading PDF...');
 
             var ab = await file.arrayBuffer();
-            var srcPdf = await window.PDFLib.PDFDocument.load(new Uint8Array(ab));
-            var pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise;
+            var srcPdf = await window.PDFLib.PDFDocument.load(new Uint8Array(ab.slice(0)));
+            var pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(ab.slice(0)) }).promise;
             totalPages = pdf.numPages;
             setStat('tc-ps-stat-total', totalPages + ' pages');
 
@@ -174,13 +198,15 @@
             }
 
             var zip = new JSZip();
+            var firstChunkBytes = null;
             for (var c = 0; c < chunks.length; c++) {
                 TCTP.setProgress('tc-ps-progress', 25 + Math.round((c / chunks.length) * 60), 'Splitting chunk ' + (c + 1) + '/' + chunks.length + '...');
                 var newPdf = await window.PDFLib.PDFDocument.create();
                 var copiedPages = await newPdf.copyPages(srcPdf, chunks[c].indices);
                 copiedPages.forEach(function (page) { newPdf.addPage(page); });
-                var bytes = await newPdf.save();
+                var bytes = await newPdf.save({ useObjectStreams: false, updateMetadata: false });
                 zip.file(chunks[c].name, bytes);
+                if (c === 0) firstChunkBytes = bytes;
             }
 
             TCTP.setProgress('tc-ps-progress', 90, 'Creating ZIP...');
@@ -197,8 +223,11 @@
             TCTP.toast('Split into ' + chunks.length + ' files!');
             var saved = file.size > zipBlob.size ? ((1 - zipBlob.size / file.size) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(zipBlob.size), saved + '%', 'Done');
-                                TCTP.showResultPreview(URL.createObjectURL(zipBlob));
             TCTP.switchToResultTab();
+            try {
+                var compDataUrl = await renderPageToImage(firstChunkBytes.buffer, 1);
+                TCTP.showResultPreview(compDataUrl);
+            } catch (_) {}
         } catch (err) {
             TCTP.toast('Split failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-ps-progress');

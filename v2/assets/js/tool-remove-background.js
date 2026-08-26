@@ -1,108 +1,109 @@
-/**
- * Remove Background — Tool JS
- * @package TextCraft_Tools_Pro
- */
-
-(function(){
-  'use strict';
-  var drop = document.getElementById('tc-rmbg-drop');
-  if(!drop) return;
-
-  var removeBtn   = document.getElementById('tc-rmbg-remove');
-  var downloadBtn = document.getElementById('tc-rmbg-download');
-  var statusEl    = document.getElementById('tc-rmbg-status');
-  var hqChk       = document.getElementById('tc-rmbg-highquality');
-
-  var file = null;
-  var resultBlob = null;
-  var loaded = false;
-
-  function loadLib(cb){
-    if(loaded){ cb(); return; }
-    if(statusEl) statusEl.textContent = 'Loading AI model (first run may take a while)...';
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.16/dist/index.umd.js';
-    s.onload = function(){ loaded = true; cb(); };
-    s.onerror = function(){
-      TCTP.toast('Failed to load background-removal library', '\u274C');
-      if(statusEl) statusEl.textContent = '';
-    };
-    document.head.appendChild(s);
-  }
-
-  function getRemoveFn(){
-    if(typeof window.removeBackground === 'function') return window.removeBackground;
-    if(window.bgRemoval && typeof window.bgRemoval.removeBackground === 'function') return window.bgRemoval.removeBackground;
-    return null;
-  }
-
-  TCTP.initDropZone('tc-rmbg-drop', 'tc-rmbg-drop-input', function(f){
-    if(!f.type.match(/image\//)){
-      TCTP.toast('Please select an image file.', '\u26A0\uFE0F');
-      return;
+(function () {
+    'use strict';
+    var drop = document.getElementById('tc-rmbg-drop');
+    if (!drop) return;
+    var file = null;
+    var resultBlob = null;
+    var removeBgModule = null;
+    var hqCheck = document.getElementById('tc-rmbg-highquality');
+    var webpCheck = document.getElementById('tc-rmbg-webp');
+    function setStat(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+    async function loadLib() {
+        if (removeBgModule) return;
+        removeBgModule = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.8/dist/index.mjs');
     }
-    file = f;
-    resultBlob = null;
-    TCTP.showFileRow('tc-rmbg-file', f);
-    if(downloadBtn) downloadBtn.style.display = 'none';
-    if(statusEl) statusEl.textContent = '';
-  }, 'image/*');
-
-  var removeFileBtn = document.querySelector('#tc-rmbg-file .tc-x');
-  if(removeFileBtn){
-    removeFileBtn.addEventListener('click', function(){
-      file = null;
-      resultBlob = null;
-      TCTP.hideFileRow('tc-rmbg-file');
-      if(downloadBtn) downloadBtn.style.display = 'none';
+    TCTP.initDropZone('tc-rmbg-drop', 'tc-rmbg-drop-input', function (f) {
+        if (!f.type.match(/image\//)) { TCTP.toast('Please select an image file.', '\u26A0\uFE0F'); return; }
+        file = f; resultBlob = null;
+        TCTP.showFileRow('tc-rmbg-file', f);
+        var dl = document.getElementById('tc-rmbg-download'); if (dl) dl.style.display = 'none';
+        setStat('tc-rmbg-stat-orig', TCTP.formatSize(f.size));
+        setStat('tc-rmbg-stat-comp', '-');
+        setStat('tc-rmbg-stat-fmt', webpCheck && webpCheck.checked ? 'WebP' : 'PNG');
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            TCTP.showOriginalPreview(ev.target.result);
+            TCTP.switchToOriginalTab();
+        };
+        reader.readAsDataURL(f);
+    }, 'image/*');
+    var removeFileBtn = document.querySelector('#tc-rmbg-file .tc-x');
+    if (removeFileBtn) removeFileBtn.addEventListener('click', function () {
+        file = null; resultBlob = null; TCTP.hideFileRow('tc-rmbg-file');
+        setStat('tc-rmbg-stat-orig', '-'); setStat('tc-rmbg-stat-comp', '-'); setStat('tc-rmbg-stat-fmt', 'PNG');
     });
-  }
-
-  if(removeBtn){
-    removeBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please select an image first.', '\u26A0\uFE0F'); return; }
-      loadLib(doRemove);
+    if (webpCheck) webpCheck.addEventListener('change', function () {
+        setStat('tc-rmbg-stat-fmt', webpCheck.checked ? 'WebP' : 'PNG');
     });
-  }
-
-  if(downloadBtn){
-    downloadBtn.addEventListener('click', function(){
-      if(!resultBlob){ TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-      var name = (file ? file.name.replace(/\.[^.]+$/, '') : 'image') + '-no-bg.png';
-      TCTP.downloadBlob(resultBlob, name);
+    var removeBtn = document.getElementById('tc-rmbg-remove');
+    if (removeBtn) removeBtn.addEventListener('click', async function () {
+        if (!file) { TCTP.toast('Please select an image first.', '\u26A0\uFE0F'); return; }
+        try {
+            await loadLib();
+        } catch (e) {
+            TCTP.toast('Failed to load AI library.', '\u274C');
+            return;
+        }
+        doRemove();
     });
-  }
-
-  function doRemove(){
-    var fn = getRemoveFn();
-    if(!fn){ TCTP.toast('Background-removal library unavailable.', '\u274C'); return; }
-
-    TCTP.showProgress('tc-rmbg-progress');
-    TCTP.setProgress('tc-rmbg-progress', 5, 'Removing background...');
-
-    var options = {
-      progress: function(key, current, total){
-        var pct = Math.min(95, Math.round((current / total) * 90) + 5);
-        TCTP.setProgress('tc-rmbg-progress', pct, 'Removing background...');
-      }
-    };
-    if(hqChk && hqChk.checked) options.model = 'isnet';
-
-    fn(file, options).then(function(blob){
-      resultBlob = blob;
-      TCTP.setProgress('tc-rmbg-progress', 100, 'Done!');
-      TCTP.hideProgress('tc-rmbg-progress');
-
-      if(downloadBtn) downloadBtn.style.display = '';
-      if(statusEl) statusEl.textContent = 'Result: ' + TCTP.formatSize(blob.size);
-      TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) + '%' : '0%'), 'Done');
-      TCTP.showResultPreview(URL.createObjectURL(resultBlob));
-      TCTP.switchToResultTab();
-      TCTP.toast('Background removed!');
-    }).catch(function(err){
-      TCTP.hideProgress('tc-rmbg-progress');
-      TCTP.toast('Failed: ' + err.message, '\u274C');
-      if(statusEl) statusEl.textContent = '';
+    function doRemove() {
+        var fn = removeBgModule && removeBgModule.removeBackground;
+        if (typeof fn !== 'function') { TCTP.toast('Background-removal library unavailable.', '\u274C'); return; }
+        TCTP.showProgress('tc-rmbg-progress');
+        TCTP.setProgress('tc-rmbg-progress', 5, 'Loading AI model...');
+        var options = {
+            progress: function (key, current, total) {
+                var pct = Math.min(95, Math.round((current / total) * 90) + 5);
+                var msg = key === 'compute:inference' ? 'Analyzing image...' : 'Loading model...';
+                TCTP.setProgress('tc-rmbg-progress', pct, msg);
+            }
+        };
+        if (hqCheck && hqCheck.checked) options.model = 'isnet';
+        fn(file, options).then(function (blob) {
+            var convertToWebp = webpCheck && webpCheck.checked;
+            if (convertToWebp) {
+                var url = URL.createObjectURL(blob);
+                var img = new Image();
+                img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    URL.revokeObjectURL(url);
+                    canvas.toBlob(function (webpBlob) {
+                        finishResult(webpBlob || blob, 'WebP');
+                    }, 'image/webp', 0.9);
+                };
+                img.onerror = function () {
+                    URL.revokeObjectURL(url);
+                    finishResult(blob, 'PNG');
+                };
+                img.src = url;
+            } else {
+                finishResult(blob, 'PNG');
+            }
+        }).catch(function (err) {
+            TCTP.hideProgress('tc-rmbg-progress');
+            TCTP.toast('Failed: ' + err.message, '\u274C');
+        });
+    }
+    function finishResult(blob, fmt) {
+        resultBlob = blob;
+        TCTP.setProgress('tc-rmbg-progress', 100, 'Done!');
+        TCTP.hideProgress('tc-rmbg-progress');
+        setStat('tc-rmbg-stat-comp', TCTP.formatSize(blob.size));
+        setStat('tc-rmbg-stat-fmt', fmt);
+        TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), (file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) + '%' : '0%'), 'Done');
+        TCTP.showResultPreview(URL.createObjectURL(blob));
+        TCTP.switchToResultTab();
+        TCTP.toast('Background removed!');
+        var dl = document.getElementById('tc-rmbg-download'); if (dl) dl.style.display = '';
+    }
+    var downloadBtn = document.getElementById('tc-rmbg-download');
+    if (downloadBtn) downloadBtn.addEventListener('click', function () {
+        if (!resultBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+        var ext = webpCheck && webpCheck.checked ? '.webp' : '.png';
+        var name = (file ? file.name.replace(/\.[^.]+$/, '') : 'image') + '-no-bg' + ext;
+        TCTP.downloadBlob(resultBlob, name);
     });
-  }
 })();

@@ -1,89 +1,153 @@
 /**
  * Find and Replace — Tool JS
+ *
+ * Mode cards, live match counter, toggles, preview tabs, copy, result panel stats.
+ *
  * @package TextCraft_Tools_Pro
  */
 
 (function () {
     'use strict';
 
-    function init() {
-        var inp = document.getElementById('tc-fr-input');
-        var out = document.getElementById('tc-fr-output');
-        var doBtn = document.getElementById('tc-fr-do');
-        if (!inp || !out || !doBtn || inp.dataset.tcInit) return;
-        inp.dataset.tcInit = '1';
+    var PREFIX = 'tc-fr-';
+    var replacedText = '';
 
-        var errEl = document.getElementById('tc-fr-err');
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        function showError(msg) {
-            if (!errEl) return;
-            errEl.textContent = msg;
-            errEl.style.display = 'block';
-        }
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
+    var findInput = document.getElementById(PREFIX + 'find');
+    var replaceInput = document.getElementById(PREFIX + 'replace');
 
-        function clearError() {
-            if (!errEl) return;
-            errEl.textContent = '';
-            errEl.style.display = 'none';
-        }
-
-        doBtn.addEventListener('click', function () {
-            clearError();
-
-            var findInput = document.getElementById('tc-fr-find');
-            var findStr = findInput ? findInput.value : '';
-            if (!findStr) {
-                showError('Please enter a search term or pattern to find.');
-                return;
-            }
-
-            var repInput = document.getElementById('tc-fr-replace');
-            var repStr = repInput ? repInput.value : '';
-            var caseCb = document.getElementById('tc-fr-case');
-            var wholeCb = document.getElementById('tc-fr-whole');
-            var regexCb = document.getElementById('tc-fr-regex');
-            var allCb = document.getElementById('tc-fr-all');
-            var cs = caseCb ? caseCb.checked : false;
-            var whole = wholeCb ? wholeCb.checked : false;
-            var regex = regexCb ? regexCb.checked : false;
-            var all = allCb ? allCb.checked : true;
-
-            var src = regex ? findStr : findStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            if (whole && !regex) src = '\\b' + src + '\\b';
-
-            var flags = (cs ? '' : 'i') + (all ? 'g' : '');
-
-            try {
-                var re = new RegExp(src, flags);
-                var count = 0;
-                var result = inp.value.replace(re, function () { count++; return repStr; });
-                out.value = result;
-                var matchesEl = document.getElementById('tc-fr-matches');
-                var replacedEl = document.getElementById('tc-fr-replaced');
-                if (matchesEl) matchesEl.textContent = count;
-                if (replacedEl) replacedEl.textContent = count;
-                TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', result.length.toLocaleString() + ' chars', (result.length < inp.value.length ? ((1 - result.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-                TCTP.toast('Found ' + count + ' match(es) and replaced.');
-            } catch (e) {
-                showError('Invalid regex: ' + e.message);
-            }
+    /* ── Mode cards ──────────────────────────────────────────── */
+    document.querySelectorAll('.tc-fr-modes .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-fr-modes .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
         });
+    });
 
-        var copyBtn = document.getElementById('tc-fr-copy');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', function () {
-                TCTP.copyText(out.value, 'Result');
-            });
+    function getSelectedMode() {
+        var s = document.querySelector('.tc-fr-modes .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'normal';
+    }
+
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
+    }
+
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+    }
+
+    /* ── Perform find & replace ─────────────────────────────── */
+    function performReplace() {
+        var findStr = findInput ? findInput.value : '';
+        var repStr = replaceInput ? replaceInput.value : '';
+        var sourceText = inp.value;
+        var mode = getSelectedMode();
+        var caseCb = document.getElementById(PREFIX + 'case');
+        var allCb = document.getElementById(PREFIX + 'all');
+        var trimCb = document.getElementById(PREFIX + 'trim');
+        var dedupCb = document.getElementById(PREFIX + 'dedup');
+        var cs = caseCb && caseCb.checked;
+        var all = allCb ? allCb.checked : true;
+
+        if (!sourceText.trim()) {
+            TCTP.toast('Paste some text first!', '\u26A0\uFE0F');
+            return;
         }
+        if (!findStr) {
+            TCTP.toast('Enter something to find.', '\u26A0\uFE0F');
+            return;
+        }
+
+        var escaped, flags, re, count = 0, result;
+
+        try {
+            if (mode === 'regex') {
+                flags = (cs ? '' : 'i') + (all ? 'g' : '');
+                re = new RegExp(findStr, flags);
+            } else if (mode === 'whole') {
+                escaped = findStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                flags = (cs ? '' : 'i') + (all ? 'g' : '');
+                re = new RegExp('\\b' + escaped + '\\b', flags);
+            } else {
+                escaped = findStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                flags = (cs ? '' : 'i') + (all ? 'g' : '');
+                re = new RegExp(escaped, flags);
+            }
+        } catch (e) {
+            TCTP.toast('Invalid regex: ' + e.message, '\u274C');
+            return;
+        }
+
+        result = sourceText.replace(re, function () { count++; return repStr; });
+
+        if (trimCb && trimCb.checked) {
+            result = result.trim();
+        }
+        if (dedupCb && dedupCb.checked) {
+            result = result.replace(/ {2,}/g, ' ');
+        }
+
+        replacedText = result;
+
+        setStat(PREFIX + 'matches', count.toLocaleString());
+        setStat(PREFIX + 'replaced', count.toLocaleString());
+
+        TCTP.updateResultPanel(
+            sourceText.length.toLocaleString() + ' chars',
+            result.length.toLocaleString() + ' chars',
+            (sourceText.length !== result.length
+                ? ((result.length < sourceText.length ? '+' : '-') +
+                   Math.abs(((result.length - sourceText.length) / sourceText.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = sourceText;
+        if (resultPreview) resultPreview.value = result;
+
+        TCTP.toast('Found ' + count + ' match(es) and replaced!');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Convert button ─────────────────────────────────────── */
+    var convertBtn = document.getElementById(PREFIX + 'convert');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'progress');
+            TCTP.setProgress(PREFIX + 'progress', 50, 'Replacing...');
+
+            setTimeout(function () {
+                performReplace();
+                TCTP.setProgress(PREFIX + 'progress', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'progress');
+                TCTP.switchToResultTab();
+            }, 80);
+        });
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(replacedText, 'Result');
+        });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

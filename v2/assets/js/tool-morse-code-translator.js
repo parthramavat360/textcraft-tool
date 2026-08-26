@@ -30,12 +30,19 @@
 
     var currentDirection = 'to-morse';
 
-    document.querySelectorAll('.tc-modes[data-group="morse-direction"] .tc-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            currentDirection = btn.getAttribute('data-val');
+    var group = document.querySelector('.tc-modes[data-group="morse-direction"]');
+    if (group) {
+        var dirBtns = group.querySelectorAll('.tc-btn');
+        dirBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                dirBtns.forEach(function (b) { b.classList.remove('sel'); });
+                btn.classList.add('sel');
+                currentDirection = btn.getAttribute('data-val') || 'to-morse';
+            });
         });
-    });
+        var selected = group.querySelector('.tc-btn.sel');
+        if (selected) currentDirection = selected.getAttribute('data-val') || 'to-morse';
+    }
 
     function getSep() {
         var sel = document.getElementById('tc-morse-sep');

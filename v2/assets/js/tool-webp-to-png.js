@@ -1,92 +1,156 @@
 /**
- * WebP to PNG Converter â€” Tool JS
- *
- * Canvas-based WebP to PNG conversion with stats.
+ * WebP to PNG Converter — Tool JS (Premium)
+ * Features: iOS downscale, preview tabs.
  *
  * @package TextCraft_Tools_Pro
  */
-
 (function () {
     'use strict';
 
+    var prefix = 'tc-w2p-';
+    var dropEl = document.getElementById(prefix + 'drop');
+    if (!dropEl) return;
+
+    var convertBtn  = document.getElementById(prefix + 'convert');
+    var downloadBtn = document.getElementById(prefix + 'download');
+    var iosToggle   = document.getElementById(prefix + 'ios');
+    var PROGRESS_ID = prefix + 'progress';
+
     var file = null;
     var convertedBlob = null;
+    var convertedUrl = null;
 
-    var drop = document.getElementById('tc-w2p-drop');
-    if (!drop) return;
+    // ── Drop Zone ─────────────────────────────────────────────
 
-    TCTP.initDropZone('tc-w2p-drop', 'tc-w2p-drop-input', function (f) {
-        if (!f.type.match(/image\/webp/) && !/\.webp$/i.test(f.name)) {
+    TCTP.initDropZone(prefix + 'drop', prefix + 'drop-input', function (f) {
+        if (f.type !== 'image/webp' && !/\.webp$/i.test(f.name)) {
             TCTP.toast('Please select a WebP file.', '\u26A0\uFE0F');
             return;
         }
         file = f;
         convertedBlob = null;
-        TCTP.showFileRow('tc-w2p-file', f);
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.showFileRow(prefix + 'file', f);
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            TCTP.showOriginalPreview(ev.target.result);
+            TCTP.switchToOriginalTab();
+        };
+        reader.readAsDataURL(f);
     }, 'image/webp,.webp');
 
-    var removeBtn = document.querySelector('#tc-w2p-file .tctp-x, #tc-w2p-file .tc-x');
+    var removeBtn = document.querySelector('#' + prefix + 'file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         convertedBlob = null;
-        TCTP.hideFileRow('tc-w2p-file');
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.hideFileRow(prefix + 'file');
     });
 
-    var convertBtn = document.getElementById('tc-w2p-convert');
-    if (convertBtn) convertBtn.addEventListener('click', function () {
-        if (!file) { TCTP.toast('Please select a WebP file first.', '\u26A0\uFE0F'); return; }
+    // ── Convert ───────────────────────────────────────────────
 
-        TCTP.showProgress('tc-w2p-progress');
-        TCTP.setProgress('tc-w2p-progress', 20, 'Reading image...');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            if (!file) { TCTP.toast('Please select a WebP file first.', '\u26A0\uFE0F'); return; }
+            doConvert();
+        });
+    }
+
+    function doConvert() {
+        var doDownscale = iosToggle ? iosToggle.checked : true;
+
+        TCTP.showProgress(PROGRESS_ID);
+        TCTP.setProgress(PROGRESS_ID, 10, 'Reading image...');
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            TCTP.setProgress('tc-w2p-progress', 50, 'Converting...');
+            TCTP.setProgress(PROGRESS_ID, 30, 'Decoding WebP...');
+
             var img = new Image();
             img.onload = function () {
+                TCTP.setProgress(PROGRESS_ID, 50, 'Processing...');
+
+                var w = img.naturalWidth;
+                var h = img.naturalHeight;
+
+                if (doDownscale) {
+                    var maxDim = 4096;
+                    if (w > maxDim || h > maxDim) {
+                        var scale = maxDim / Math.max(w, h);
+                        w = Math.round(w * scale);
+                        h = Math.round(h * scale);
+                    }
+                }
+
                 var canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+                canvas.width = w;
+                canvas.height = h;
                 var ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(img, 0, 0, w, h);
+
+                TCTP.setProgress(PROGRESS_ID, 70, 'Encoding PNG...');
 
                 canvas.toBlob(function (blob) {
                     if (!blob) {
-                        TCTP.toast('Conversion failed. WebP may not be supported.', '\u274C');
-                        TCTP.hideProgress('tc-w2p-progress');
+                        TCTP.hideProgress(PROGRESS_ID);
+                        TCTP.toast('PNG encoding failed.', '\u274C');
                         return;
                     }
+
                     convertedBlob = blob;
                     var origSize = file.size;
                     var compSize = blob.size;
-                    var diff = origSize - compSize;
-                    var sign = diff >= 0 ? '-' : '+';
+                    var pctVal = origSize > 0 ? ((compSize - origSize) / origSize * 100) : 0;
+                    var savedLabel = (pctVal >= 0 ? '+' : '') + pctVal.toFixed(1) + '%';
 
-                    document.getElementById('tc-w2p-stat-orig').textContent = TCTP.formatSize(origSize);
-                    document.getElementById('tc-w2p-stat-comp').textContent = TCTP.formatSize(compSize);
-                    document.getElementById('tc-w2p-stat-diff').textContent = sign + TCTP.formatSize(Math.abs(diff));
-                    TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), sign + TCTP.formatSize(Math.abs(diff)), 'Done');
-                                        TCTP.showResultPreview(URL.createObjectURL(convertedBlob));
+                    // Input panel stats
+                    var statOrig = document.getElementById(prefix + 'stat-orig');
+                    var statComp = document.getElementById(prefix + 'stat-comp');
+                    var statSaved = document.getElementById(prefix + 'stat-saved');
+                    if (statOrig) statOrig.textContent = TCTP.formatSize(origSize);
+                    if (statComp) statComp.textContent = TCTP.formatSize(compSize);
+                    if (statSaved) statSaved.textContent = savedLabel;
+
+                    // Result panel stats
+                    TCTP.updateResultPanel(
+                        TCTP.formatSize(origSize),
+                        TCTP.formatSize(compSize),
+                        savedLabel,
+                        'Done'
+                    );
+
+                    // Preview tabs
+                    if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+                    convertedUrl = URL.createObjectURL(blob);
+                    TCTP.showResultPreview(convertedUrl);
                     TCTP.switchToResultTab();
 
-                    TCTP.setProgress('tc-w2p-progress', 100, 'Done!');
+                    TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
+                    setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
                     TCTP.toast('Converted to PNG!');
+                    URL.revokeObjectURL(img.src);
                 }, 'image/png');
             };
+
             img.onerror = function () {
+                TCTP.hideProgress(PROGRESS_ID);
                 TCTP.toast('Failed to decode WebP image.', '\u274C');
-                TCTP.hideProgress('tc-w2p-progress');
             };
+
             img.src = e.target.result;
         };
         reader.readAsDataURL(file);
-    });
+    }
 
-    var downloadBtn = document.getElementById('tc-w2p-download');
-    if (downloadBtn) downloadBtn.addEventListener('click', function () {
-        if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-        var name = (file ? file.name.replace(/\.webp$/i, '') : 'image') + '.png';
-        TCTP.downloadBlob(convertedBlob, name);
-    });
+    // ── Download ──────────────────────────────────────────────
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+            var name = (file ? file.name.replace(/\.webp$/i, '') : 'image') + '.png';
+            TCTP.downloadBlob(convertedBlob, name);
+        });
+    }
 
 })();

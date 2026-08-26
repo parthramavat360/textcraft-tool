@@ -1,7 +1,7 @@
 /**
  * Em Dash Remover — Tool JS
  *
- * Removes em dashes (—) and en dashes (–) from text, reports removal counts.
+ * Mode cards, replace modes, preview tabs, copy, result panel stats.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -9,66 +9,152 @@
 (function () {
     'use strict';
 
-    function init() {
-        var inp = document.getElementById('tc-edr-input');
-        var btnRemove = document.getElementById('tc-edr-remove');
-        if (!inp || !btnRemove || inp.dataset.tcInit) return;
-        inp.dataset.tcInit = '1';
+    var PREFIX = 'tc-edr-';
+    var cleanedText = '';
 
-        var out = document.getElementById('tc-edr-output');
-        var statusEl = document.getElementById('tc-edr-status');
-        var barId = 'tc-edr-bar';
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        function setStat(ids, val) {
-            for (var i = 0; i < ids.length; i++) {
-                var el = document.getElementById(ids[i]);
-                if (el) { el.textContent = val; return; }
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
+    var customWrap = document.querySelector('.tc-edr-custom-wrap');
+    var customInput = document.getElementById(PREFIX + 'custom');
+
+    /* ── Dash type cards ────────────────────────────────────── */
+    document.querySelectorAll('.tc-edr-dash-types .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-edr-dash-types .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+        });
+    });
+
+    function getDashType() {
+        var s = document.querySelector('.tc-edr-dash-types .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'both';
+    }
+
+    /* ── Replace type cards ─────────────────────────────────── */
+    document.querySelectorAll('.tc-edr-replace-types .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-edr-replace-types .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+            if (card.getAttribute('data-val') === 'custom') {
+                if (customWrap) customWrap.style.display = '';
+            } else {
+                if (customWrap) customWrap.style.display = 'none';
             }
+        });
+    });
+
+    function getReplacement() {
+        var s = document.querySelector('.tc-edr-replace-types .tc-rsz-mode-card.sel');
+        var val = s ? s.getAttribute('data-val') : 'remove';
+        if (val === 'custom' && customInput) return customInput.value;
+        if (val === 'space') return ' ';
+        if (val === 'hyphen') return '-';
+        if (val === 'comma') return ',';
+        return '';
+    }
+
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
+    }
+
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+    }
+
+    /* ── Perform remove ────────────────────────────────────── */
+    function performRemove() {
+        var text = inp.value;
+        var dashType = getDashType();
+        var replacement = getReplacement();
+
+        if (!text.trim()) {
+            TCTP.toast('Paste some text first.', '\u26A0\uFE0F');
+            return;
         }
 
-        btnRemove.addEventListener('click', function () {
-            var text = inp.value;
-            if (!text.trim()) {
-                TCTP.toast('Paste some text first.', '\u26A0\uFE0F');
-                return;
-            }
+        var emDash = '\u2014';
+        var enDash = '\u2013';
 
-            TCTP.showProgress(barId);
-            TCTP.setProgress(barId, 50, 'Processing...');
+        var emCount = 0;
+        var enCount = 0;
 
-            var emCount = (text.match(/\u2014/g) || []).length;
-            var enCount = (text.match(/\u2013/g) || []).length;
-            text = text.split('\u2014').join(' ').split('\u2013').join(' ');
+        if (dashType === 'both' || dashType === 'em') {
+            emCount = (text.match(new RegExp(emDash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length;
+        }
+        if (dashType === 'both' || dashType === 'en') {
+            enCount = (text.match(new RegExp(enDash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length;
+        }
 
-            var totalReplaced = emCount + enCount;
+        var result = text;
+        if (dashType === 'both' || dashType === 'em') {
+            result = result.split(emDash).join(replacement);
+        }
+        if (dashType === 'both' || dashType === 'en') {
+            result = result.split(enDash).join(replacement);
+        }
 
-            if (out) out.value = text;
-            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', text.length.toLocaleString() + ' chars', (text.length < inp.value.length ? ((1 - text.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-            setStat(['tc-edr-stats-em_count', 'tc-edr-stats-em-count', 'tc-edr-stat-em'], emCount.toLocaleString());
-            setStat(['tc-edr-stats-en_count', 'tc-edr-stats-en-count', 'tc-edr-stat-en'], enCount.toLocaleString());
-            setStat(['tc-edr-stats-total', 'tc-edr-stat-total', 'tc-edr-total'], totalReplaced.toLocaleString());
+        var totalReplaced = emCount + enCount;
+        cleanedText = result;
 
-            if (statusEl) {
-                statusEl.textContent = totalReplaced > 0
-                    ? 'Removed ' + totalReplaced + ' dash' + (totalReplaced === 1 ? '' : 'es') + '.'
-                    : 'No em or en dashes found.';
-            }
+        setStat(PREFIX + 'em', emCount.toLocaleString());
+        setStat(PREFIX + 'en', enCount.toLocaleString());
 
-            TCTP.setProgress(barId, 100, 'Done!');
-            TCTP.hideProgress(barId);
-            TCTP.toast(totalReplaced > 0
-                ? totalReplaced + ' dash' + (totalReplaced === 1 ? '' : 'es') + ' removed!'
-                : 'No dashes found.', totalReplaced > 0 ? '\u2705' : '\u26A0\uFE0F');
+        TCTP.updateResultPanel(
+            text.length.toLocaleString() + ' chars',
+            result.length.toLocaleString() + ' chars',
+            (text.length !== result.length
+                ? ((result.length < text.length ? '+' : '-') +
+                   Math.abs(((result.length - text.length) / text.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = text;
+        if (resultPreview) resultPreview.value = result;
+
+        TCTP.toast(totalReplaced > 0
+            ? totalReplaced + ' dash' + (totalReplaced === 1 ? '' : 'es') + ' removed!'
+            : 'No dashes found.', totalReplaced > 0 ? '\u2705' : '\u26A0\uFE0F');
+    }
+
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Remove button ─────────────────────────────────────── */
+    var removeBtn = document.getElementById(PREFIX + 'remove');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'bar');
+            TCTP.setProgress(PREFIX + 'bar', 50, 'Processing...');
+
+            setTimeout(function () {
+                performRemove();
+                TCTP.setProgress(PREFIX + 'bar', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'bar');
+                TCTP.switchToResultTab();
+            }, 80);
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(cleanedText, 'Result');
+        });
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

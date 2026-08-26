@@ -1,67 +1,146 @@
 /**
  * Whitespace Remover — Tool JS
+ *
+ * Premium design: mode cards, toggles, preview tabs, copy, live stats.
+ *
  * @package TextCraft_Tools_Pro
  */
 
 (function () {
     'use strict';
 
-    function init() {
-        var input = document.getElementById('tc-ws-input');
-        var output = document.getElementById('tc-ws-output');
-        var cleanBtn = document.getElementById('tc-ws-clean');
-        var copyBtn = document.getElementById('tc-ws-copy');
-        if (!input || !cleanBtn || input.dataset.tcInit) return;
-        input.dataset.tcInit = '1';
+    var PREFIX = 'tc-ws-';
+    var cleanedText = '';
 
-        var trimLines = document.getElementById('ws-trim');
-        var extraSpaces = document.getElementById('ws-extra');
-        var removeTabs = document.getElementById('ws-tabs');
-        var globalTrim = document.getElementById('ws-global');
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        cleanBtn.addEventListener('click', function () {
-            var text = input.value;
-            if (!text.trim()) {
-                TCTP.toast('Please enter some text to clean up.', '\u26A0\uFE0F');
-                return;
-            }
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
 
-            var lines = text.split('\n');
-
-            if (removeTabs && removeTabs.checked) {
-                lines = lines.map(function (l) { return l.replace(/\t/g, ''); });
-            }
-            if (extraSpaces && extraSpaces.checked) {
-                lines = lines.map(function (l) { return l.replace(/ {2,}/g, ' '); });
-            }
-            if (trimLines && trimLines.checked) {
-                lines = lines.map(function (l) { return l.trim(); });
-            }
-
-            text = lines.join('\n');
-            if (globalTrim && globalTrim.checked) {
-                text = text.replace(/^\s+|\s+$/g, '');
-            }
-
-            if (output) output.value = text;
-            TCTP.updateResultPanel(input.value.length.toLocaleString() + ' chars', text.length.toLocaleString() + ' chars', (text.length < input.value.length ? ((1 - text.length / input.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-            TCTP.toast('Whitespace cleaned!');
+    /* ── Mode cards ─────────────────────────────────────────── */
+    document.querySelectorAll('.tc-ws-modes .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-ws-modes .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
         });
+    });
 
-        if (copyBtn) {
-            copyBtn.addEventListener('click', function () {
-                TCTP.copyText(output ? output.value : '', 'Cleaned text');
-            });
+    function getMode() {
+        var s = document.querySelector('.tc-ws-modes .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'smart';
+    }
+
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
+    }
+
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+        setStat(PREFIX + 'lines', s.lines.toLocaleString());
+    }
+
+    /* ── Cleaning logic ────────────────────────────────────── */
+    function performClean() {
+        var text = inp.value;
+
+        if (!text.trim()) {
+            TCTP.toast('Paste some text first.', '\u26A0\uFE0F');
+            return;
         }
+
+        var mode = getMode();
+        var removeTabs = document.getElementById(PREFIX + 'tabs');
+        var removeBlank = document.getElementById(PREFIX + 'blanklines');
+        var globalTrim = document.getElementById(PREFIX + 'globaltrim');
+
+        var lines = text.split('\n');
+
+        if (removeTabs && removeTabs.checked) {
+            lines = lines.map(function (l) { return l.replace(/\t/g, ' '); });
+        }
+
+        if (mode === 'smart' || mode === 'trim' || mode === 'aggressive') {
+            lines = lines.map(function (l) { return l.trim(); });
+        }
+
+        if (mode === 'smart' || mode === 'collapse') {
+            lines = lines.map(function (l) { return l.replace(/ {2,}/g, ' '); });
+        }
+
+        if (mode === 'aggressive') {
+            lines = lines.map(function (l) { return l.replace(/\s+/g, ''); });
+        }
+
+        if (removeBlank && removeBlank.checked) {
+            lines = lines.filter(function (l) { return l.trim().length > 0; });
+        }
+
+        var result = lines.join('\n');
+
+        if (globalTrim && globalTrim.checked) {
+            result = result.trim();
+        }
+
+        cleanedText = result;
+
+        var diff = text.length - result.length;
+        var pct = text.length > 0 ? ((diff / text.length) * 100).toFixed(1) : '0';
+        setStat(PREFIX + 'saved', (diff > 0 ? '-' : '+') + Math.abs(pct) + '%');
+
+        TCTP.updateResultPanel(
+            text.length.toLocaleString() + ' chars',
+            result.length.toLocaleString() + ' chars',
+            (text.length !== result.length
+                ? ((result.length < text.length ? '+' : '-') +
+                   Math.abs(((result.length - text.length) / text.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = text;
+        if (resultPreview) resultPreview.value = result;
+
+        TCTP.toast(diff > 0
+            ? diff.toLocaleString() + ' characters removed!'
+            : 'No extra whitespace found.', diff > 0 ? '\u2705' : '\u26A0\uFE0F');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Clean button ─────────────────────────────────────── */
+    var cleanBtn = document.getElementById(PREFIX + 'clean');
+    if (cleanBtn) {
+        cleanBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'bar');
+            TCTP.setProgress(PREFIX + 'bar', 50, 'Cleaning...');
+
+            setTimeout(function () {
+                performClean();
+                TCTP.setProgress(PREFIX + 'bar', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'bar');
+                TCTP.switchToResultTab();
+            }, 80);
+        });
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(cleanedText, 'Result');
+        });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

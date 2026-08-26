@@ -1,122 +1,163 @@
 /**
  * Plain Text Converter — Tool JS
+ *
+ * Premium design: mode cards, toggles, preview tabs, copy, live stats.
+ *
  * @package TextCraft_Tools_Pro
  */
 
 (function () {
     'use strict';
 
-    function init() {
-        var inp = document.getElementById('tc-pt-input');
-        var out = document.getElementById('tc-pt-output');
-        var btnConvert = document.getElementById('tc-pt-convert');
-        if (!inp || !btnConvert || inp.dataset.tcInit) return;
-        inp.dataset.tcInit = '1';
+    var PREFIX = 'tc-pt-';
+    var cleanedText = '';
 
-        var statusEl = document.getElementById('tc-pt-status');
+    var inp = document.getElementById(PREFIX + 'input');
+    if (!inp) return;
 
-        // Option defaults mirror the Elementor controls
-        // (pt_strip_html=yes, pt_decode_entities=yes, pt_remove_blanks='',
-        //  pt_trim_spaces=yes, pt_normalize_unicode='').
-        var stripHtml = true;
-        var decodeEntities = true;
-        var removeBlanks = false;
-        var trimSpaces = true;
-        var normalizeUnicode = false;
+    var origPreview = document.getElementById(PREFIX + 'preview-orig');
+    var resultPreview = document.getElementById(PREFIX + 'preview-result');
 
-        function setStat(ids, val) {
-            for (var i = 0; i < ids.length; i++) {
-                var el = document.getElementById(ids[i]);
-                if (el) { el.textContent = val; return; }
-            }
-        }
+    /* ── Mode cards ─────────────────────────────────────────── */
+    document.querySelectorAll('.tc-pt-modes .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.tc-pt-modes .tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+        });
+    });
 
-        function convert() {
-            var text = inp.value;
-            if (!text.trim()) {
-                TCTP.toast('Paste some HTML or rich text first.', '\u26A0\uFE0F');
-                return;
-            }
-
-            TCTP.showProgress('tc-pt-bar');
-            TCTP.setProgress('tc-pt-bar', 40, 'Converting...');
-
-            var tagsRemoved = 0;
-
-            if (stripHtml) {
-                var before = text.length;
-                text = text.replace(/<[^>]+>/g, '');
-                tagsRemoved = before - text.length;
-            }
-            if (decodeEntities) {
-                var ta = document.createElement('textarea');
-                ta.innerHTML = text;
-                text = ta.value;
-                text = text.replace(/&#(\d+);/g, function (m, code) { return String.fromCharCode(parseInt(code, 10)); });
-                text = text.replace(/&#x([0-9a-f]+);/gi, function (m, code) { return String.fromCharCode(parseInt(code, 16)); });
-            }
-            if (normalizeUnicode) {
-                text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
-                text = text.replace(/\u00A0/g, ' ');
-                text = text.replace(/[\u2000-\u200A\u202F\u205F\u3000]/g, ' ');
-            }
-            if (removeBlanks) {
-                text = text.replace(/([ \t]*\n){2,}/g, '\n');
-            }
-            if (trimSpaces) {
-                text = text.replace(/[ \t]+/g, ' ');
-                text = text.split('\n').map(function (l) { return l.trim(); }).join('\n');
-            }
-            if (removeBlanks) {
-                text = text.replace(/\n{3,}/g, '\n\n');
-            }
-            text = text.trim();
-
-            if (out) out.value = text;
-            setStat(['tc-pt-stats-tags_removed', 'tc-pt-stats-tags-removed', 'tc-pt-stat-tags'], tagsRemoved.toLocaleString());
-            setStat(['tc-pt-stats-before', 'tc-pt-stat-before'], inp.value.length.toLocaleString());
-            setStat(['tc-pt-stats-after', 'tc-pt-stat-after'], text.length.toLocaleString());
-            if (statusEl) statusEl.textContent = 'Converted to plain text.';
-
-            TCTP.updateResultPanel(inp.value.length.toLocaleString() + ' chars', text.length.toLocaleString() + ' chars', (text.length < inp.value.length ? ((1 - text.length / inp.value.length) * 100).toFixed(1) + '%' : '0%'), 'Done');
-
-            TCTP.setProgress('tc-pt-bar', 100, 'Done!');
-            TCTP.hideProgress('tc-pt-bar');
-            TCTP.toast('Converted to plain text!');
-        }
-
-        btnConvert.addEventListener('click', convert);
-
-        // Drop zone + file row
-        function onFile(file) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                inp.value = String(reader.result || '');
-                TCTP.showFileRow('tc-pt-file', file);
-                convert();
-            };
-            reader.readAsText(file);
-        }
-        TCTP.initDropZone('tc-pt-drop', 'tc-pt-drop-input', onFile);
-
-        var fileRow = document.getElementById('tc-pt-file');
-        if (fileRow) {
-            var closeBtn = fileRow.querySelector('.tc-x');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function () {
-                    TCTP.hideFileRow('tc-pt-file');
-                });
-            }
-        }
+    function getMode() {
+        var s = document.querySelector('.tc-pt-modes .tc-rsz-mode-card.sel');
+        return s ? s.getAttribute('data-val') : 'smart';
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    /* ── Stats ─────────────────────────────────────────────── */
+    function setStat(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v;
     }
 
-    // Re-init after Elementor AJAX re-render
-    new MutationObserver(function () { init(); })
-        .observe(document.documentElement, { childList: true, subtree: true });
+    function updateStats(text) {
+        var s = TCTP.getStats(text);
+        setStat(PREFIX + 'chars', s.chars.toLocaleString());
+        setStat(PREFIX + 'words', s.words.toLocaleString());
+    }
+
+    /* ── Cleaning logic ────────────────────────────────────── */
+    function countTags(text) {
+        return (text.match(/<[^>]+>/g) || []).length;
+    }
+
+    function performConvert() {
+        var text = inp.value;
+
+        if (!text.trim()) {
+            TCTP.toast('Paste some HTML or rich text first.', '\u26A0\uFE0F');
+            return;
+        }
+
+        var mode = getMode();
+        var decodeEl = document.getElementById(PREFIX + 'decode');
+        var unicodeEl = document.getElementById(PREFIX + 'unicode');
+        var blankEl = document.getElementById(PREFIX + 'blanklines');
+        var dedupEl = document.getElementById(PREFIX + 'dedup');
+
+        var doDecode = decodeEl ? decodeEl.checked : false;
+        var doUnicode = unicodeEl ? unicodeEl.checked : false;
+        var doBlanks = blankEl ? blankEl.checked : false;
+        var doDedup = dedupEl ? dedupEl.checked : false;
+
+        var tagsRemoved = 0;
+
+        if (mode === 'smart' || mode === 'strip') {
+            tagsRemoved = countTags(text);
+            text = text.replace(/<!--[\s\S]*?-->/g, '');
+            text = text.replace(/<script[\s\S]*?<\/script>/gi, '');
+            text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
+            text = text.replace(/<[^>]+>/g, ' ');
+        }
+
+        if (mode === 'smart' || mode === 'decode' || doDecode) {
+            var ta = document.createElement('textarea');
+            ta.innerHTML = text;
+            text = ta.value;
+            text = text.replace(/&#(\d+);/g, function (m, code) { return String.fromCharCode(parseInt(code, 10)); });
+            text = text.replace(/&#x([0-9a-f]+);/gi, function (m, code) { return String.fromCharCode(parseInt(code, 16)); });
+        }
+
+        if (doUnicode) {
+            text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+            text = text.replace(/\u00A0/g, ' ');
+            text = text.replace(/[\u2000-\u200A\u202F\u205F\u3000]/g, ' ');
+        }
+
+        if (mode === 'smart' || doDedup) {
+            text = text.replace(/ {2,}/g, ' ');
+            text = text.split('\n').map(function (l) { return l.trim(); }).join('\n');
+        }
+
+        if (doBlanks) {
+            text = text.replace(/([ \t]*\n){2,}/g, '\n');
+            text = text.replace(/\n{3,}/g, '\n\n');
+        }
+
+        text = text.trim();
+
+        cleanedText = text;
+
+        setStat(PREFIX + 'tags', tagsRemoved.toLocaleString());
+
+        var diff = inp.value.length - text.length;
+        var pct = inp.value.length > 0 ? ((diff / inp.value.length) * 100).toFixed(1) : '0';
+        setStat(PREFIX + 'saved', (diff > 0 ? '-' : '+') + Math.abs(pct) + '%');
+
+        TCTP.updateResultPanel(
+            inp.value.length.toLocaleString() + ' chars',
+            text.length.toLocaleString() + ' chars',
+            (inp.value.length !== text.length
+                ? ((text.length < inp.value.length ? '+' : '-') +
+                   Math.abs(((text.length - inp.value.length) / inp.value.length) * 100).toFixed(1) + '%')
+                : '0%'),
+            'Done'
+        );
+
+        if (origPreview) origPreview.value = inp.value;
+        if (resultPreview) resultPreview.value = text;
+
+        TCTP.toast('Converted to plain text!', '\u2705');
+    }
+
+    /* ── Live input stats + original preview ────────────────── */
+    inp.addEventListener('input', function () {
+        updateStats(inp.value);
+        if (origPreview) origPreview.value = inp.value;
+    });
+
+    /* ── Convert button ─────────────────────────────────────── */
+    var convertBtn = document.getElementById(PREFIX + 'convert');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            TCTP.showProgress(PREFIX + 'bar');
+            TCTP.setProgress(PREFIX + 'bar', 50, 'Converting...');
+
+            setTimeout(function () {
+                performConvert();
+                TCTP.setProgress(PREFIX + 'bar', 100, 'Done!');
+                TCTP.hideProgress(PREFIX + 'bar');
+                TCTP.switchToResultTab();
+            }, 80);
+        });
+    }
+
+    /* ── Copy ───────────────────────────────────────────────── */
+    var copyBtn = document.getElementById(PREFIX + 'copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            TCTP.copyText(cleanedText, 'Result');
+        });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStats('');
+
 })();

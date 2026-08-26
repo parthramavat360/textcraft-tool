@@ -1,102 +1,125 @@
 <?php
+/**
+ * Widget: Em Dash Remover
+ * Premium design following case-converter pattern.
+ *
+ * @package TextCraft_Tools_Pro
+ */
+
 declare(strict_types=1);
+
 namespace TextCraft_Tools_Pro;
 
-use Elementor\Controls_Manager;
 defined('ABSPATH') || exit;
 
 class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
 
-    public function get_name(): string {
-        return 'em_dash_remover';
-    }
+    protected bool $show_preview = true;
 
-    public function get_title(): string {
-        return 'Em Dash Remover';
-    }
+    public function get_name(): string { return 'em_dash_remover'; }
+    public function get_title(): string { return 'Em Dash Remover'; }
+    public function get_icon(): string { return 'eicon-minus'; }
 
-    public function get_icon(): string {
-        return 'eicon-minus';
-    }
-
-    protected function register_tool_controls(): void {
-
-        $this->add_control(
-            'edr_replace_with',
-            [
-                'label'   => esc_html__('Replace With', 'textcrafttoolspro'),
-                'type'    => Controls_Manager::SELECT,
-                'options' => [
-                    'nothing' => esc_html__('Nothing (remove)', 'textcrafttoolspro'),
-                    'space'   => esc_html__('Space', 'textcrafttoolspro'),
-                    'hyphen'  => esc_html__('Hyphen', 'textcrafttoolspro'),
-                    'comma'   => esc_html__('Comma', 'textcrafttoolspro'),
-                    'custom'  => esc_html__('Custom', 'textcrafttoolspro'),
-                ],
-                'default' => 'nothing',
-            ]
-        );
-
-        $this->add_control(
-            'edr_custom_replacement',
-            [
-                'label'       => esc_html__('Custom Replacement', 'textcrafttoolspro'),
-                'type'        => Controls_Manager::TEXT,
-                'default'     => '',
-                'placeholder' => esc_html__('e.g. -', 'textcrafttoolspro'),
-                'condition'   => ['edr_replace_with' => 'custom'],
-                'label_block' => true,
-            ]
-        );
-
-        $this->add_control(
-            'edr_remove_em_dash',
-            [
-                'label'        => esc_html__('Em Dash (â€”)', 'textcrafttoolspro'),
-                'type'         => Controls_Manager::SWITCHER,
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'edr_remove_en_dash',
-            [
-                'label'        => esc_html__('En Dash (â€“)', 'textcrafttoolspro'),
-                'type'         => Controls_Manager::SWITCHER,
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'edr_remove_hyphen',
-            [
-                'label'        => esc_html__('Hyphen (-)', 'textcrafttoolspro'),
-                'type'         => Controls_Manager::SWITCHER,
-                'return_value' => 'yes',
-                'default'      => '',
-            ]
-        );
+    public function get_keywords(): array {
+        return ['em', 'dash', 'en', 'remove', 'hyphen', 'replace', 'punctuation', 'clean'];
     }
 
     protected function render_tool_content(array $settings): void {
-        $this->render_textarea('tc-edr-input', 'Paste or type your text here...');
-        $this->render_actions('tc-edr-remove', 'Remove Dashes');
-        $this->render_progress_bar('tc-edr-bar', 'Processing...');
-        $this->render_status('tc-edr-status');
-    }
-
-    protected function render_result_content(array $settings): void {
         ?>
-        <div class="tc-result-area" id="tc-result">
-            <textarea class="tc-textarea" id="tc-edr-output" placeholder="Result will appear here..." readonly></textarea>
+        <div class="tc-tool-desc">
+            Remove em dashes, en dashes, and hyphens from your text. Choose what to replace them with. Works entirely in your browser — no data is sent to any server.
+        </div>
+
+        <?php $this->render_textarea('tc-edr-input', 'Paste or type your text here...', 8); ?>
+
+        <div class="tc-rsz-options">
+
+            <div class="tc-rsz-section">
+                <div class="tc-rsz-mode-cards tc-edr-dash-types">
+                    <button class="tc-rsz-mode-card sel" type="button" data-val="both">
+                        <span class="tc-rsz-mode-text"><b>Em + En</b><span>Both dash types</span></span>
+                    </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="em">
+                        <span class="tc-rsz-mode-text"><b>Em Dash</b><span>&mdash; only</span></span>
+                    </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="en">
+                        <span class="tc-rsz-mode-text"><b>En Dash</b><span>&ndash; only</span></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tc-rsz-section">
+                <div class="tc-rsz-mode-cards tc-edr-replace-types">
+                    <button class="tc-rsz-mode-card sel" type="button" data-val="remove">
+                        <span class="tc-rsz-mode-text"><b>Remove</b><span>Delete dashes</span></span>
+                    </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="space">
+                        <span class="tc-rsz-mode-text"><b>Space</b><span>Replace with space</span></span>
+                    </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="hyphen">
+                        <span class="tc-rsz-mode-text"><b>Hyphen</b><span>Replace with -</span></span>
+                    </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="comma">
+                        <span class="tc-rsz-mode-text"><b>Comma</b><span>Replace with ,</span></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tc-rsz-section tc-edr-custom-wrap" style="display:none">
+                <div class="tc-input-group">
+                    <label class="tc-label">Custom Replacement</label>
+                    <input type="text" class="tc-input" id="tc-edr-custom" placeholder="e.g. -">
+                </div>
+            </div>
+
+        </div>
+
+        <?php $this->render_progress_bar('tc-edr-bar', 'Processing...'); ?>
+
+        <?php $this->render_actions('tc-edr-remove', 'Remove Dashes', 'tc-edr-copy', 'Copy Result'); ?>
+
+        <div class="tc-stats-row">
+            <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-edr-chars">0</span></div>
+            <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-edr-words">0</span></div>
+            <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Em Dashes</span><span class="tc-stat-value" id="tc-edr-em">0</span></div>
+            <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">En Dashes</span><span class="tc-stat-value" id="tc-edr-en">0</span></div>
         </div>
         <?php
-        $this->render_stats_panel_row('tc-edr-stats', [
-            'em_count' => 'Em Dashes Removed',
-            'en_count' => 'En Dashes Removed',
-            'total'    => 'Total Replacements',
-        ]);
+    }
+
+    protected function render_result_content(array $settings): void {}
+
+    protected function render_result(array $settings): void {
+        ?>
+        <div class="tc-result-col">
+            <div class="tc-panel">
+                <div class="tc-panel-head">
+                    <h3>2 &middot; Result</h3>
+                    <span id="tc-status-chip">Idle</span>
+                </div>
+                <div class="tc-panel-body">
+                    <div class="tc-stats">
+                        <div><span>Original</span><b id="tc-stat-orig">&mdash;</b></div>
+                        <div><span>Cleaned</span><b id="tc-stat-comp">&mdash;</b></div>
+                        <div class="saved"><span>Difference</span><b id="tc-stat-saved">&mdash;</b></div>
+                    </div>
+                    <div class="tc-tabs-header">
+                        <h4>Preview</h4>
+                        <div class="tc-tabs">
+                            <button class="on" data-tab="original">Original</button>
+                            <button data-tab="result">Cleaned</button>
+                        </div>
+                    </div>
+                    <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">
+                        <textarea class="tc-textarea" id="tc-edr-preview-orig" placeholder="Original text will appear here..." readonly rows="10"></textarea>
+                    </div>
+                    <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">
+                        <textarea class="tc-textarea" id="tc-edr-preview-result" placeholder="Cleaned text will appear here..." readonly rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+            <?php $this->render_side_panel($settings); ?>
+        </div>
+        <?php
     }
 }

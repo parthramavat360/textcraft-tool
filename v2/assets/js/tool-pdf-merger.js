@@ -1,5 +1,5 @@
 /**
- * PDF Merger â€” Tool JS
+ * PDF Merger — Tool JS
  *
  * Multi-file drop zone, file list with reorder (up/down buttons),
  * merge button, download. Stats: count, total size.
@@ -28,6 +28,32 @@
         });
     }
 
+    async function ensurePdfLib() {
+        if (!window.PDFLib) {
+            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+        }
+    }
+
+    function renderPageToImage(arrayBuffer, pageNum) {
+        pageNum = pageNum || 1;
+        return window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise.then(function (pdf) {
+            if (pageNum > pdf.numPages) pageNum = 1;
+            return pdf.getPage(pageNum);
+        }).then(function (page) {
+            var vp = page.getViewport({ scale: 1.5 });
+            var canvas = document.createElement('canvas');
+            canvas.width = vp.width;
+            canvas.height = vp.height;
+            var ctx = canvas.getContext('2d');
+            return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+                var dataUrl = canvas.toDataURL('image/png');
+                canvas.width = 0;
+                canvas.height = 0;
+                return dataUrl;
+            });
+        });
+    }
+
     function renderFileList() {
         var list = document.getElementById('tc-pm-list');
         if (!list) return;
@@ -39,6 +65,14 @@
             var li = document.createElement('li');
             li.className = 'tc-pm-item';
 
+            var numSpan = document.createElement('span');
+            numSpan.className = 'tc-pm-num';
+            numSpan.textContent = (idx + 1);
+
+            var icon = document.createElement('span');
+            icon.className = 'tc-pm-icon';
+            icon.textContent = '\uD83D\uDCC4';
+
             var nameSpan = document.createElement('span');
             nameSpan.className = 'tc-pm-name';
             nameSpan.textContent = f.name;
@@ -49,7 +83,7 @@
 
             var upBtn = document.createElement('button');
             upBtn.className = 'tc-pm-up';
-            upBtn.textContent = '\u25B2';
+            upBtn.innerHTML = '\u25B2';
             upBtn.title = 'Move up';
             upBtn.disabled = idx === 0;
             upBtn.addEventListener('click', function () {
@@ -63,7 +97,7 @@
 
             var downBtn = document.createElement('button');
             downBtn.className = 'tc-pm-down';
-            downBtn.textContent = '\u25BC';
+            downBtn.innerHTML = '\u25BC';
             downBtn.title = 'Move down';
             downBtn.disabled = idx === files.length - 1;
             downBtn.addEventListener('click', function () {
@@ -76,8 +110,8 @@
             });
 
             var removeBtn = document.createElement('button');
-            removeBtn.className = 'tc-pm-remove';
-            removeBtn.textContent = '\u2715';
+            removeBtn.className = 'tc-pm-remove tc-pm-btns-del';
+            removeBtn.innerHTML = '\u2715';
             removeBtn.title = 'Remove';
             removeBtn.addEventListener('click', function () {
                 files.splice(idx, 1);
@@ -90,6 +124,8 @@
             btnGroup.appendChild(downBtn);
             btnGroup.appendChild(removeBtn);
 
+            li.appendChild(numSpan);
+            li.appendChild(icon);
             li.appendChild(nameSpan);
             li.appendChild(sizeSpan);
             li.appendChild(btnGroup);
@@ -119,6 +155,21 @@
         var dl = document.getElementById('tc-pm-download');
         if (dl) dl.style.display = 'none';
         renderFileList();
+
+        if (files.length === 1) {
+            Promise.all([
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js')
+            ]).then(function () {
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                return f.arrayBuffer();
+            }).then(function (ab) {
+                return renderPageToImage(ab, 1);
+            }).then(function (dataUrl) {
+                TCTP.showOriginalPreview(dataUrl);
+                TCTP.switchToOriginalTab();
+            }).catch(function () {});
+        }
     }, '.pdf,application/pdf');
 
     var mergeBtn = document.getElementById('tc-pm-merge');
@@ -132,8 +183,10 @@
         TCTP.setProgress('tc-pm-progress', 10, 'Loading pdf-lib...');
 
         try {
-            if (!window.PDFLib) {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+            await ensurePdfLib();
+            if (!window.pdfjsLib) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             }
             TCTP.setProgress('tc-pm-progress', 30, 'Merging PDFs...');
 
@@ -147,7 +200,7 @@
             }
 
             TCTP.setProgress('tc-pm-progress', 85, 'Saving...');
-            var bytes = await mergedPdf.save();
+            var bytes = await mergedPdf.save({ useObjectStreams: false, updateMetadata: false });
             mergedBlob = new Blob([bytes], { type: 'application/pdf' });
 
             TCTP.setProgress('tc-pm-progress', 100, 'Done!');
@@ -159,8 +212,12 @@
             files.forEach(function (f) { totalIn += f.size; });
             var saved = totalIn > mergedBlob.size ? ((1 - mergedBlob.size / totalIn) * 100).toFixed(1) : '0';
             TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedBlob.size), saved + '%', 'Done');
-                                TCTP.showResultPreview(URL.createObjectURL(mergedBlob));
             TCTP.switchToResultTab();
+            try {
+                var mergedAb = await mergedBlob.arrayBuffer();
+                var compDataUrl = await renderPageToImage(mergedAb, 1);
+                TCTP.showResultPreview(compDataUrl);
+            } catch (_) {}
         } catch (err) {
             TCTP.toast('Merge failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-pm-progress');

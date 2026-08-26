@@ -1,8 +1,8 @@
 /**
- * JPG to WebP Converter â€” Tool JS
+ * JPG to WebP Converter — Tool JS
  *
- * Client-side JPG-to-WebP conversion using canvas.toBlob('image/webp', quality).
- * Quality adjustable with presets.
+ * Premium client-side JPG→WebP conversion using canvas.
+ * Features: quality slider with presets, iOS auto-downscale, preview tabs.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -10,99 +10,173 @@
 (function () {
     'use strict';
 
+    var prefix = 'tc-j2w-';
+    var dropEl = document.getElementById(prefix + 'drop');
+    if (!dropEl) return;
+
+    var convertBtn    = document.getElementById(prefix + 'convert');
+    var downloadBtn   = document.getElementById(prefix + 'download');
+    var qualitySlider = document.getElementById(prefix + 'quality');
+    var qualityBadge  = document.getElementById(prefix + 'quality-badge');
+    var iosToggle     = document.getElementById(prefix + 'ios');
+    var progressWrap  = document.getElementById(prefix + 'progress');
+
     var file = null;
     var convertedBlob = null;
+    var convertedUrl = null;
     var quality = 92;
 
-    var qualitySlider = document.getElementById('tc-j2w-quality');
-    var qualityVal = document.getElementById('tc-j2w-quality-val');
-    if (!qualitySlider) return;
+    // ── Quality Slider + Badge ────────────────────────────────
 
-    qualitySlider.addEventListener('input', function () {
-        quality = parseInt(qualitySlider.value);
-        qualityVal.textContent = quality;
-    });
+    if (qualitySlider && qualityBadge) {
+        qualitySlider.addEventListener('input', function () {
+            quality = parseInt(qualitySlider.value, 10);
+            qualityBadge.textContent = quality;
+        });
+    }
 
-    // Quality presets
+    // ── Quality Presets ───────────────────────────────────────
+
     document.querySelectorAll('[data-group="j2w-quality"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var group = btn.closest('[data-group="j2w-quality"]');
             if (group) group.querySelectorAll('.sel').forEach(function (b) { b.classList.remove('sel'); });
             btn.classList.add('sel');
-            quality = parseInt(btn.getAttribute('data-val')) || 92;
-            qualitySlider.value = quality;
-            qualityVal.textContent = quality;
+            quality = parseInt(btn.getAttribute('data-val'), 10) || 92;
+            if (qualitySlider) qualitySlider.value = quality;
+            if (qualityBadge) qualityBadge.textContent = quality;
         });
     });
 
-    // â”€â”€ Drop zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Drop Zone ─────────────────────────────────────────────
 
-    TCTP.initDropZone('tc-j2w-drop', 'tc-j2w-drop-input', function (f) {
-        if (!f.type.match(/image\/jpe?g/)) {
+    TCTP.initDropZone(prefix + 'drop', prefix + 'drop-input', function (f) {
+        if (!f.type.match(/image\/jpe?g/) && !/\.jpe?g$/i.test(f.name)) {
             TCTP.toast('Please select a JPG/JPEG file.', '\u26A0\uFE0F');
             return;
         }
         file = f;
-        TCTP.showFileRow('tc-j2w-file', f);
+        convertedBlob = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.showFileRow(prefix + 'file', f);
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            TCTP.showOriginalPreview(ev.target.result);
+            TCTP.switchToOriginalTab();
+        };
+        reader.readAsDataURL(f);
     }, 'image/jpeg,.jpg,.jpeg');
 
-    var removeBtn = document.querySelector('#tc-j2w-file .tctp-x, #tc-j2w-file .tc-x');
+    var removeBtn = document.querySelector('#' + prefix + 'file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null;
         convertedBlob = null;
-        TCTP.hideFileRow('tc-j2w-file');
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.hideFileRow(prefix + 'file');
     });
 
-    // â”€â”€ Convert â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Convert ───────────────────────────────────────────────
 
-    document.getElementById('tc-j2w-convert').addEventListener('click', function () {
-        if (!file) { TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            if (!file) { TCTP.toast('Please select a JPG file first.', '\u26A0\uFE0F'); return; }
+            doConvert();
+        });
+    }
 
-        TCTP.showProgress('tc-j2w-progress');
-        TCTP.setProgress('tc-j2w-progress', 30, 'Reading image...');
+    var PROGRESS_ID = prefix + 'progress';
 
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            TCTP.setProgress('tc-j2w-progress', 60, 'Converting...');
-            var img = new Image();
-            img.onload = function () {
-                var canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+    function doConvert() {
+        var doDownscale = iosToggle ? iosToggle.checked : true;
 
-                canvas.toBlob(function (blob) {
-                    if (!blob) {
-                        TCTP.toast('WebP is not supported in your browser.', '\u274C');
-                        TCTP.hideProgress('tc-j2w-progress');
-                        return;
-                    }
-                    convertedBlob = blob;
-                    var origSize = file.size;
-                    var compSize = blob.size;
-                    var saved = origSize > compSize ? ((1 - compSize / origSize) * 100).toFixed(1) : '0';
+        TCTP.showProgress(PROGRESS_ID);
+        TCTP.setProgress(PROGRESS_ID, 10, 'Reading image...');
 
-                    document.getElementById('tc-j2w-stat-orig').textContent = TCTP.formatSize(origSize);
-                    document.getElementById('tc-j2w-stat-comp').textContent = TCTP.formatSize(compSize);
-                    document.getElementById('tc-j2w-stat-saved').textContent = saved + '%';
-                    TCTP.updateResultPanel(TCTP.formatSize(origSize), TCTP.formatSize(compSize), saved + '%', 'Done');
-                                        TCTP.showResultPreview(URL.createObjectURL(convertedBlob));
-                    TCTP.switchToResultTab();
-                    TCTP.setProgress('tc-j2w-progress', 100, 'Done!');
-                    TCTP.toast('Converted to WebP! Saved ' + saved + '%');
-                }, 'image/webp', quality / 100);
-            };
-            img.src = e.target.result;
+        var img = new Image();
+        img.onload = function () {
+            TCTP.setProgress(PROGRESS_ID, 30, 'Processing...');
+
+            var w = img.naturalWidth;
+            var h = img.naturalHeight;
+
+            // iOS downscale: cap long edge at 4096
+            if (doDownscale) {
+                var maxDim = 4096;
+                if (w > maxDim || h > maxDim) {
+                    var scale = maxDim / Math.max(w, h);
+                    w = Math.round(w * scale);
+                    h = Math.round(h * scale);
+                }
+            }
+
+            TCTP.setProgress(PROGRESS_ID, 50, 'Converting to WebP...');
+
+            var canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+
+            TCTP.setProgress(PROGRESS_ID, 75, 'Encoding WebP...');
+
+            canvas.toBlob(function (blob) {
+                if (!blob) {
+                    TCTP.hideProgress(PROGRESS_ID);
+                    TCTP.toast('WebP is not supported in your browser.', '\u274C');
+                    return;
+                }
+
+                convertedBlob = blob;
+                var origSize = file.size;
+                var compSize = blob.size;
+                var savedPct = origSize > 0 ? ((1 - compSize / origSize) * 100).toFixed(1) : '0';
+
+                // Input panel stats
+                var statOrig = document.getElementById(prefix + 'stat-orig');
+                var statComp = document.getElementById(prefix + 'stat-comp');
+                var statSaved = document.getElementById(prefix + 'stat-saved');
+                if (statOrig) statOrig.textContent = TCTP.formatSize(origSize);
+                if (statComp) statComp.textContent = TCTP.formatSize(compSize);
+                if (statSaved) statSaved.textContent = savedPct + '%';
+
+                // Result panel stats
+                TCTP.updateResultPanel(
+                    TCTP.formatSize(origSize),
+                    TCTP.formatSize(compSize),
+                    savedPct + '%',
+                    'Done'
+                );
+
+                // Preview tabs
+                if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+                convertedUrl = URL.createObjectURL(blob);
+                TCTP.showResultPreview(convertedUrl);
+                TCTP.switchToResultTab();
+
+                TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
+                setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
+                TCTP.toast('Converted to WebP! Saved ' + savedPct + '%');
+                URL.revokeObjectURL(img.src);
+            }, 'image/webp', quality / 100);
         };
-        reader.readAsDataURL(file);
-    });
 
-    // Download
-    document.getElementById('tc-j2w-download').addEventListener('click', function () {
-        if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-        var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.webp';
-        TCTP.downloadBlob(convertedBlob, name);
-    });
+        img.onerror = function () {
+            TCTP.hideProgress(PROGRESS_ID);
+            TCTP.toast('Failed to load image.', '\u274C');
+        };
+
+        img.src = URL.createObjectURL(file);
+    }
+
+    // ── Download ──────────────────────────────────────────────
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+            var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.webp';
+            TCTP.downloadBlob(convertedBlob, name);
+        });
+    }
 
 })();

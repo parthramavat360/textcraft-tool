@@ -12,14 +12,21 @@
 
     var currentType = 'uuid_v4';
 
-    document.querySelectorAll('.tc-modes[data-group="uid-type"] .tc-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            currentType = btn.getAttribute('data-val');
-            var nanoidRow = document.getElementById('tc-uid-nanoid-len');
-            if (nanoidRow) nanoidRow.style.display = currentType === 'nanoid' ? '' : 'none';
+    var group = document.querySelector('.tc-modes[data-group="uid-type"]');
+    if (group) {
+        var dirBtns = group.querySelectorAll('.tc-btn');
+        dirBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                dirBtns.forEach(function (b) { b.classList.remove('sel'); });
+                btn.classList.add('sel');
+                currentType = btn.getAttribute('data-val') || 'uuid_v4';
+                var nanoidRow = document.getElementById('tc-uid-nanoid-len');
+                if (nanoidRow) nanoidRow.style.display = currentType === 'nanoid' ? '' : 'none';
+            });
         });
-    });
+        var selected = group.querySelector('.tc-btn.sel');
+        if (selected) currentType = selected.getAttribute('data-val') || 'uuid_v4';
+    }
 
     var nanoidRange = document.getElementById('tc-uid-nanoid-range');
     var nanoidVal = document.getElementById('tc-uid-nanoid-len-val');

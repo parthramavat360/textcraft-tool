@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define plugin constants.
  */
-define( 'TCTP_VERSION', '1.0.0' );
+define( 'TCTP_VERSION', '1.0.39' );
 define( 'TCTP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TCTP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TCTP_DATA_VERSION', 4 );
@@ -95,6 +95,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-nato-phonetic.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-online-notepad.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-password-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-password-strength-checker.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-pdf-compressor.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-pdf-merger.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-pdf-splitter.php';
@@ -147,6 +148,62 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-hash-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-url-encode-decode.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-resize-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-fancy-text.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-video-converter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-crop-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-rotate-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-watermark-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-flip-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-png-to-ico.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-svg-to-png.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-blur-face.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-meme-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-html-to-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-image-compressor.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-color-picker.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-lorem-ipsum.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-age-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-percentage-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-bmi-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-tip-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-date-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-font-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-upscale-image.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-photo-editor.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-small-text.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-to-speech.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-readability-checker.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-speech-to-text.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-diff.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-number-to-words.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-words-to-number.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-summarizer.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-color-converter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-gradient-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-dev-utilities.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-code-formatter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-json-tools.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-markdown-preview.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-markdown-table-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-cipher-tools.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-financial-calculator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-unit-converter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-timezone-converter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-instagram-caption.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-hashtag-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-social-char-counter.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-youtube-title.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-meta-description.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-random-name.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-team-name.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-dice-roller.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-coin-flipper.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-random-emoji.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-cheat-sheet.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-qr-reader.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-barcode-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-to-handwriting.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-currency-converter.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -176,6 +233,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Nato_Phonetic() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Online_Notepad() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Password_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Password_Strength_Checker() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Pdf_Compressor() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Pdf_Merger() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Pdf_Splitter() );
@@ -228,6 +286,62 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Hash_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_URL_Encode_Decode() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Resize_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Fancy_Text() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Crop_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Rotate_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Watermark_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Flip_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Png_To_Ico() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Svg_To_Png() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Blur_Face() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Meme_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Html_To_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Image_Compressor() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Color_Picker() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Lorem_Ipsum() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Age_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Percentage_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Bmi_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Tip_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Date_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Font_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Upscale_Image() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Photo_Editor() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Small_Text() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_To_Speech() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Readability_Checker() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Speech_To_Text() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_Diff() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Number_To_Words() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Words_To_Number() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_Summarizer() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Color_Converter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Gradient_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Dev_Utilities() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Code_Formatter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Json_Tools() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Markdown_Preview() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Markdown_Table_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Cipher_Tools() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Financial_Calculator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Unit_Converter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Timezone_Converter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Video_Converter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Instagram_Caption() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Hashtag_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Social_Char_Counter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Youtube_Title() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Meta_Description() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Random_Name() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Team_Name() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Dice_Roller() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Coin_Flipper() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Random_Emoji() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Cheat_Sheet() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_QR_Reader() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Barcode_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_To_Handwriting() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Currency_Converter() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -282,6 +396,25 @@ function tctp_enqueue_global_fonts() {
     ' );
 }
 add_action( 'wp_enqueue_scripts', 'tctp_enqueue_global_fonts' );
+
+/**
+ * Import map for onnxruntime-web (used by background-removal AI library).
+ */
+function tctp_import_map() {
+    echo '<script type="importmap">{"imports":{"onnxruntime-web":"https://esm.sh/onnxruntime-web@1.21.0","onnxruntime-web/webgpu":"https://esm.sh/onnxruntime-web@1.21.0/webgpu"}}</script>' . "\n";
+}
+add_action( 'wp_head', 'tctp_import_map', 1 );
+
+/**
+ * COOP/COEP headers for SharedArrayBuffer (needed by ffmpeg.wasm).
+ */
+function tctp_send_cross_origin_isolation_headers() {
+    if ( is_page( 'video-converter' ) ) {
+        header( 'Cross-Origin-Opener-Policy: same-origin' );
+        header( 'Cross-Origin-Embedder-Policy: credentialless' );
+    }
+}
+add_action( 'send_headers', 'tctp_send_cross_origin_isolation_headers' );
 
 /**
  * Enqueue plugin assets on frontend.
@@ -416,7 +549,6 @@ function tctp_enqueue_assets() {
         'tool-invisible-text',
         'tool-jpg-compressor',
         'tool-jpg-to-avif',
-        'tool-jpg-to-gif',
         'tool-jpg-to-heic',
         'tool-jpg-to-pdf',
         'tool-jpg-to-png',
@@ -426,6 +558,7 @@ function tctp_enqueue_assets() {
         'tool-nato-phonetic',
         'tool-online-notepad',
         'tool-password-generator',
+        'tool-password-strength-checker',
         'tool-pdf-compressor',
         'tool-pdf-merger',
         'tool-pdf-splitter',
@@ -478,6 +611,62 @@ function tctp_enqueue_assets() {
         'tool-hash-generator',
         'tool-url-encode-decode',
         'tool-resize-image',
+        'tool-crop-image',
+        'tool-rotate-image',
+        'tool-watermark-image',
+        'tool-flip-image',
+        'tool-png-to-ico',
+        'tool-svg-to-png',
+        'tool-blur-face',
+        'tool-meme-generator',
+        'tool-html-to-image',
+        'tool-image-compressor',
+        'tool-color-picker',
+        'tool-lorem-ipsum',
+        'tool-age-calculator',
+        'tool-percentage-calculator',
+        'tool-bmi-calculator',
+        'tool-tip-calculator',
+        'tool-date-calculator',
+        'tool-font-generator',
+        'tool-upscale-image',
+        'tool-photo-editor',
+        'tool-small-text',
+        'tool-text-to-speech',
+        'tool-readability-checker',
+        'tool-speech-to-text',
+        'tool-text-diff',
+        'tool-number-to-words',
+        'tool-words-to-number',
+        'tool-text-summarizer',
+        'tool-color-converter',
+        'tool-gradient-generator',
+        'tool-dev-utilities',
+        'tool-code-formatter',
+        'tool-json-tools',
+        'tool-markdown-preview',
+        'tool-markdown-table-generator',
+        'tool-cipher-tools',
+        'tool-financial-calculator',
+        'tool-unit-converter',
+        'tool-timezone-converter',
+        'tool-fancy-text',
+        'tool-video-converter',
+        'tool-instagram-caption',
+        'tool-hashtag-generator',
+        'tool-social-char-counter',
+        'tool-youtube-title',
+        'tool-meta-description',
+        'tool-random-name',
+        'tool-team-name',
+        'tool-dice-roller',
+        'tool-coin-flipper',
+        'tool-random-emoji',
+        'tool-cheat-sheet',
+        'tool-qr-reader',
+        'tool-barcode-generator',
+        'tool-text-to-handwriting',
+        'tool-currency-converter',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
@@ -489,6 +678,57 @@ function tctp_enqueue_assets() {
             true
         );
     }
+
+    wp_localize_script(
+        'tctp-tool-video-converter',
+        'tctpWasm',
+        [ 'url' => TCTP_PLUGIN_URL . 'assets/wasm' ]
+    );
+
+    wp_register_script(
+        'tctp-lib-omggif',
+        TCTP_PLUGIN_URL . 'assets/js/lib-omggif.js',
+        [],
+        '1.0.10',
+        true
+    );
+    wp_register_script(
+        'tctp-lib-gifjs',
+        'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js',
+        [],
+        '0.2.0',
+        true
+    );
+    wp_register_script(
+        'tctp-tool-gif-compressor',
+        TCTP_PLUGIN_URL . 'assets/js/tool-gif-compressor.js',
+        [ 'tctp-tool-shared-js', 'tctp-lib-omggif' ],
+        TCTP_VERSION,
+        true
+    );
+    if ( is_page( 'gif-compressor' ) ) {
+        wp_enqueue_script( 'tctp-lib-omggif' );
+        wp_enqueue_script( 'tctp-tool-gif-compressor' );
+    }
+
+    // omggif also needed by jpg-to-gif converter
+    wp_enqueue_script( 'tctp-lib-omggif' );
+
+    // jpg-to-gif needs omggif as dependency
+    wp_register_script(
+        'tctp-tool-jpg-to-gif',
+        TCTP_PLUGIN_URL . 'assets/js/tool-jpg-to-gif.js',
+        [ 'tctp-tool-shared-js', 'tctp-lib-omggif' ],
+        TCTP_VERSION,
+        true
+    );
+    wp_enqueue_script( 'tctp-tool-jpg-to-gif' );
+
+    wp_localize_script(
+        'tctp-tool-shared-js',
+        'tctpGifWorker',
+        [ 'url' => TCTP_PLUGIN_URL . 'assets/js/gif.worker.js' ]
+    );
 }
 add_action( 'wp_enqueue_scripts', 'tctp_enqueue_assets' );
 

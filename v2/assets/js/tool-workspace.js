@@ -3074,7 +3074,7 @@ function initRemoveBackground(ws) {
         if (!selectedFile) return;
         runBtn.disabled = true; runBtn.textContent = 'Processing...';
         try {
-            var mod = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/index.js');
+            var mod = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.8/dist/index.mjs');
             var bgRemoved = await mod.removeBackground(selectedFile);
             resultBlob = bgRemoved;
             runBtn.textContent = '\u2713 Done!';

@@ -11,24 +11,27 @@
     var generateBtn = document.getElementById('tc-qr-generate');
     if (!generateBtn) return;
 
-    var currentType = 'text';
+    function getQrType() {
+        return document.querySelector('.tc-modes[data-group="qr-type"] .sel')?.dataset.val || 'url';
+    }
     var lastSvg = '';
 
     document.querySelectorAll('.tc-modes[data-group="qr-type"] .tc-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            TCTP.activateBtn(btn);
-            currentType = btn.getAttribute('data-val');
+            this.closest('.tc-modes').querySelectorAll('.tc-btn').forEach(function (b) { b.classList.remove('sel'); });
+            this.classList.add('sel');
+            var type = getQrType();
             ['text-group', 'email-group', 'phone-group', 'wifi-group', 'vcard-group'].forEach(function (id) {
                 var el = document.getElementById('tc-qr-' + id);
                 if (el) el.style.display = 'none';
             });
-            var show = document.getElementById('tc-qr-' + currentType + '-group');
+            var show = document.getElementById('tc-qr-' + type + '-group');
             if (show) show.style.display = '';
         });
     });
 
     function getContent() {
-        switch (currentType) {
+        switch (getQrType()) {
             case 'text':
                 return document.getElementById('tc-qr-text') ? document.getElementById('tc-qr-text').value : '';
             case 'email':

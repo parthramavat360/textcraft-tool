@@ -22,17 +22,17 @@ class Widget_Repeat_Text extends TextCraft_Tool_Base {
             Repeat any text a specified number of times with your choice of separator. Great for generating placeholder text, test data, or patterns.
         </div>
 
-        <div class="tc-field">
+        <div class="tc-input-group">
             <label class="tc-label" for="tc-rt-text">Text to Repeat</label>
             <input type="text" class="tc-input" id="tc-rt-text" placeholder="Enter text to repeat...">
         </div>
 
-        <div class="tc-field">
+        <div class="tc-input-group">
             <label class="tc-label" for="tc-rt-count">Repeat Count (1–1000)</label>
             <input type="number" class="tc-input" id="tc-rt-count" min="1" max="1000" value="5" placeholder="5">
         </div>
 
-        <div class="tc-field">
+        <div class="tc-input-group">
             <label class="tc-label" for="tc-rt-separator">Separator</label>
             <?php $this->render_select('tc-rt-separator', [
                 'newline' => 'Newline',

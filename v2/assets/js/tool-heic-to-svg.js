@@ -1,113 +1,318 @@
-(function(){
-  'use strict';
-  var prefix = 'tc-h2s-';
-  var dropEl = document.getElementById(prefix+'drop');
-  if(!dropEl) return;
+/**
+ * HEIC to SVG Converter — Tool JS (Premium)
+ * Features: embed mode (pixel-perfect), trace modes, detail cards, color mode cards, paths slider.
+ * Strategy: try native canvas first (Safari 11+), fallback to heic2any, then trace/embed.
+ *
+ * @package TextCraft_Tools_Pro
+ */
+(function () {
+    'use strict';
 
-  var convertBtn = document.getElementById(prefix+'convert');
-  var downloadBtn = document.getElementById(prefix+'download');
-  var preview     = document.getElementById(prefix+'preview');
-  var fileRow     = document.getElementById(prefix+'file-row');
-  var progressWrap = document.getElementById(prefix+'progress');
-  var statsEl     = document.getElementById(prefix+'stats');
+    var prefix = 'tc-h2s-';
+    var dropEl = document.getElementById(prefix + 'drop');
+    if (!dropEl) return;
 
-  var file = null;
-  var resultSVG = null;
-  var heicLoaded = false;
-  var potraceLoaded = false;
+    var convertBtn   = document.getElementById(prefix + 'convert');
+    var downloadBtn  = document.getElementById(prefix + 'download');
+    var pathsSlider  = document.getElementById(prefix + 'paths');
+    var pathsBadge   = document.getElementById(prefix + 'paths-val');
+    var PROGRESS_ID  = prefix + 'progress';
 
-  function loadHeic(cb){
-    if(heicLoaded){ cb(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
-    s.onload = function(){ heicLoaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load heic2any','error'); };
-    document.head.appendChild(s);
-  }
+    var file = null;
+    var resultSVG = null;
+    var convertedUrl = null;
+    var heicLoaded = false;
+    var tracerLoaded = false;
+    var converting = false;
 
-  function loadPotrace(cb){
-    if(potraceLoaded){ cb(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/potrace@2.1.8/build/potrace.min.js';
-    s.onload = function(){ potraceLoaded = true; cb(); };
-    s.onerror = function(){ TCTP.toast('Failed to load Potrace','error'); };
-    document.head.appendChild(s);
-  }
+    var MAX_TRACE_DIM = 1200;
 
-  TCTP.initDropZone(dropEl, function(f){
-    file = f;
-    resultSVG = null;
-    TCTP.showFileRow(fileRow, f.name);
-    if(preview) preview.innerHTML = '';
-    if(statsEl) statsEl.textContent = '';
-    if(downloadBtn) downloadBtn.style.display = 'none';
-  });
+    var DETAIL_PRESETS = {
+        high:   { scale: 3, colorsampling: 2, numberofcolors: 128, mincolorratio: 0, colorquantcycles: 5, pathomit: 0, ltres: 0.5, qtres: 0.5, blurradius: 0, strokewidth: 0 },
+        medium: { scale: 2, colorsampling: 2, numberofcolors: 64,  mincolorratio: 0, colorquantcycles: 4, pathomit: 1, ltres: 1,   qtres: 1,   blurradius: 0, strokewidth: 0 },
+        low:    { scale: 1, colorsampling: 2, numberofcolors: 32,  mincolorratio: 0, colorquantcycles: 3, pathomit: 4, ltres: 2,   qtres: 2,   blurradius: 0, strokewidth: 0 }
+    };
 
-  if(convertBtn){
-    convertBtn.addEventListener('click', function(){
-      if(!file){ TCTP.toast('Please drop a HEIC image first','warning'); return; }
-      loadHeic(function(){
-        loadPotrace(function(){ doConvert(); });
-      });
+    document.querySelectorAll('[data-group="h2s-detail"] .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var group = card.closest('[data-group="h2s-detail"]');
+            if (group) group.querySelectorAll('.sel').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+        });
     });
-  }
 
-  if(downloadBtn){
-    downloadBtn.addEventListener('click', function(){
-      if(resultSVG){
-        var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
-        TCTP.downloadBlob(blob, 'converted.svg');
-      }
+    document.querySelectorAll('[data-group="h2s-color"] .tc-rsz-mode-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var group = card.closest('[data-group="h2s-color"]');
+            if (group) group.querySelectorAll('.sel').forEach(function (c) { c.classList.remove('sel'); });
+            card.classList.add('sel');
+        });
     });
-  }
 
-  function doConvert(){
-    TCTP.showProgress(progressWrap);
-    TCTP.setProgress(progressWrap, 10);
+    if (pathsSlider && pathsBadge) {
+        pathsSlider.addEventListener('input', function () {
+            pathsBadge.textContent = pathsSlider.value;
+        });
+    }
 
-    heic2any({ blob: file, toType: 'image/png' }).then(function(pngBlob){
-      TCTP.setProgress(progressWrap, 40);
-      var img = new Image();
-      img.onload = function(){
-        TCTP.setProgress(progressWrap, 50);
-        var c = document.createElement('canvas');
-        c.width = img.naturalWidth;
-        c.height = img.naturalHeight;
-        var ctx = c.getContext('2d');
-        ctx.drawImage(img, 0, 0);
+    function loadHeic(cb) {
+        if (heicLoaded) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+        s.onload = function () { heicLoaded = true; cb(); };
+        s.onerror = function () { TCTP.toast('Failed to load HEIC decoder.', '\u274C'); };
+        document.head.appendChild(s);
+    }
 
-        var imgData = ctx.getImageData(0, 0, c.width, c.height);
-        TCTP.setProgress(progressWrap, 60);
+    function loadTracer(cb) {
+        if (tracerLoaded) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js';
+        s.onload = function () { tracerLoaded = true; cb(); };
+        s.onerror = function () { TCTP.toast('Failed to load imagetracer library.', '\u274C'); };
+        document.head.appendChild(s);
+    }
 
-        var params = Potrace.Params;
-        params.threshold = 128;
-        params.turbo = true;
-
-        var potrace = new Potrace();
-        potrace.loadImageFromCanvas(c);
-        potrace.setParameters(params);
-
-        TCTP.setProgress(progressWrap, 80);
-        resultSVG = potrace.getSVG();
-        TCTP.setProgress(progressWrap, 100);
-        TCTP.hideProgress(progressWrap);
-
-        if(preview){
-          preview.innerHTML = '';
-          preview.innerHTML = resultSVG;
+    TCTP.initDropZone(prefix + 'drop', prefix + 'drop-input', function (f) {
+        if (!/\.heic$/i.test(f.name) && !/\.heif$/i.test(f.name) && f.type !== 'image/heic') {
+            TCTP.toast('Please select a HEIC/HEIF file.', '\u26A0\uFE0F');
+            return;
         }
-        if(downloadBtn) downloadBtn.style.display = '';
-        if(statsEl) statsEl.textContent = (resultSVG.length / 1024).toFixed(1) + ' KB | SVG';
-        TCTP.updateResultPanel(TCTP.formatSize(file.size), (resultSVG.length / 1024).toFixed(1) + ' KB', 'SVG', 'Done');
-        TCTP.showResultText(resultSVG);
-        TCTP.switchToResultTab();
-        TCTP.toast('HEIC converted to SVG');
-        URL.revokeObjectURL(img.src);
-      };
-      img.src = URL.createObjectURL(pngBlob);
-    }).catch(function(err){
-      TCTP.hideProgress(progressWrap);
-      TCTP.toast('Conversion failed: ' + err.message, 'error');
+        file = f;
+        resultSVG = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.showFileRow(prefix + 'file', f);
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            TCTP.showOriginalPreview(ev.target.result);
+            TCTP.switchToOriginalTab();
+        };
+        reader.readAsDataURL(f);
+    }, 'image/heic,.heic,.HEIF,.heif');
+
+    var removeBtn = document.querySelector('#' + prefix + 'file .tc-x');
+    if (removeBtn) removeBtn.addEventListener('click', function () {
+        file = null;
+        resultSVG = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.hideFileRow(prefix + 'file');
     });
-  }
+
+    function getSelectedVal(group) {
+        var sel = document.querySelector('[data-group="' + group + '"] .tc-rsz-mode-card.sel');
+        return sel ? sel.getAttribute('data-val') : '';
+    }
+
+    function setStat(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
+    if (convertBtn) {
+        convertBtn.addEventListener('click', function () {
+            if (converting) return;
+            if (!file) { TCTP.toast('Please select a HEIC file first.', '\u26A0\uFE0F'); return; }
+            tryNativeFirst();
+        });
+    }
+
+    function tryNativeFirst() {
+        converting = true;
+        TCTP.showProgress(PROGRESS_ID);
+        TCTP.setProgress(PROGRESS_ID, 5, 'Reading HEIC...');
+
+        var img = new Image();
+        img.onload = function () {
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                TCTP.setProgress(PROGRESS_ID, 20, 'Decoded natively...');
+                doConvertFromImage(img);
+            } else {
+                fallbackHeic2Any();
+            }
+            URL.revokeObjectURL(img.src);
+        };
+        img.onerror = function () {
+            URL.revokeObjectURL(img.src);
+            fallbackHeic2Any();
+        };
+
+        var blobUrl = URL.createObjectURL(file);
+        img.src = blobUrl;
+
+        setTimeout(function () {
+            if (converting && !resultSVG) {
+                try { URL.revokeObjectURL(blobUrl); } catch(e) {}
+                fallbackHeic2Any();
+            }
+        }, 5000);
+    }
+
+    function fallbackHeic2Any() {
+        TCTP.setProgress(PROGRESS_ID, 15, 'Loading HEIC library...');
+        loadHeic(function () {
+            TCTP.setProgress(PROGRESS_ID, 25, 'Decoding HEIC...');
+            heic2any({ blob: file, toType: 'image/png' }).then(function (pngBlob) {
+                var url = URL.createObjectURL(pngBlob);
+                var img = new Image();
+                img.onload = function () {
+                    TCTP.setProgress(PROGRESS_ID, 40, 'HEIC decoded...');
+                    doConvertFromImage(img);
+                    URL.revokeObjectURL(url);
+                };
+                img.onerror = function () {
+                    TCTP.hideProgress(PROGRESS_ID);
+                    TCTP.toast('Failed to decode HEIC image.', '\u274C');
+                    converting = false;
+                    URL.revokeObjectURL(url);
+                };
+                img.src = url;
+            }).catch(function (err) {
+                TCTP.hideProgress(PROGRESS_ID);
+                var msg = err && err.message ? err.message : 'Unknown error';
+                if (msg.indexOf('format not supported') !== -1 || msg.indexOf('ERR_LIBHEIF') !== -1) {
+                    TCTP.toast('This HEIC variant is not supported. Try converting on your device first.', '\u26A0\uFE0F');
+                } else {
+                    TCTP.toast('Conversion failed: ' + msg, '\u274C');
+                }
+                converting = false;
+            });
+        });
+    }
+
+    function doConvertFromImage(img) {
+        var colorMode = getSelectedVal('h2s-color') || 'embed';
+        if (colorMode === 'embed') {
+            doEmbedFromImage(img);
+        } else {
+            loadTracer(function () { doTraceFromImage(img); });
+        }
+    }
+
+    function doEmbedFromImage(img) {
+        TCTP.setProgress(PROGRESS_ID, 50, 'Building SVG...');
+
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+            var dataUrl = ev.target.result;
+            var w = img.naturalWidth;
+            var h = img.naturalHeight;
+
+            var svgStr = '<?xml version="1.0" encoding="UTF-8"?>\n'
+                + '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+                + 'width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">\n'
+                + '  <image width="' + w + '" height="' + h + '" href="' + dataUrl + '"/>\n'
+                + '</svg>';
+
+            resultSVG = svgStr;
+
+            var origSize = file.size;
+            var svgKB = (svgStr.length / 1024).toFixed(1);
+
+            setStat(prefix + 'stat-orig', TCTP.formatSize(origSize));
+            setStat(prefix + 'stat-comp', svgKB + ' KB');
+            setStat(prefix + 'stat-fmt', 'Embedded');
+
+            TCTP.updateResultPanel(TCTP.formatSize(origSize), svgKB + ' KB', 'Embedded', 'Done');
+
+            TCTP.setProgress(PROGRESS_ID, 80, 'Rendering preview...');
+            var svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+            if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+            convertedUrl = URL.createObjectURL(svgBlob);
+            TCTP.showResultPreview(convertedUrl);
+            TCTP.switchToResultTab();
+
+            TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
+            setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
+            TCTP.toast('Pixel-perfect SVG created!');
+            converting = false;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function doTraceFromImage(img) {
+        var detailKey = getSelectedVal('h2s-detail') || 'medium';
+        var colorMode = getSelectedVal('h2s-color') || 'color';
+        var maxPaths = pathsSlider ? parseInt(pathsSlider.value, 10) : 500;
+
+        var opts = DETAIL_PRESETS[detailKey] || DETAIL_PRESETS['medium'];
+        opts = JSON.parse(JSON.stringify(opts));
+        opts.pathomit = Math.max(0, Math.round((1 - maxPaths / 2000) * 20));
+
+        if (colorMode === 'bw') {
+            opts.numberofcolors = 2;
+        } else if (colorMode === 'grayscale') {
+            opts.numberofcolors = 4;
+        }
+
+        var origW = img.naturalWidth;
+        var origH = img.naturalHeight;
+        var w = origW;
+        var h = origH;
+
+        if (w > MAX_TRACE_DIM || h > MAX_TRACE_DIM) {
+            var sc = MAX_TRACE_DIM / Math.max(w, h);
+            w = Math.round(w * sc);
+            h = Math.round(h * sc);
+        }
+
+        var scaled = (w !== origW || h !== origH);
+        var sizeInfo = scaled ? ' (scaled ' + w + '\u00D7' + h + ')' : ' (' + w + '\u00D7' + h + ')';
+
+        TCTP.setProgress(PROGRESS_ID, 50, 'Preparing canvas' + sizeInfo + '...');
+
+        var c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        TCTP.setProgress(PROGRESS_ID, 60, 'Tracing' + sizeInfo + '...');
+
+        setTimeout(function () {
+            try {
+                var imgData = ctx.getImageData(0, 0, w, h);
+                TCTP.setProgress(PROGRESS_ID, 70, 'Generating SVG paths...');
+                var svgStr = window.ImageTracer.imagedataToSVG(imgData, opts);
+
+                resultSVG = svgStr;
+
+                var origSize = file.size;
+                var svgKB = (svgStr.length / 1024).toFixed(1);
+                var fmt = colorMode === 'bw' ? 'B&W' : colorMode === 'grayscale' ? 'Gray' : 'Color';
+
+                setStat(prefix + 'stat-orig', TCTP.formatSize(origSize));
+                setStat(prefix + 'stat-comp', svgKB + ' KB');
+                setStat(prefix + 'stat-fmt', fmt);
+
+                TCTP.updateResultPanel(TCTP.formatSize(origSize), svgKB + ' KB', fmt, 'Done');
+
+                TCTP.setProgress(PROGRESS_ID, 85, 'Rendering preview...');
+                var svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+                if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+                convertedUrl = URL.createObjectURL(svgBlob);
+                TCTP.showResultPreview(convertedUrl);
+                TCTP.switchToResultTab();
+
+                TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
+                setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
+                TCTP.toast('Converted to SVG!' + (scaled ? ' (downscaled for speed)' : ''));
+            } catch (err) {
+                TCTP.hideProgress(PROGRESS_ID);
+                TCTP.toast('Conversion failed: ' + err.message, '\u274C');
+            } finally {
+                converting = false;
+            }
+        }, 50);
+    }
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            if (!resultSVG) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
+            var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
+            var name = (file ? file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '') : 'image') + '.svg';
+            TCTP.downloadBlob(blob, name);
+        });
+    }
+
 })();
