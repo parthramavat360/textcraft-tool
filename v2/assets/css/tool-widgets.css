@@ -4801,6 +4801,31 @@
 }
 .tc-mtg-code-actions { display: flex; gap: 10px; }
 
+/* Robots.txt Generator */
+.tc-rt-fields { display: flex; flex-direction: column; gap: 12px; }
+.tc-rt-rules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.tc-rt-rule-row {
+  display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px;
+  background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 8px;
+}
+.tc-rt-rule-fields { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+.tc-rt-rule-fields .tc-input-group { flex: 1; min-width: 120px; }
+.tc-rt-rule-del { color: var(--muted, #64748b); padding: 6px 10px; flex-shrink: 0; }
+.tc-rt-rule-del:hover { color: #ef4444; }
+.tc-rt-preview { padding: 16px 0; }
+.tc-rt-preview-code {
+  background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 16px;
+  font-family: monospace; font-size: 12px; line-height: 1.7; white-space: pre-wrap;
+  margin: 0;
+}
+.tc-rt-code-area { display: flex; flex-direction: column; gap: 12px; }
+.tc-rt-code-output {
+  width: 100%; font-family: monospace; font-size: 12px;
+  background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 14px;
+  resize: vertical; line-height: 1.7;
+}
+.tc-rt-code-actions { display: flex; gap: 10px; }
+
 @media (max-width: 768px) {
   .tc-fb-item-row { flex-direction: column; align-items: flex-start; }
   .tc-fb-item-props { width: 100%; }
