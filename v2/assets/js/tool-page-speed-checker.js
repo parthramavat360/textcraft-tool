@@ -153,25 +153,42 @@
         var apiUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' +
             encodeURIComponent(url) + '&strategy=' + strategy + '&category=performance&category=accessibility&category=seo&category=best-practices';
 
-        fetch(apiUrl)
-            .then(function (res) {
-                if (!res.ok) throw new Error('API error: ' + res.status);
-                return res.json();
-            })
-            .then(function (data) {
-                stopLoading();
-                renderResults(data, url);
-                isAnalyzing = false;
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '<i class="fa-solid fa-play"></i> Analyze';
-            })
-            .catch(function (err) {
-                stopLoading();
-                scoresEl.innerHTML = '<div class="tc-ps-error"><i class="fa-solid fa-circle-exclamation"></i><p>Analysis failed: ' + (err.message || 'Unknown error') + '</p><p style="font-size:12px;color:#94a3b8">Tip: Make sure the URL is accessible and try again.</p></div>';
-                isAnalyzing = false;
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '<i class="fa-solid fa-play"></i> Analyze';
-            });
+        var retries = 3;
+        var delay = 5000;
+
+        function attemptFetch(attempt) {
+            fetch(apiUrl)
+                .then(function (res) {
+                    if (res.status === 429) {
+                        if (attempt < retries) {
+                            loadingText.textContent = 'Rate limited by Google. Retrying in ' + Math.round(delay/1000) + 's... (attempt ' + (attempt+1) + '/' + retries + ')';
+                            return new Promise(function (resolve) { setTimeout(resolve, delay); }).then(function () {
+                                return attemptFetch(attempt + 1);
+                            });
+                        }
+                        throw new Error('Rate limited by Google. Please wait a minute and try again.');
+                    }
+                    if (!res.ok) throw new Error('API error: ' + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    if (!data || data.error) throw new Error((data && data.error && data.error.message) || 'Unknown API error');
+                    stopLoading();
+                    renderResults(data, url);
+                    isAnalyzing = false;
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerHTML = '<i class="fa-solid fa-play"></i> Analyze';
+                })
+                .catch(function (err) {
+                    stopLoading();
+                    scoresEl.innerHTML = '<div class="tc-ps-error"><i class="fa-solid fa-circle-exclamation"></i><p>Analysis failed: ' + (err.message || 'Unknown error') + '</p><p style="font-size:12px;color:#94a3b8">Tip: Wait 1 minute between analyses. Google rate-limits free API requests.</p></div>';
+                    isAnalyzing = false;
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerHTML = '<i class="fa-solid fa-play"></i> Analyze';
+                });
+        }
+
+        attemptFetch(0);
     });
 
     // Enter key
