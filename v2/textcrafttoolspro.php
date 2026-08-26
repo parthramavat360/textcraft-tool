@@ -210,6 +210,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-currency-converter.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-box-shadow-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-css-gradient-previewer.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-border-radius-generator.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -354,6 +355,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_What_Is_My_User_Agent() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Box_Shadow_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_CSS_Gradient_Previewer() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Border_Radius_Generator() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -685,6 +687,7 @@ function tctp_enqueue_assets() {
         'tool-what-is-my-user-agent',
         'tool-box-shadow-generator',
         'tool-css-gradient-previewer',
+        'tool-border-radius-generator',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
