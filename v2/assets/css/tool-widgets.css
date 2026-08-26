@@ -4531,3 +4531,93 @@
   display: block; font-size: 15px; font-weight: 600;
 }
 .tc-cc-detail-row b { color: var(--ink, #1e293b); font-weight: 600; }
+
+/* Keyword Density Checker */
+.tctp-kdc-stats { margin-bottom: 16px; }
+.tctp-kdc-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.tctp-kdc-stat-box {
+  background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px; padding: 14px; text-align: center;
+}
+.tctp-kdc-stat-val { font-size: 20px; font-weight: 700; color: var(--brand, #2563eb); }
+.tctp-kdc-stat-lbl { font-size: 11px; color: var(--muted, #64748b); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+.tctp-kdc-rating { background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 10px; padding: 12px 16px; margin-top: 12px; font-weight: 600; font-size: 14px; }
+.tctp-kdc-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.tctp-kdc-bar-word { width: 140px; font-size: 13px; font-weight: 500; text-align: right; color: var(--ink, #1e293b); }
+.tctp-kdc-bar-track { flex: 1; height: 22px; background: var(--bg, #f1f5f9); border-radius: 6px; overflow: hidden; }
+.tctp-kdc-bar-fill { height: 100%; background: linear-gradient(90deg, var(--brand, #2563eb), #60a5fa); border-radius: 6px; transition: width 0.3s ease; }
+.tctp-kdc-bar-pct { width: 60px; font-size: 13px; font-weight: 600; color: var(--brand, #2563eb); }
+.tctp-kdc-phrase-section h4 { margin: 16px 0 8px; font-size: 14px; color: var(--ink, #1e293b); }
+.tctp-kdc-phrase-section h4:first-child { margin-top: 0; }
+
+@media (max-width: 768px) {
+  .tctp-kdc-stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .tctp-kdc-bar-word { width: 100px; font-size: 12px; }
+}
+
+/* Fake Name Generator */
+.tctp-fng-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.tctp-fng-card {
+  background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0);
+  border-radius: 12px; overflow: hidden; transition: box-shadow 0.2s;
+}
+.tctp-fng-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.tctp-fng-card-header {
+  display: flex; align-items: center; gap: 12px; padding: 16px;
+  background: linear-gradient(135deg, var(--brand, #2563eb), #1d4ed8);
+  color: #fff;
+}
+.tctp-fng-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); display: flex; align-items: center;
+  justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0;
+}
+.tctp-fng-card-body { padding: 14px 16px; }
+.tctp-fng-field {
+  display: flex; align-items: flex-start; gap: 8px; padding: 6px 0;
+  font-size: 13px; border-bottom: 1px solid var(--border, #f1f5f9);
+}
+.tctp-fng-field:last-child { border-bottom: none; }
+.tctp-fng-field i { color: var(--brand, #2563eb); width: 16px; text-align: center; margin-top: 2px; }
+.tctp-code-pre {
+  background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 10px;
+  overflow-x: auto; font-size: 12px; max-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .tctp-fng-grid { grid-template-columns: 1fr; }
+}
+
+/* Credit Card Validator */
+.tc-ccv-quick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tc-ccv-result-wrap { background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 12px; overflow: hidden; }
+.tc-ccv-card-display { padding: 20px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border-radius: 12px; margin: 16px; border-left: 4px solid #666; }
+.tc-ccv-card-type { font-size: 14px; font-weight: 600; margin-bottom: 8px; opacity: 0.85; }
+.tc-ccv-card-number { font-size: 18px; font-weight: 700; letter-spacing: 2px; font-family: monospace; margin-bottom: 10px; }
+.tc-ccv-card-status { font-size: 15px; font-weight: 600; }
+.tc-ccv-card-status.valid { color: #34d399; }
+.tc-ccv-card-status.invalid { color: #f87171; }
+.tc-ccv-details { padding: 16px 20px; }
+.tc-ccv-detail-row { padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--border, #f1f5f9); }
+.tc-ccv-detail-row:last-child { border-bottom: none; }
+.tc-ccv-detail-row b { color: var(--ink, #1e293b); font-weight: 600; }
+.tc-ccv-note { padding: 12px 16px; margin: 12px 16px 16px; border-radius: 8px; font-size: 13px; line-height: 1.5; }
+.tc-ccv-note-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.tc-ccv-note-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* What Is My User Agent */
+.tctp-uad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.tctp-uad-card {
+  background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px; padding: 16px; text-align: center;
+}
+.tctp-uad-card-icon { font-size: 24px; color: var(--brand, #2563eb); margin-bottom: 8px; }
+.tctp-uad-card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted, #64748b); font-weight: 600; margin-bottom: 4px; }
+.tctp-uad-card-value { font-size: 14px; font-weight: 700; color: var(--ink, #1e293b); word-break: break-word; }
+.tctp-uad-raw-box { background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 16px; }
+.tctp-uad-raw-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+.tctp-uad-raw-value { font-family: monospace; font-size: 13px; line-height: 1.6; word-break: break-all; }
+
+@media (max-width: 768px) {
+  .tctp-uad-grid { grid-template-columns: repeat(2, 1fr); }
+}

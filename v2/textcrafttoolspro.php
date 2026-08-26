@@ -202,6 +202,10 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-cheat-sheet.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-qr-reader.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-barcode-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-keyword-density-checker.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-fake-name-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-credit-card-validator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-what-is-my-user-agent.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-to-handwriting.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-currency-converter.php';
 
@@ -342,6 +346,10 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Barcode_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_To_Handwriting() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Currency_Converter() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Keyword_Density_Checker() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Fake_Name_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Credit_Card_Validator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_What_Is_My_User_Agent() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -667,6 +675,10 @@ function tctp_enqueue_assets() {
         'tool-barcode-generator',
         'tool-text-to-handwriting',
         'tool-currency-converter',
+        'tool-keyword-density-checker',
+        'tool-fake-name-generator',
+        'tool-credit-card-validator',
+        'tool-what-is-my-user-agent',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
