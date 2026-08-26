@@ -215,6 +215,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-css-grid-playground.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-meta-tag-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-robots-txt-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-page-speed-checker.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -364,6 +365,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_CSS_Grid_Playground() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Meta_Tag_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Robots_Txt_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Page_Speed_Checker() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -700,6 +702,7 @@ function tctp_enqueue_assets() {
         'tool-css-grid-playground',
         'tool-meta-tag-generator',
         'tool-robots-txt-generator',
+        'tool-page-speed-checker',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
