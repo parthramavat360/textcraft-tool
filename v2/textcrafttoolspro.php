@@ -222,6 +222,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-gemini-prompt-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-chatgpt-prompt-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-prompt-optimizer.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-color-palette-generator.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -378,6 +379,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Gemini_Prompt_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Chatgpt_Prompt_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Prompt_Optimizer() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Color_Palette_Generator() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
