@@ -4675,9 +4675,47 @@
 }
 .tc-bs-code-actions { display: flex; gap: 10px; }
 
+/* CSS Gradient Previewer */
+.tc-grad-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.tc-grad-row .tc-input-group { flex: 1; min-width: 180px; }
+.tc-grad-slider-row { display: flex; align-items: center; gap: 12px; }
+.tc-grad-slider-row .tc-bs-range { flex: 1; }
+.tc-grad-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+.tc-grad-preset-swatch {
+  width: 40px; height: 40px; border-radius: 8px; border: 2px solid transparent;
+  cursor: pointer; transition: all 0.15s;
+}
+.tc-grad-preset-swatch:hover { border-color: var(--brand, #2563eb); transform: scale(1.1); }
+.tc-grad-stops { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.tc-grad-stop-row {
+  display: flex; align-items: flex-end; gap: 10px; padding: 10px 12px;
+  background: var(--bg, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 8px;
+}
+.tc-grad-stop-row .tc-input-group { flex: 1; }
+.tc-grad-stop-inputs { display: flex; align-items: center; gap: 8px; }
+.tc-grad-stop-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+.tc-grad-stop-pos { flex: 1; }
+.tc-grad-stop-val { min-width: 45px; text-align: right; }
+.tc-grad-stop-del { color: var(--muted, #64748b); padding: 4px 8px; margin-bottom: 2px; }
+.tc-grad-stop-del:hover { color: #ef4444; }
+.tc-grad-add-stop { margin-top: 4px; }
+.tc-grad-preview-area {
+  width: 100%; min-height: 200px; border-radius: 12px;
+  transition: background 0.15s;
+}
+.tc-grad-code-area { display: flex; flex-direction: column; gap: 12px; }
+.tc-grad-code-output {
+  width: 100%; min-height: 80px; font-family: monospace; font-size: 12px;
+  background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 14px;
+  resize: vertical; line-height: 1.6;
+}
+.tc-grad-code-actions { display: flex; gap: 10px; }
+
 @media (max-width: 768px) {
   .tctp-uad-grid { grid-template-columns: repeat(2, 1fr); }
   .tc-bs-color-row { flex-direction: column; }
   .tc-bs-layer-actions { flex-direction: column; }
   .tc-bs-preview-area { padding: 24px; }
+  .tc-grad-row { flex-direction: column; }
+  .tc-grad-stop-inputs { flex-wrap: wrap; }
 }
