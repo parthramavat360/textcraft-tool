@@ -1,204 +1,140 @@
-/**
- * Number to Words — convert numbers to English words
- * @package TextCraft_Tools_Pro
- */
 (function () {
-  'use strict';
+    'use strict';
+    var $ = function (s, p) { return (p || document).querySelector(s); };
+    var numInput = $('#ntw-number');
+    if (!numInput) return;
 
-  var convertBtn = document.getElementById('tc-nw-convert');
-  if (!convertBtn) return;
+    var formatSelect = $('#ntw-format');
+    var currencyGroup = $('#ntw-currency-group');
+    var currencySelect = $('#ntw-currency');
+    var capitalizeCheck = $('#ntw-capitalize');
+    var andCheck = $('#ntw-and');
+    var convertBtn = $('#ntw-convert');
+    var resultEl = $('#ntw-result');
+    var wordsEl = $('#ntw-words');
+    var upperEl = $('#ntw-upper');
 
-  var inputEl = document.getElementById('tc-nw-input');
-  var outputEl = document.getElementById('tc-nw-output');
-  var mode = 'words';
-  var currency = 'USD';
-
-  /* ── Mode cards ─────────────────────────────────────────── */
-
-  var modeCards = document.querySelectorAll('.tc-nw-modes .tc-rsz-mode-card');
-  modeCards.forEach(function (card) {
-    card.addEventListener('click', function () {
-      modeCards.forEach(function (c) { c.classList.remove('sel'); });
-      card.classList.add('sel');
-      mode = card.getAttribute('data-val') || 'words';
-      var currRow = document.getElementById('tc-nw-currency-row');
-      if (currRow) currRow.style.display = mode === 'currency' ? '' : 'none';
-      convert();
+    formatSelect.addEventListener('change', function () {
+        currencyGroup.style.display = this.value === 'currency' ? '' : 'none';
     });
-  });
 
-  var currCards = document.querySelectorAll('.tc-nw-curr-modes .tc-rsz-mode-card');
-  currCards.forEach(function (card) {
-    card.addEventListener('click', function () {
-      currCards.forEach(function (c) { c.classList.remove('sel'); });
-      card.classList.add('sel');
-      currency = card.getAttribute('data-val') || 'USD';
-      if (mode === 'currency') convert();
+    var ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    var tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+    var scales = ['', 'thousand', 'million', 'billion', 'trillion', 'quadrillion'];
+
+    var ordinals = {
+        'one': 'first', 'two': 'second', 'three': 'third', 'five': 'fifth',
+        'eight': 'eighth', 'nine': 'ninth', 'twelve': 'twelfth'
+    };
+
+    function threeDigits(n) {
+        if (n === 0) return '';
+        var h = Math.floor(n / 100);
+        var r = n % 100;
+        var parts = [];
+        if (h > 0) parts.push(ones[h] + ' hundred');
+        if (r > 0) {
+            if (r < 20) parts.push(ones[r]);
+            else {
+                var t = Math.floor(r / 10);
+                var o = r % 10;
+                parts.push(tens[t] + (o > 0 ? '-' + ones[o] : ''));
+            }
+        }
+        return parts.join(andCheck.checked ? ' and ' : ' ');
+    }
+
+    function numberToWords(numStr) {
+        var negative = '';
+        if (numStr.charAt(0) === '-') { negative = 'negative '; numStr = numStr.substring(1); }
+
+        var parts = numStr.split('.');
+        var intPart = parts[0].replace(/^0+/, '') || '0';
+        var decPart = parts.length > 1 ? parts[1] : '';
+
+        var intNum = parseInt(intPart, 10);
+        if (isNaN(intNum)) return 'Not a valid number';
+
+        if (intNum === 0) {
+            var result = 'zero';
+            if (decPart) result += ' point ' + digitWords(decPart);
+            return negative + result;
+        }
+
+        var groups = [];
+        while (intNum > 0) {
+            groups.unshift(intNum % 1000);
+            intNum = Math.floor(intNum / 1000);
+        }
+
+        var words = [];
+        for (var i = 0; i < groups.length; i++) {
+            if (groups[i] === 0) continue;
+            var scaleIdx = groups.length - 1 - i;
+            var groupWords = threeDigits(groups[i]);
+            if (scales[scaleIdx]) groupWords += ' ' + scales[scaleIdx];
+            words.push(groupWords);
+        }
+
+        var result = negative + words.join(andCheck.checked ? ' and ' : ' ');
+
+        if (decPart) {
+            result += ' point ' + digitWords(decPart);
+        }
+
+        return result;
+    }
+
+    function digitWords(d) {
+        var wordDigits = {
+            '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
+            '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'
+        };
+        return d.split('').map(function (c) { return wordDigits[c] || c; }).join(' ');
+    }
+
+    function applyOrdinal(words) {
+        var lastWord = words.split(/[\s-]+/).pop();
+        if (ordinals[lastWord]) {
+            return words.substring(0, words.length - lastWord.length) + ordinals[lastWord];
+        }
+        if (lastWord.endsWith('y')) {
+            return words.substring(0, words.length - 1) + 'ieth';
+        }
+        return words + 'th';
+    }
+
+    convertBtn.addEventListener('click', function () {
+        var val = numInput.value.trim();
+        if (!val) { TCTP.toast('Enter a number', '\u26a0\ufe0f'); return; }
+        if (isNaN(val.replace('-', '').replace('.', ''))) { TCTP.toast('Invalid number', '\u26a0\ufe0f'); return; }
+
+        var words = numberToWords(val);
+
+        if (formatSelect.value === 'ordinal') {
+            words = applyOrdinal(words);
+        } else if (formatSelect.value === 'currency') {
+            var cur = currencySelect.value;
+            words = cur + ' ' + words;
+        }
+
+        if (capitalizeCheck.checked) {
+            words = words.charAt(0).toUpperCase() + words.slice(1);
+        }
+
+        TCTP.copyText(words);
+
+        wordsEl.innerHTML = '<div style="background:#0f172a;padding:16px;border-radius:12px;border:1px solid rgba(148,163,184,0.12);color:#e2e8f0;font-size:16px;line-height:1.6;word-break:break-word">' + escHtml(words) + '</div>';
+        upperEl.innerHTML = '<div style="background:#0f172a;padding:16px;border-radius:12px;border:1px solid rgba(148,163,184,0.12);color:#e2e8f0;font-size:16px;line-height:1.6;word-break:break-word;text-transform:uppercase">' + escHtml(words) + '</div>';
+
+        resultEl.style.display = '';
+        TCTP.initTabs(resultEl);
+        TCTP.toast('Copied to clipboard!', '\u2705');
     });
-  });
 
-  /* ── Number to words engine ─────────────────────────────── */
-
-  var ones = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
-  var tens = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
-
-  function convertHundreds(n) {
-    var result = '';
-    if (n >= 100) { result += ones[Math.floor(n / 100)] + ' hundred'; n %= 100; }
-    if (n >= 20) { result += (result ? ' ' : '') + tens[Math.floor(n / 10)]; n %= 10; }
-    if (n > 0) result += (result ? ' ' : '') + ones[n];
-    return result;
-  }
-
-  var scales = [
-    { val: 1e18, name: 'quintillion' },
-    { val: 1e15, name: 'quadrillion' },
-    { val: 1e12, name: 'trillion' },
-    { val: 1e9,  name: 'billion' },
-    { val: 1e6,  name: 'million' },
-    { val: 1e3,  name: 'thousand' }
-  ];
-
-  function numberToWords(numStr) {
-    if (numStr === '0') return 'zero';
-
-    var negative = numStr[0] === '-';
-    if (negative) numStr = numStr.slice(1);
-
-    var parts = numStr.split('.');
-    var intPart = parts[0];
-    var decPart = parts[1] || '';
-
-    /* Pad to groups of 3 */
-    while (intPart.length % 3 !== 0) intPart = '0' + intPart;
-
-    var result = '';
-    var groups = intPart.match(/.{1,3}/g) || [];
-
-    for (var i = 0; i < groups.length; i++) {
-      var groupNum = parseInt(groups[i], 10);
-      if (groupNum === 0) continue;
-      var groupWords = convertHundreds(groupNum);
-      var scaleIdx = groups.length - 1 - i;
-      var scaleName = '';
-      if (scaleIdx < scales.length) scaleName = scales[scaleIdx].name;
-      else {
-        /* Handle larger scales */
-        var bigScales = ['','thousand','million','billion','trillion','quadrillion','quintillion','sextillion','septillion'];
-        scaleName = bigScales[scaleIdx] || '';
-      }
-      result += (result ? ' ' : '') + groupWords + (scaleName ? ' ' + scaleName : '');
-    }
-
-    if (negative) result = 'minus ' + result;
-
-    /* Decimal part */
-    if (decPart) {
-      result += ' point';
-      for (var j = 0; j < decPart.length; j++) {
-        result += ' ' + ones[parseInt(decPart[j], 10)];
-      }
-    }
-
-    return result;
-  }
-
-  /* ── Ordinal suffix ─────────────────────────────────────── */
-
-  function ordinalSuffix(n) {
-    var s = ['th','st','nd','rd'];
-    var v = n % 100;
-    return n + (s[(v-20)%10] || s[v] || s[0]);
-  }
-
-  function toOrdinal(numStr) {
-    var n = parseInt(numStr, 10);
-    if (isNaN(n)) return numStr;
-    return ordinalSuffix(n) + ' (' + numberToWords(numStr) + ')';
-  }
-
-  /* ── Currency ───────────────────────────────────────────── */
-
-  var currSymbols = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
-
-  function toCurrency(numStr) {
-    var parts = numStr.split('.');
-    var intWords = numberToWords(parts[0]);
-    var cents = parts[1] ? parts[1].padEnd(2, '0').slice(0, 2) : '00';
-    var sym = currSymbols[currency] || '$';
-    return sym + ' ' + intWords + ' and ' + cents + '/100';
-  }
-
-  /* ── Convert ────────────────────────────────────────────── */
-
-  function convert() {
-    var raw = (inputEl ? inputEl.value : '').trim();
-    if (!raw) { TCTP.toast('Enter a number.', '⚠️'); return; }
-
-    /* Validate */
-    var cleaned = raw.replace(/[^0-9.\-]/g, '');
-    if (cleaned === '' || isNaN(parseFloat(cleaned))) {
-      TCTP.toast('Invalid number.', '⚠️'); return;
-    }
-
-    /* Limit length */
-    if (cleaned.replace(/[^0-9]/g, '').length > 30) {
-      TCTP.toast('Number too large (max 30 digits).', '⚠️'); return;
-    }
-
-    var result;
-    if (mode === 'currency') result = toCurrency(cleaned);
-    else if (mode === 'ordinal') result = toOrdinal(cleaned);
-    else result = numberToWords(cleaned);
-
-    /* Capitalize first letter */
-    result = result.charAt(0).toUpperCase() + result.slice(1);
-
-    /* Update output */
-    if (outputEl) {
-      outputEl.innerHTML = '<div class="tc-nw-result-text">' + result + '</div>';
-    }
-
-    var wordCount = result.split(/\s+/).length;
-    var sO = document.getElementById('tc-stat-orig');
-    var sC = document.getElementById('tc-stat-comp');
-    var sS = document.getElementById('tc-stat-saved');
-    if (sO) sO.textContent = raw;
-    if (sC) sC.textContent = wordCount;
-    if (sS) sS.textContent = result.length;
-
-    var preview = document.getElementById('tc-nw-preview');
-    if (preview) {
-      preview.innerHTML = '<div style="font-size:16px;line-height:1.6;color:var(--ink,#f1f5f9);word-break:break-word">' + result + '</div>';
-    }
-
-    var chip = document.getElementById('tc-status-chip');
-    if (chip) chip.textContent = 'Done';
-
-    TCTP.switchToResultTab();
-    TCTP.toast('Converted!', '✅');
-  }
-
-  convertBtn.addEventListener('click', convert);
-
-  /* Live convert on input */
-  if (inputEl) {
-    inputEl.addEventListener('input', function () {
-      if (inputEl.value.trim()) convert();
+    numInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') convertBtn.click();
     });
-  }
 
-  /* Copy */
-  var copyBtn = document.getElementById('tc-nw-copy');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', function () {
-      var out = outputEl ? outputEl.textContent : '';
-      if (!out || out.includes('Result will')) { TCTP.toast('Convert first.', '⚠️'); return; }
-      TCTP.copyText(out.trim());
-      TCTP.toast('Copied!', '✅');
-    });
-  }
-
-  /* Auto-convert on load */
-  convert();
+    function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 })();

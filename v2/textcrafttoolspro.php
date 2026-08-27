@@ -226,6 +226,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-to-speech.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-speech-to-text.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-diff.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-number-to-words.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -386,6 +387,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_To_Speech() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Speech_To_Text() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_Diff() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Number_To_Words() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
