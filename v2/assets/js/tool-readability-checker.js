@@ -1,308 +1,145 @@
-/**
- * Readability Checker — Flesch-Kincaid, Coleman-Liau, SMOG, ARI, Dale-Chall
- * @package TextCraft_Tools_Pro
- */
 (function () {
-  'use strict';
+    'use strict';
+    var $ = function (s, p) { return (p || document).querySelector(s); };
+    var textEl = $('#rc-text');
+    if (!textEl) return;
 
-  var analyzeBtn = document.getElementById('tc-rc-analyze');
-  if (!analyzeBtn) return;
+    var analyzeBtn = $('#rc-analyze');
+    var resultEl = $('#rc-result');
+    var scoresEl = $('#rc-scores');
+    var statsEl = $('#rc-stats');
+    var tipsEl = $('#rc-tips');
 
-  var inputEl    = document.getElementById('tc-rc-input');
-  var resultsEl  = document.getElementById('tc-rc-results');
-  var targetMode = 'general';
+    function countSentences(text) {
+        return (text.match(/[.!?]+/g) || []).length || 1;
+    }
 
-  /* ── Mode cards ──────────────────────────────────────────── */
+    function countWords(text) {
+        return (text.trim().match(/\b[a-zA-Z']+\b/g) || []).length;
+    }
 
-  var modeCards = document.querySelectorAll('.tc-rc-modes .tc-rsz-mode-card');
-  modeCards.forEach(function (card) {
-    card.addEventListener('click', function () {
-      modeCards.forEach(function (c) { c.classList.remove('sel'); });
-      card.classList.add('sel');
-      targetMode = card.getAttribute('data-val') || 'general';
-    });
-  });
+    function countSyllables(word) {
+        word = word.toLowerCase().replace(/[^a-z]/g, '');
+        if (word.length <= 3) return 1;
+        word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+        word = word.replace(/^y/, '');
+        var m = word.match(/[aeiouy]{1,2}/g);
+        return m ? m.length : 1;
+    }
 
-  /* ── Syllable counter ────────────────────────────────────── */
+    function totalSyllables(text) {
+        var words = text.trim().match(/\b[a-zA-Z']+\b/g) || [];
+        var total = 0;
+        words.forEach(function (w) { total += countSyllables(w); });
+        return total || 1;
+    }
 
-  function countSyllables(word) {
-    word = word.toLowerCase().replace(/[^a-z]/g, '');
-    if (!word) return 0;
-    if (word.length <= 3) return 1;
-    word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
-    word = word.replace(/^y/, '');
-    var m = word.match(/[aeiouy]{1,2}/g);
-    return m ? m.length : 1;
-  }
+    function countCharacters(text) {
+        return text.replace(/\s/g, '').length;
+    }
 
-  /* ── Dale-Chall word list (simplified common difficult words) ── */
+    function fleschReadingEase(words, sentences, syllables) {
+        return Math.round(206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words));
+    }
 
-  var difficultWords = new Set([
-    'abandon','abolish','abstract','academic','accelerate','accomplish','accurate',
-    'achieve','acquire','address','adequate','advocate','affirm','aggressive',
-    'agriculture','allegation','allocate','alter','alternative','ambiguous',
-    'amend','analogy','analyze','annual','anticipate','apparent','appetite',
-    'arbitrary','assemble','assert','assess','assign','assist','assume',
-    'authority','automatic','available','benefit','bureau','capable','capacity',
-    'category','challenge','circumstance','coherent','coincide','collaborate',
-    'commence','commit','communicate','compact','compensate','competent',
-    'comprehensive','conceive','concentrate','concept','conclude','concrete',
-    'conduct','confine','confirm','conflict','confront','congress','conscience',
-    'conscious','consequence','considerable','consistent','constitute','construct',
-    'consult','consume','contemplate','contradict','contribute','controversial',
-    'convention','coordinate','correspond','criteria','crucial','currency',
-    'curriculum','database','debate','decade','decide','decline','dedicate',
-    'definite','demonstrate','deny','deprecate','derive','describe','design',
-    'desire','despite','detect','determine','develop','devote','dimension',
-    'diminish','discriminate','displace','distinct','distribute','diverse',
-    'domestic','dominate','dynamic','economy','edition','educate','element',
-    'eliminate','emerge','emphasis','enable','encounter','enhance','enormous',
-    'ensure','enterprise','entire','environment','equivalent','erode','establish',
-    'estimate','evaluate','eventually','evident','evolve','exceed','except',
-    'excess','exclude','execute','exhibit','expand','expertise','explicit',
-    'exploit','expose','external','extract','facilitate','factor','feature',
-    'federal','finance','flexible','fluctuate','focus','forecast','formula',
-    'foundation','framework','function','fundamental','generate','genuine',
-    'global','guarantee','guideline','hierarchy','hypothesis','identical',
-    'ideology','illustrate','immense','implement','implicit','imply','impose',
-    'incentive','incident','incorporate','indicate','individual','inevitable',
-    'infrastructure','initial','innocent','innovate','integrate','intellect',
-    'intense','interact','interpret','intervene','investigate','involve',
-    'isolate','justify','label','legislation','legitimate','liberal',
-    'likewise','maintain','manifest','manipulate','mechanism','media',
-    'method','migrate','military','minister','minor','modify','monitor',
-    'mutual','negotiate','network','neutral','nevertheless','norm',
-    'notion','nuclear','objective','oblige','obtain','obvious','occupy',
-    'occur','offset','ongoing','option','orient','outcome','output',
-    'overall','overlap','overseas','parallel','parameter','participate',
-    'partner','passive','perceive','period','persist','perspective','phase',
-    'phenomenon','philosophy','policy','portion','pose','potential','precede',
-    'precise','predict','predominant','preliminary','presume','previous',
-    'primary','principle','proceed','professional','prohibit','project',
-    'promote','proportion','prospect','protocol','pursue','qualify','quote',
-    'radical','random','ratio','react','recover','regime','region','regulate',
-    'reinforce','reject','relevant','reluctant','rely','remove','require',
-    'research','reside','resolve','resource','respond','restore','restrict',
-    'retain','reveal','revenue','reverse','revolution','role','route',
-    'scenario','schedule','scheme','scope','section','sector','select',
-    'sequence','significant','similar','simultaneous','specify','sphere',
-    'stable','strategy','structure','submit','subordinate','subsequent',
-    'substance','substitute','succeed','sufficient','summarize','supplement',
-    'survey','survive','suspect','sustain','symbol','sympathy','technique',
-    'technology','temporary','tension','terminate','theme','theory','thereby',
-    'thesis','tradition','transfer','transform','transition','transmit',
-    'transport','trend','trigger','ultimate','undergo','underline','undermine',
-    'undertake','uniform','utilize','valid','vary','vehicle','version',
-    'violate','virtual','visible','volume','voluntary','welfare','whereas',
-    'widespread','withdraw','workforce'
-  ]);
+    function fleschKincaidGrade(words, sentences, syllables) {
+        return (0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59).toFixed(1);
+    }
 
-  /* ── Main analysis ───────────────────────────────────────── */
+    function gunningFog(text, words, sentences) {
+        var complexWords = 0;
+        text.trim().match(/\b[a-zA-Z']+\b/g).forEach(function (w) {
+            if (countSyllables(w) >= 3) complexWords++;
+        });
+        return (0.4 * (words / sentences + 100 * (complexWords / words))).toFixed(1);
+    }
 
-  function analyze() {
-    var text = inputEl.value.trim();
-    if (!text) { TCTP.toast('Please enter some text.', '⚠️'); return; }
+    function colemanLiau(text, words, sentences) {
+        var chars = countCharacters(text);
+        var L = (chars / words) * 100;
+        var S = (sentences / words) * 100;
+        return (0.0588 * L - 0.296 * S - 15.59).toFixed(1);
+    }
 
-    /* Split into sentences */
-    var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-    sentences = sentences.map(function(s) { return s.trim(); }).filter(Boolean);
-    var sentenceCount = sentences.length;
+    function readingLevel(grade) {
+        var g = parseFloat(grade);
+        if (g <= 5) return { label: 'Elementary', color: '#22c55e' };
+        if (g <= 8) return { label: 'Middle School', color: '#3b82f6' };
+        if (g <= 12) return { label: 'High School', color: '#eab308' };
+        if (g <= 16) return { label: 'College', color: '#f97316' };
+        return { label: 'Graduate', color: '#ef4444' };
+    }
 
-    /* Split into words */
-    var words = text.match(/[a-zA-Z']+/g) || [];
-    var wordCount = words.length;
-
-    if (wordCount === 0) { TCTP.toast('No words found.', '⚠️'); return; }
-
-    /* Count syllables */
-    var totalSyllables = 0;
-    words.forEach(function (w) { totalSyllables += countSyllables(w); });
-
-    /* Count characters (letters only) */
-    var charCount = text.replace(/[^a-zA-Z]/g, '').length;
-
-    /* Count complex words (3+ syllables) */
-    var complexWords = 0;
-    words.forEach(function (w) { if (countSyllables(w) >= 3) complexWords++; });
-
-    /* Difficult words (Dale-Chall) */
-    var difficultCount = 0;
-    words.forEach(function (w) { if (difficultWords.has(w.toLowerCase())) difficultCount++; });
-
-    var avgWordsPerSentence = wordCount / Math.max(sentenceCount, 1);
-    var avgSyllablesPerWord = totalSyllables / Math.max(wordCount, 1);
-
-    /* ── Flesch Reading Ease ─────────────────────────────── */
-    var fleschEase = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
-    fleschEase = Math.max(0, Math.min(100, fleschEase));
-
-    /* ── Flesch-Kincaid Grade Level ──────────────────────── */
-    var fkGrade = (0.39 * avgWordsPerSentence) + (11.8 * avgSyllablesPerWord) - 15.59;
-
-    /* ── Coleman-Liau Index ──────────────────────────────── */
-    var L = (charCount / Math.max(wordCount, 1)) * 100;
-    var S = (sentenceCount / Math.max(wordCount, 1)) * 100;
-    var colemanLiau = (0.0588 * L) - (0.296 * S) - 15.8;
-
-    /* ── SMOG Index ─────────────────────────────────────── */
-    var smog = 1.0430 * Math.sqrt(complexWords * (30 / Math.max(sentenceCount, 1))) + 3.1291;
-
-    /* ── Automated Readability Index ─────────────────────── */
-    var ari = (4.71 * (charCount / Math.max(wordCount, 1))) + (0.5 * avgWordsPerSentence) - 21.43;
-
-    /* ── Dale-Chall Readability Score ────────────────────── */
-    var p = (difficultCount / Math.max(wordCount, 1)) * 100;
-    var daleChall = (0.1579 * p) + (0.0496 * avgWordsPerSentence);
-    if (p > 5) daleChall += 3.6365;
-
-    /* ── Linsear Write ───────────────────────────────────── */
-    var easyWords = 0;
-    words.forEach(function (w) { if (countSyllables(w) <= 2) easyWords++; });
-    var linsear = ((easyWords * 1) + ((wordCount - easyWords) * 3)) / Math.max(sentenceCount, 1);
-    if (linsear > 20) linsear = linsear / 2;
-    else linsear = (linsear / 2) - 1;
-
-    /* ── Reading level labels ────────────────────────────── */
     function easeLabel(score) {
-      if (score >= 90) return 'Very Easy';
-      if (score >= 80) return 'Easy';
-      if (score >= 70) return 'Fairly Easy';
-      if (score >= 60) return 'Standard';
-      if (score >= 50) return 'Fairly Difficult';
-      if (score >= 30) return 'Difficult';
-      return 'Very Confusing';
+        if (score >= 90) return { label: 'Very Easy', color: '#22c55e' };
+        if (score >= 80) return { label: 'Easy', color: '#22c55e' };
+        if (score >= 70) return { label: 'Fairly Easy', color: '#3b82f6' };
+        if (score >= 60) return { label: 'Standard', color: '#3b82f6' };
+        if (score >= 50) return { label: 'Fairly Difficult', color: '#eab308' };
+        if (score >= 30) return { label: 'Difficult', color: '#f97316' };
+        return { label: 'Very Confusing', color: '#ef4444' };
     }
 
-    function gradeLabel(score) {
-      if (score <= 5) return 'Elementary School';
-      if (score <= 8) return 'Middle School';
-      if (score <= 12) return 'High School';
-      if (score <= 16) return 'College Level';
-      return 'Post-Graduate';
-    }
+    analyzeBtn.addEventListener('click', function () {
+        var text = textEl.value.trim();
+        if (!text) { TCTP.toast('Enter some text first', '\u26a0\ufe0f'); return; }
 
-    function easeColor(score) {
-      if (score >= 80) return '#10b981';
-      if (score >= 60) return '#f59e0b';
-      if (score >= 40) return '#f97316';
-      return '#ef4444';
-    }
+        var words = countWords(text);
+        var sentences = countSentences(text);
+        var syllables = totalSyllables(text);
+        var chars = countCharacters(text);
+        var paragraphs = (text.match(/\n\s*\n/g) || []).length + 1;
+        var readingTime = Math.ceil(words / 200);
+        var speakingTime = Math.ceil(words / 130);
 
-    /* ── Update UI ───────────────────────────────────────── */
+        var fre = fleschReadingEase(words, sentences, syllables);
+        var fkg = fleschKincaidGrade(words, sentences, syllables);
+        var gf = gunningFog(text, words, sentences);
+        var cl = colemanLiau(text, words, sentences);
+        var ease = easeLabel(fre);
+        var level = readingLevel(fkg);
 
-    resultsEl.style.display = '';
+        scoresEl.innerHTML =
+            '<div style="text-align:center;margin-bottom:20px">' +
+            '<div style="font-size:64px;font-weight:800;color:' + ease.color + '">' + Math.max(0, Math.min(100, fre)) + '</div>' +
+            '<div style="font-size:18px;font-weight:600;color:' + ease.color + '">' + ease.label + '</div>' +
+            '<div style="color:#94a3b8;font-size:13px">Flesch Reading Ease Score</div>' +
+            '</div>' +
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:' + level.color + '">' + fkg + '</div><div style="color:#94a3b8;font-size:11px">F-K Grade Level</div><div style="color:' + level.color + ';font-size:11px">' + level.label + '</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#2563eb">' + gf + '</div><div style="color:#94a3b8;font-size:11px">Gunning Fog</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#8b5cf6">' + cl + '</div><div style="color:#94a3b8;font-size:11px">Coleman-Liau</div></div>' +
+            '</div>';
 
-    /* Score ring */
-    var ringFill = document.getElementById('tc-rc-ring-fill');
-    var scoreNum = document.getElementById('tc-rc-score-num');
-    var scoreLabel = document.getElementById('tc-rc-score-label');
-    var levelBadge = document.getElementById('tc-rc-level-badge');
-    var circumference = 2 * Math.PI * 54;
-    var offset = circumference - (fleschEase / 100) * circumference;
+        statsEl.innerHTML =
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + words + '</div><div style="color:#94a3b8;font-size:11px">Words</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + sentences + '</div><div style="color:#94a3b8;font-size:11px">Sentences</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + paragraphs + '</div><div style="color:#94a3b8;font-size:11px">Paragraphs</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + chars + '</div><div style="color:#94a3b8;font-size:11px">Characters</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#2563eb">' + readingTime + ' min</div><div style="color:#94a3b8;font-size:11px">Reading Time</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#8b5cf6">' + speakingTime + ' min</div><div style="color:#94a3b8;font-size:11px">Speaking Time</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + (words / Math.max(1, sentences)).toFixed(1) + '</div><div style="color:#94a3b8;font-size:11px">Words/Sentence</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + (syllables / words).toFixed(1) + '</div><div style="color:#94a3b8;font-size:11px">Syllables/Word</div></div>' +
+            '</div>';
 
-    if (ringFill) {
-      ringFill.style.strokeDashoffset = offset;
-      ringFill.style.stroke = easeColor(fleschEase);
-    }
-    if (scoreNum) {
-      scoreNum.textContent = Math.round(fleschEase);
-      scoreNum.style.color = easeColor(fleschEase);
-    }
-    if (scoreLabel) scoreLabel.textContent = easeLabel(fleschEase);
-    if (levelBadge) {
-      levelBadge.textContent = gradeLabel(fkGrade) + ' (Grade ' + Math.round(fkGrade) + ')';
-      levelBadge.style.borderColor = easeColor(fleschEase);
-      levelBadge.style.color = easeColor(fleschEase);
-    }
+        var tipsArr = [];
+        if (fre < 50) tipsArr.push('Your text is difficult to read. Try using shorter sentences and simpler words.');
+        if (parseFloat(fkg) > 12) tipsArr.push('The grade level is high. Aim for 8th-9th grade for general audiences.');
+        if (words / sentences > 20) tipsArr.push('Average sentence length is ' + Math.round(words / sentences) + ' words. Try to keep sentences under 20 words.');
+        var avgSyl = syllables / words;
+        if (avgSyl > 1.8) tipsArr.push('Words have many syllables on average. Replace complex words with simpler alternatives.');
+        if (paragraphs === 1 && words > 100) tipsArr.push('Add paragraph breaks to improve visual readability.');
+        if (readingTime > 10) tipsArr.push('Article is long (' + readingTime + ' min read). Consider adding subheadings and bullet points.');
+        if (tipsArr.length === 0) tipsArr.push('Your text has good readability! Keep up the clear writing.');
 
-    /* Metric cards */
-    var setText = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
-    setText('tc-rc-fk-grade', Math.round(fkGrade * 10) / 10);
-    setText('tc-rc-coleman', Math.round(colemanLiau * 10) / 10);
-    setText('tc-rc-smog', Math.round(smog * 10) / 10);
-    setText('tc-rc-ari', Math.round(ari * 10) / 10);
-    setText('tc-rc-dale', Math.round(daleChall * 10) / 10);
-    setText('tc-rc-linx', Math.round(linsear * 10) / 10);
+        tipsEl.innerHTML = '<ul style="list-style:none;padding:0;margin:0">' + tipsArr.map(function (t) {
+            return '<li style="padding:12px 16px;margin-bottom:8px;background:#0f172a;border-radius:10px;border:1px solid rgba(148,163,184,0.12);color:#cbd5e1;font-size:13px;line-height:1.6"><i class="fa-solid fa-lightbulb" style="color:#2563eb;margin-right:8px"></i>' + escHtml(t) + '</li>';
+        }).join('') + '</ul>';
 
-    /* Stats */
-    setText('tc-rc-words', wordCount.toLocaleString());
-    setText('tc-rc-sentences', sentenceCount);
-    setText('tc-rc-syllables', totalSyllables);
-    setText('tc-rc-avg-wps', Math.round(avgWordsPerSentence * 10) / 10);
-    setText('tc-rc-avg-sps', Math.round(avgSyllablesPerWord * 100) / 100);
-    setText('tc-rc-characters', charCount.toLocaleString());
-
-    /* Update result panel */
-    setText('tc-stat-orig', wordCount);
-    setText('tc-stat-comp', sentenceCount);
-    setText('tc-stat-saved', totalSyllables);
-    var chip = document.getElementById('tc-status-chip');
-    if (chip) chip.textContent = easeLabel(fleschEase);
-
-    /* Detail scores */
-    var detailScores = document.getElementById('tc-rc-detail-scores');
-    if (detailScores) {
-      detailScores.innerHTML =
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">Flesch Reading Ease</span><span class="tc-rc-detail-val" style="color:' + easeColor(fleschEase) + '">' + Math.round(fleschEase) + '/100</span><span class="tc-rc-detail-desc">' + easeLabel(fleschEase) + '</span></div>' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">Flesch-Kincaid Grade</span><span class="tc-rc-detail-val">Grade ' + Math.round(fkGrade) + '</span><span class="tc-rc-detail-desc">' + gradeLabel(fkGrade) + '</span></div>' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">Coleman-Liau Index</span><span class="tc-rc-detail-val">' + Math.round(colemanLiau * 10) / 10 + '</span><span class="tc-rc-detail-desc">' + gradeLabel(colemanLiau) + '</span></div>' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">SMOG Index</span><span class="tc-rc-detail-val">' + Math.round(smog * 10) / 10 + '</span><span class="tc-rc-detail-desc">' + gradeLabel(smog) + '</span></div>' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">Automated Readability</span><span class="tc-rc-detail-val">' + Math.round(ari * 10) / 10 + '</span><span class="tc-rc-detail-desc">' + gradeLabel(ari) + '</span></div>' +
-        '<div class="tc-rc-detail-item"><span class="tc-rc-detail-name">Dale-Chall Score</span><span class="tc-rc-detail-val">' + Math.round(daleChall * 100) / 100 + '</span><span class="tc-rc-detail-desc">' + (daleChall < 5 ? 'Easy' : 'Difficult') + '</span></div>' +
-        '</div>';
-    }
-
-    /* Tips */
-    var tips = [];
-    if (avgWordsPerSentence > 20) tips.push('Your sentences are long (avg ' + Math.round(avgWordsPerSentence) + ' words). Try splitting into shorter sentences for better readability.');
-    if (avgSyllablesPerWord > 1.6) tips.push('Your words tend to be complex (avg ' + Math.round(avgSyllablesPerWord * 100) / 100 + ' syllables). Use simpler words where possible.');
-    if (complexWords > wordCount * 0.15) tips.push('You have many complex words (3+ syllables). Replace jargon with plain language.');
-    if (fleschEase < 50) tips.push('Your text is hard to read (score ' + Math.round(fleschEase) + '). Aim for shorter sentences and common words.');
-    if (fleschEase >= 70) tips.push('Good readability! Your text is easy to understand for most readers.');
-    if (fkGrade > 12) tips.push('Your text requires college-level reading. Consider simplifying for a broader audience.');
-    if (difficultCount > 0) tips.push('Found ' + difficultCount + ' difficult words from the Dale-Chall list. Replace with simpler alternatives.');
-
-    var targetTips = {
-      general: 'For general audiences, aim for a Flesch Reading Ease score above 60 (8th grade level).',
-      academic: 'For academic writing, a score of 30-50 (college level) is appropriate.',
-      business: 'For business communication, aim for 60-70 (8th-10th grade) for clarity.',
-      child: 'For children, aim for a Flesch Reading Ease above 80 (5th-6th grade level).'
-    };
-    tips.push(targetTips[targetMode] || targetTips.general);
-
-    var tipsEl = document.getElementById('tc-rc-detail-tips');
-    if (tipsEl) {
-      tipsEl.innerHTML = '<ul style="margin:0;padding:0 0 0 16px">' +
-        tips.map(function(t) { return '<li style="margin-bottom:10px;line-height:1.6;color:var(--body,#cbd5e1)">' + t + '</li>'; }).join('') +
-        '</ul>';
-    }
-
-    /* Suggestions box */
-    var sugEl = document.getElementById('tc-rc-suggestions');
-    if (sugEl) {
-      sugEl.innerHTML = '<div class="tc-rc-suggestion-box">' +
-        '<h4 style="margin:0 0 10px;color:var(--ink,#f1f5f9);font-size:14px">Quick Summary</h4>' +
-        '<p style="margin:0 0 8px;color:var(--body,#cbd5e1);font-size:13px;line-height:1.6">' +
-        'Your text has a <b>Reading Ease score of ' + Math.round(fleschEase) + '</b> (' + easeLabel(fleschEase) + ') ' +
-        'and is at a <b>Grade ' + Math.round(fkGrade) + '</b> level (' + gradeLabel(fkGrade) + '). ' +
-        'It contains <b>' + wordCount + ' words</b> across <b>' + sentenceCount + ' sentences</b>, ' +
-        'with an average of <b>' + Math.round(avgWordsPerSentence) + ' words per sentence</b>.</p>' +
-        '</div>';
-    }
-
-    TCTP.switchToResultTab();
-    TCTP.toast('Readability analysis complete!', '✅');
-  }
-
-  analyzeBtn.addEventListener('click', analyze);
-
-  /* Clear */
-  var clearBtn = document.getElementById('tc-rc-clear');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', function () {
-      inputEl.value = '';
-      resultsEl.style.display = 'none';
+        resultEl.style.display = '';
+        TCTP.initTabs(resultEl);
     });
-  }
+
+    function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 })();
