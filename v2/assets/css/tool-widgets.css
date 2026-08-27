@@ -4780,6 +4780,134 @@
   .tc-fb-item-props { width: 100%; }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   REDUCE IMAGE SIZE TO KB (tool-reduce-image-kb)
+   ═══════════════════════════════════════════════════════════ */
+.tc-kb-options {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Target size tabs */
+.tc-kb-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tc-kb-target {
+  padding: 10px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.tc-kb-target:hover { border-color: #c8d2de; }
+.tc-kb-target.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* Custom target row */
+.tc-kb-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.tc-kb-custom-input {
+  width: 140px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+}
+.tc-kb-custom-input:focus { border-color: var(--accent); }
+.tc-kb-unit {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* Output format */
+.tc-kb-fmts {
+  display: inline-flex;
+  gap: 8px;
+}
+.tc-kb-fmt {
+  padding: 10px 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.tc-kb-fmt:hover { border-color: #c8d2de; }
+.tc-kb-fmt.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tc-kb-outnote {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+/* Result */
+.tc-kb-result {
+  padding-top: 12px;
+}
+.tc-kb-result-preview {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
+  text-align: center;
+}
+.tc-kb-result-preview img {
+  max-width: 100%;
+  max-height: 340px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.18);
+  object-fit: contain;
+}
+.tc-kb-result-msg {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.tc-kb-msg.ok { color: #15803d; }
+.tc-kb-msg.warn { color: #b45309; }
+
+@media (max-width: 520px) {
+  .tc-kb-targets { grid-template-columns: repeat(3, 1fr); }
+}
+
+
 /* =========================================================================
    PASSPORT PHOTO MAKER — Premium UI
    ========================================================================= */
