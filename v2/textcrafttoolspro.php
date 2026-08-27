@@ -240,6 +240,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-html-preview.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-passport-photo.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-reduce-image-kb.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-office-to-pdf.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -414,6 +415,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Html_Preview() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Passport_Photo() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Reduce_Image_Kb() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Office_To_Pdf() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -759,6 +761,7 @@ function tctp_enqueue_assets() {
         'tool-schema-markup-generator',
         'tool-passport-photo',
         'tool-reduce-image-kb',
+        'tool-office-to-pdf',
     ];
 
     foreach ( $tool_js_files as $js_file ) {
