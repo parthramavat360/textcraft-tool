@@ -232,6 +232,8 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-git-cheat-sheet.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-linux-cheat-sheet.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-tailwind-css-cheat-sheet.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-words-to-number.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-font-pair-generator.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -398,6 +400,8 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Git_Cheat_Sheet() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Linux_Cheat_Sheet() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Tailwind_Css_Cheat_Sheet() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Words_To_Number() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Font_Pair_Generator() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 

@@ -1,124 +1,108 @@
 /**
- * Words to Number — convert English number words to digits
- * @package TextCraft_Tools_Pro
+ * Words to Number — Convert written numbers to digits.
+ * Supports cardinal, ordinal, currency, and Roman numerals.
  */
 (function () {
-  'use strict';
+    'use strict';
+    if (!document.getElementById('wt-input')) return;
 
-  var convertBtn = document.getElementById('tc-wn-convert');
-  if (!convertBtn) return;
+    var input = document.getElementById('wt-input');
+    var output = document.getElementById('wt-output');
+    var result = document.getElementById('wt-result');
+    var status = document.getElementById('wt-status');
+    var convertBtn = document.getElementById('wt-convert');
+    var copyBtn = document.getElementById('wt-copy');
+    var romanToggle = document.getElementById('wt-roman');
+    var mode = 'cardinal';
 
-  var inputEl  = document.getElementById('tc-wn-input');
-  var outputEl = document.getElementById('tc-wn-output');
+    TCTP.initModeGroup('.tc-modes[data-group="wt-mode"]', function (val) {
+        mode = val;
+    });
 
-  /* ── Word-to-number map ─────────────────────────────────── */
+    var ones = {
+        'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,
+        'eight':8,'nine':9,'ten':10,'eleven':11,'twelve':12,'thirteen':13,
+        'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,
+        'nineteen':19,'twenty':20,'thirty':30,'forty':40,'fifty':50,
+        'sixty':60,'seventy':70,'eighty':80,'ninety':90
+    };
 
-  var wordMap = {
-    'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
-    'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,
-    'seventeen':17,'eighteen':18,'nineteen':19,'twenty':20,'thirty':30,'forty':40,'fifty':50,
-    'sixty':60,'seventy':70,'eighty':80,'ninety':90,
-    'hundred':100,'thousand':1000,'million':1e6,'billion':1e9,'trillion':1e12,
-    'quadrillion':1e15,'quintillion':1e18,
-    'first':1,'second':2,'third':3,'fourth':4,'fifth':5,'sixth':6,'seventh':7,'eighth':8,'ninth':9,'tenth':10
-  };
+    var scales = {
+        'thousand': 1000, 'million': 1e6, 'billion': 1e9, 'trillion': 1e12,
+        'quadrillion': 1e15, 'quintillion': 1e18, 'sextillion': 1e21
+    };
 
-  function wordsToNumber(text) {
-    text = text.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/\s+/g, ' ').trim();
+    function wordToNumber(text) {
+        text = text.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/-/g, ' ').trim();
+        if (!text) return NaN;
 
-    /* Handle "minus" */
-    var negative = false;
-    if (text.startsWith('minus ')) { negative = true; text = text.slice(6); }
-    else if (text.startsWith('negative ')) { negative = true; text = text.slice(9); }
+        var words = text.split(/\s+/);
+        var current = 0, total = 0, chunk = 0;
 
-    var words = text.split(' ');
-    var current = 0;
-    var total = 0;
-    var result = 0;
-
-    for (var i = 0; i < words.length; i++) {
-      var w = words[i];
-      if (w === 'and') continue;
-      if (w === 'a' || w === 'an') { current = 1; continue; }
-
-      var val = wordMap[w];
-      if (val === undefined) {
-        /* Check hyphenated words like "twenty-one" */
-        var parts = w.split('-');
-        if (parts.length === 2) {
-          val = (wordMap[parts[0]] || 0) + (wordMap[parts[1]] || 0);
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            if (w === 'and') continue;
+            if (w === 'hundred') {
+                chunk = chunk === 0 ? 100 : chunk * 100;
+            } else if (scales[w]) {
+                chunk = chunk === 0 ? scales[w] : chunk * scales[w];
+                total += chunk;
+                chunk = 0;
+            } else if (ones[w] !== undefined) {
+                chunk += ones[w];
+            } else {
+                var num = parseInt(w, 10);
+                if (!isNaN(num)) chunk += num;
+            }
         }
-        if (val === undefined || val === 0) continue;
-      }
-
-      if (val >= 1e15) { current = current * val; total += current; current = 0; }
-      else if (val >= 1e12) { current = current * val; total += current; current = 0; }
-      else if (val >= 1e9) { current = current * val; total += current; current = 0; }
-      else if (val >= 1e6) { current = current * val; total += current; current = 0; }
-      else if (val >= 1000) { current = current * val; total += current; current = 0; }
-      else if (val >= 100) { current = current * val; }
-      else { current += val; }
+        total += chunk;
+        return total;
     }
 
-    result = total + current;
-    if (negative) result = -result;
-
-    return result;
-  }
-
-  /* ── Convert ────────────────────────────────────────────── */
-
-  function convert() {
-    var raw = (inputEl ? inputEl.value : '').trim();
-    if (!raw) { TCTP.toast('Enter some number words.', '⚠️'); return; }
-
-    var num = wordsToNumber(raw);
-    if (isNaN(num)) { TCTP.toast('Could not parse number words.', '⚠️'); return; }
-
-    var numStr = num.toLocaleString('en-US');
-
-    if (outputEl) {
-      outputEl.innerHTML = '<div class="tc-wn-result-text">' + numStr + '</div>';
+    function toOrdinal(n) {
+        var s = ['th','st','nd','rd'];
+        var v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
-    var sO = document.getElementById('tc-stat-orig');
-    var sC = document.getElementById('tc-stat-comp');
-    var sS = document.getElementById('tc-stat-saved');
-    if (sO) sO.textContent = raw.slice(0, 20) + (raw.length > 20 ? '...' : '');
-    if (sC) sC.textContent = numStr;
-    if (sS) sS.textContent = numStr.replace(/[^0-9\-]/g, '').length;
-
-    var preview = document.getElementById('tc-wn-preview');
-    if (preview) {
-      preview.innerHTML = '<div style="font-size:24px;font-weight:700;color:var(--accent,#2563eb)">' + numStr + '</div>';
+    function toRoman(num) {
+        if (num <= 0 || num > 3999999) return '';
+        var vals = [1000000,900000,500000,400000,100000,90000,50000,40000,10000,9000,5000,4000,1000,900,500,400,100,90,50,40,10,9,5,4,1];
+        var syms = ['M\u0305','C\u0305M\u0305','D\u0305','C\u0305D\u0305','C\u0305','X\u0305C\u0305','L\u0305','X\u0305L\u0305','X\u0305','I\u0305X\u0305','V\u0305','I\u0305V\u0305','M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+        var result = '';
+        for (var i = 0; i < vals.length; i++) {
+            while (num >= vals[i]) { result += syms[i]; num -= vals[i]; }
+        }
+        return result;
     }
 
-    var chip = document.getElementById('tc-status-chip');
-    if (chip) chip.textContent = 'Done';
+    function convert() {
+        var text = input.value.trim();
+        if (!text) { TCTP.toast('Please enter written numbers.', '\u26A0\uFE0F'); return; }
+        status.textContent = 'Converting...';
+        result.style.display = '';
 
-    TCTP.switchToResultTab();
-    TCTP.toast('Converted: ' + numStr, '✅');
-  }
+        var lines = text.split('\n');
+        var results = [];
+        var useRoman = romanToggle.checked;
 
-  convertBtn.addEventListener('click', convert);
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line) continue;
+            var num = wordToNumber(line);
+            if (isNaN(num)) { results.push(line + ' \u2192 [cannot parse]'); continue; }
+            var formatted = num.toLocaleString();
+            if (mode === 'ordinal') formatted = toOrdinal(num);
+            else if (mode === 'currency') formatted = '$' + num.toLocaleString();
+            if (useRoman) formatted += ' (' + toRoman(num) + ')';
+            results.push(line + ' \u2192 ' + formatted);
+        }
 
-  /* Live convert */
-  if (inputEl) {
-    inputEl.addEventListener('input', function () {
-      if (inputEl.value.trim()) convert();
-    });
-  }
+        output.textContent = results.join('\n');
+        status.textContent = results.length + ' line' + (results.length === 1 ? '' : 's') + ' converted';
+        TCTP.toast('Conversion complete!', '\u2705');
+    }
 
-  /* Copy */
-  var copyBtn = document.getElementById('tc-wn-copy');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', function () {
-      var out = outputEl ? outputEl.textContent : '';
-      if (!out || out.includes('Result will')) { TCTP.toast('Convert first.', '⚠️'); return; }
-      TCTP.copyText(out.trim());
-      TCTP.toast('Copied!', '✅');
-    });
-  }
-
-  convert();
+    convertBtn.addEventListener('click', convert);
+    copyBtn.addEventListener('click', function () { TCTP.copyText(output.textContent, 'Result'); });
 })();

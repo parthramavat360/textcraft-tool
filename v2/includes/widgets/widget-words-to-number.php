@@ -1,79 +1,45 @@
 <?php
-/**
- * Widget: Words to Number
- * Convert English words to numbers ("one hundred twenty three" = 123).
- *
- * @package TextCraft_Tools_Pro
- */
-
 declare(strict_types=1);
-
 namespace TextCraft_Tools_Pro;
-
 defined('ABSPATH') || exit;
 
 class Widget_Words_To_Number extends TextCraft_Tool_Base {
-
-    protected bool $show_preview = false;
-
     public function get_name(): string { return 'words_to_number'; }
     public function get_title(): string { return 'Words to Number'; }
-    public function get_icon(): string { return 'eicon-shortcode'; }
+    public function get_icon(): string { return 'eicon-sort-alphabet-asc'; }
 
-    public function get_keywords(): array {
-        return ['words to number', 'spell to number', 'text to number', 'convert words to digits'];
-    }
-
-    protected function render_tool_content(array $settings): void {
-        ?>
-        <div class="tc-tool-desc">
-            Convert English number words into digits. Type "one hundred twenty three" and get 123.
-        </div>
-
-        <textarea class="tc-textarea" id="tc-wn-input" placeholder="Type number words (e.g. one million, two hundred thirty four thousand, five hundred sixty seven)..." rows="4">one million two hundred thirty four thousand five hundred sixty seven</textarea>
-
-        <div class="tc-wn-actions">
-            <button class="tc-btn tc-btn--accent" id="tc-wn-convert" type="button">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-                Convert
-            </button>
-            <button class="tc-btn tc-btn--ghost" id="tc-wn-copy" type="button">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Copy
-            </button>
-        </div>
-
-        <div class="tc-wn-output" id="tc-wn-output">
-            <p class="tc-wn-placeholder">Result will appear here</p>
-        </div>
-
-        <?php
-    }
-
-    protected function render_result(array $settings): void {
-        ?>
-        <div class="tc-result-col">
-            <div class="tc-panel">
-                <div class="tc-panel-head">
-                    <h3>2 · Result</h3>
-                    <span id="tc-status-chip">Ready</span>
-                </div>
-                <div class="tc-panel-body">
-                    <div class="tc-stats">
-                        <div><span>Input</span><b id="tc-stat-orig">—</b></div>
-                        <div><span>Number</span><b id="tc-stat-comp">0</b></div>
-                        <div class="saved"><span>Digits</span><b id="tc-stat-saved">0</b></div>
-                    </div>
-                    <div class="tc-tabs-header"><h4>Output</h4></div>
-                    <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">
-                        <div id="tc-wn-preview" class="tc-wn-preview-box">
-                            <p class="tc-wn-placeholder">Result will appear here</p>
-                        </div>
-                    </div>
-                </div>
+    protected function render_tool_content(array $settings): void { ?>
+        <div class="tc-tool-desc">Convert written numbers to digits. Supports cardinal numbers (one → 1), ordinal (first → 1st), currency (fifty dollars → $50), and Roman numerals.</div>
+        <div class="tc-tool-actions-bar">
+            <div class="tc-modes" data-group="wt-mode">
+                <button class="tc-btn tc-btn--ghost sel" data-val="cardinal">Cardinal</button>
+                <button class="tc-btn tc-btn--ghost" data-val="ordinal">Ordinal</button>
+                <button class="tc-btn tc-btn--ghost" data-val="currency">Currency</button>
             </div>
-            <?php $this->render_side_panel($settings); ?>
+            <button class="tc-btn tc-btn--outline" id="wt-copy">Copy</button>
         </div>
-        <?php
-    }
+        <div class="tc-rsz-toggles">
+            <label class="tc-rsz-toggle">
+                <input type="checkbox" class="tc-rsz-toggle-input" id="wt-roman">
+                <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
+                <span class="tc-rsz-toggle-text">Roman Numerals</span>
+            </label>
+        </div>
+        <div class="tc-input-group">
+            <textarea class="tc-input tc-input--textarea" id="wt-input" rows="4" placeholder="Enter written numbers (e.g., one hundred twenty three, fifty six million)..."></textarea>
+        </div>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--primary" id="wt-convert">Convert</button>
+        </div>
+        <div class="tc-result-panel" id="wt-result" style="display:none">
+            <div class="tc-result-header">
+                <span class="tc-status-chip" id="wt-status">Ready</span>
+            </div>
+            <div class="tc-result-body" id="wt-output"></div>
+        </div>
+    <?php }
+
+    protected function render_result_content(array $settings): void { ?>
+        <div></div>
+    <?php }
 }
