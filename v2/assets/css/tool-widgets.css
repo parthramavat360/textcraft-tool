@@ -4780,6 +4780,75 @@
   .tc-fb-item-props { width: 100%; }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   HTML PREVIEW / LIVE EDITOR (tool-html-preview)
+   Split-pane code editor with live preview
+   ═══════════════════════════════════════════════════════════ */
+.tctp-editor{
+  border:1px solid #1e293b;
+  border-radius:16px;
+  overflow:hidden;
+  background:#0f172a;
+  box-shadow:0 20px 50px rgba(2,6,23,.35);
+  font-family:var(--font-body);
+}
+.tctp-editor__head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:#16213a;border-bottom:1px solid #1e293b;flex-wrap:wrap;gap:10px;
+}
+.tctp-editor__tabs{display:inline-flex;gap:2px}
+.tctp-editor__tab{
+  border:0;background:transparent;color:#94a3b8;font-family:var(--font-body);
+  font-size:13px;font-weight:600;padding:7px 16px;border-radius:8px;cursor:pointer;transition:.14s ease;
+}
+.tctp-editor__tab:hover{color:#e2e8f0;background:#1e293b}
+.tctp-editor__tab.sel{color:#fff;background:#2563eb}
+.tctp-editor__head-actions{display:flex;align-items:center;gap:12px}
+.tctp-editor__auto{font-size:12px;color:#4ade80;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.tctp-editor__seg{display:inline-flex;background:#1e293b;border-radius:8px;padding:2px;gap:2px}
+.tctp-editor__seg-btn{border:0;background:transparent;color:#94a3b8;font-family:var(--font-body);font-size:12px;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer}
+.tctp-editor__seg-btn.sel{background:#2563eb;color:#fff}
+.tctp-editor__body{display:grid;grid-template-columns:1fr 1fr;min-height:480px}
+.tctp-editor__pane{min-width:0;display:flex;flex-direction:column}
+.tctp-editor__pane--code{border-right:1px solid #1e293b;background:#0b1220}
+.tctp-editor__pane--preview{background:#fff}
+.tctp-editor__files{display:flex;gap:2px;padding:8px 10px;border-bottom:1px solid #1e293b;background:#16213a}
+.tctp-editor__file{border:1px solid transparent;background:transparent;color:#94a3b8;font-family:"Cascadia Code","Fira Code",Consolas,monospace;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;transition:.14s ease}
+.tctp-editor__file:hover{color:#e2e8f0}
+.tctp-editor__file.sel{background:#1e293b;color:#fff;border-color:#334155}
+.tctp-editor__code{
+  flex:1;width:100%;resize:none;border:0;outline:none;background:transparent;color:#e2e8f0;
+  font-family:"Cascadia Code","Fira Code","SF Mono",Consolas,monospace;font-size:13px;line-height:1.7;
+  padding:16px;tab-size:2;
+}
+.tctp-editor__code:focus{box-shadow:none}
+.tctp-editor__pane--preview{position:relative}
+.tctp-editor__preview-head{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#f1f5f9;border-bottom:1px solid #e2e8f0}
+.tctp-editor__dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.tctp-editor__dot--r{background:#f87171}
+.tctp-editor__dot--y{background:#fbbf24}
+.tctp-editor__dot--g{background:#34d399}
+.tctp-editor__preview-title{font-size:12px;color:#64748b;font-weight:600;margin-left:4px}
+.tctp-editor__open{margin-left:auto;border:1px solid #e2e8f0;background:#fff;color:#475569;font-family:var(--font-body);font-size:12px;font-weight:600;padding:5px 12px;border-radius:7px;cursor:pointer;transition:.14s ease}
+.tctp-editor__open:hover{border-color:#cbd5e1;color:#0f172a}
+.tctp-editor__frame{flex:1;width:100%;border:0;background:#fff}
+.tctp-editor__foot{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;background:#16213a;border-top:1px solid #1e293b;flex-wrap:wrap;
+}
+.tctp-editor__status{font-size:12.5px;font-weight:600;color:#94a3b8;display:inline-flex;align-items:center;gap:6px;margin-right:auto}
+.tctp-editor__status--ok{color:#4ade80}
+.tctp-editor__meta{font-size:12px;color:#64748b;font-family:"Cascadia Code",Consolas,monospace}
+.tctp-editor__foot .tc-btn{height:36px;padding:0 14px;font-size:13px;background:#1e293b;border-color:#334155;color:#e2e8f0}
+.tctp-editor__foot .tc-btn:hover{border-color:#475569}
+.tctp-editor__foot .tc-btn--primary{background:#2563eb;border-color:#2563eb;color:#fff}
+.tctp-editor__foot .tc-btn--primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+@media (max-width: 900px){
+  .tctp-editor__body{grid-template-columns:1fr}
+  .tctp-editor__pane--code{border-right:0;border-bottom:1px solid #1e293b}
+  .tctp-editor__pane--preview{min-height:320px}
+}
+
+
 /* Meta Tag Generator */
 .tc-mtg-fields { display: flex; flex-direction: column; gap: 12px; }
 .tc-mtg-count { font-size: 11px; color: var(--muted, #64748b); margin-top: 4px; display: block; }
