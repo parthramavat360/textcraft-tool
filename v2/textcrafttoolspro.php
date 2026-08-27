@@ -235,6 +235,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-words-to-number.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-font-pair-generator.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-wifi-qr-generator.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-ip-address-lookup.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -404,6 +405,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Words_To_Number() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Font_Pair_Generator() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Wifi_Qr_Generator() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Ip_Address_Lookup() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 
@@ -702,6 +704,7 @@ function tctp_enqueue_assets() {
         'tool-words-to-number',
         'tool-font-pair-generator',
         'tool-wifi-qr-generator',
+        'tool-ip-address-lookup',
         'tool-text-summarizer',
         'tool-color-converter',
         'tool-gradient-generator',
