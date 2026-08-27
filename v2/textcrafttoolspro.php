@@ -700,6 +700,8 @@ function tctp_enqueue_assets() {
         'tool-text-diff',
         'tool-number-to-words',
         'tool-words-to-number',
+        'tool-font-pair-generator',
+        'tool-wifi-qr-generator',
         'tool-text-summarizer',
         'tool-color-converter',
         'tool-gradient-generator',
