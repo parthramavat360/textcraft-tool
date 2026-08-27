@@ -35,9 +35,11 @@
             fmtBtns.forEach(function (b) { b.classList.remove('sel'); });
             btn.classList.add('sel');
             currentFmt = btn.getAttribute('data-fmt');
-            // update drop zone accept hint text
+            // update drop zone accept hint text + stat
             var stat = document.getElementById('tc-ofp-stat-type');
             if (stat) stat.textContent = labelFor(currentFmt);
+            var dropHint = document.querySelector('#tc-ofp-drop > b');
+            if (dropHint) dropHint.textContent = 'Drag & drop a ' + labelFor(currentFmt) + ' file here';
             resetAll();
         });
     });
@@ -95,8 +97,11 @@
         TCTP.showFileRow('tc-ofp-file', f);
         var dl = document.getElementById('tc-ofp-download');
         if (dl) dl.disabled = true;
+        showOriginalInfo(f);
         var prev = document.getElementById('tc-ofp-result-preview');
         if (prev) prev.textContent = 'Your PDF will appear here. Click Convert to PDF when ready.';
+        var resTab = document.getElementById('tc-preview-result');
+        if (resTab) resTab.innerHTML = '<div class="tc-preview-placeholder">Your PDF preview will appear here after conversion.</div>';
         TCTP.toast('File loaded: ' + f.name);
     }, '.docx,.xlsx,.xls,.csv,.pptx');
 
@@ -225,8 +230,6 @@
             // html2canvas capture failed — offer print fallback
             var container = window.__tcOfpContainer;
             if (container) {
-                TCTP.showResultPreview('');
-                TCTP.switchToResultTab();
                 var preview = container.cloneNode(true);
                 preview.id = '';
                 preview.style.position = 'static';
@@ -235,7 +238,10 @@
                 preview.style.width = '100%';
                 var host = document.getElementById('tc-ofp-result-preview');
                 if (host) { host.innerHTML = ''; host.appendChild(preview); }
-                TCTP.toast('Rendered below — use "Print / Save as PDF" to save it.', '\u26A0\uFE0F');
+                var resTab = document.getElementById('tc-preview-result');
+                if (resTab) { resTab.innerHTML = ''; resTab.appendChild(preview.cloneNode(true)); }
+                TCTP.switchToResultTab();
+                TCTP.toast('Rendered below. Use "Print / Save as PDF" to save it.', '\u26A0\uFE0F');
             } else {
                 TCTP.toast('Conversion failed: ' + (err && err.message ? err.message : 'unknown error'), '\u26A0\uFE0F');
             }
@@ -243,13 +249,35 @@
         });
     });
 
+    // ── Preview tabs ───────────────────────────────────────────
+
+    // Original preview tab shows an info panel (office files can't be shown as images).
+    function showOriginalInfo(f) {
+        var info = document.createElement('div');
+        info.className = 'tc-ofp-origin';
+        info.innerHTML =
+            '<div class="tc-ofp-origin-icon">\u{1F4C4}</div>' +
+            '<div class="tc-ofp-origin-name">' + f.name + '</div>' +
+            '<div class="tc-ofp-origin-meta">' + (f.type || 'File') + ' &middot; ' + TCTP.formatSize(f.size) + '</div>';
+        var el = document.getElementById('tc-preview-orig');
+        if (el) { el.innerHTML = ''; el.appendChild(info); }
+    }
+
+    // Result preview tab shows the generated PDF in an iframe viewer.
+    function showPdfPreview(blob) {
+        var url = URL.createObjectURL(blob);
+        var el = document.getElementById('tc-preview-result');
+        if (el) el.innerHTML = '<iframe class="tc-ofp-iframe" src="' + url + '" title="PDF preview"></iframe>';
+        return url;
+    }
+
     // ── PDF preview via iframe ─────────────────────────────────
 
     function showPdf(blob) {
-        var url = URL.createObjectURL(blob);
+        var url = showPdfPreview(blob);
         var host = document.getElementById('tc-ofp-result-preview');
         if (host) host.innerHTML = '<iframe class="tc-ofp-iframe" src="' + url + '" title="PDF preview"></iframe>';
-        TCTP.showResultPreview(url);
+        // switch to Result tab so the PDF is visible
         TCTP.switchToResultTab();
     }
 
@@ -288,6 +316,10 @@
         TCTP.hideFileRow('tc-ofp-file');
         var prev = document.getElementById('tc-ofp-result-preview');
         if (prev) prev.textContent = 'Your PDF will appear here.';
+        var orig = document.getElementById('tc-preview-orig');
+        if (orig) orig.innerHTML = '<div class="tc-preview-placeholder">Original preview will appear here</div>';
+        var res = document.getElementById('tc-preview-result');
+        if (res) res.innerHTML = '<div class="tc-preview-placeholder">Result preview will appear here</div>';
         var s = document.getElementById('tc-ofp-stat-size');
         if (s) s.textContent = '—';
     }

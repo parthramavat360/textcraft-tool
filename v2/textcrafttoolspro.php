@@ -3,7 +3,7 @@
  * Plugin Name: TextCraft Tools Pro
  * Plugin URI: https://textcraft.tools
  * Description: Custom Elementor widgets for TextCraft Tools — header, megamenu, individual tool widgets, and more.
- * Version: 2.0.0
+ * Version: 2.0.1
  * Author: TextCraft
  * Author URI: https://textcraft.tools
  * Text Domain: textcrafttoolspro
