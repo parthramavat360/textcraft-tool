@@ -228,6 +228,10 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-text-diff.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-number-to-words.php';
     require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-readability-checker.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-sql-cheat-sheet.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-git-cheat-sheet.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-linux-cheat-sheet.php';
+    require_once TCTP_PLUGIN_DIR . 'includes/widgets/widget-tailwind-css-cheat-sheet.php';
 
     // Register new individual tool widgets
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Apa_Format() );
@@ -390,6 +394,10 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Text_Diff() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Number_To_Words() );
     $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Readability_Checker() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Sql_Cheat_Sheet() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Git_Cheat_Sheet() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Linux_Cheat_Sheet() );
+    $widgets_manager->register( new \TextCraft_Tools_Pro\Widget_Tailwind_Css_Cheat_Sheet() );
 }
 add_action( 'elementor/widgets/register', 'tctp_register_widgets' );
 

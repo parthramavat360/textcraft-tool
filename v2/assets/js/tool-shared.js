@@ -396,6 +396,39 @@
     };
 
     // ═══════════════════════════════════════════════════════════
+    //  CHEAT SHEET SEARCH
+    // ═══════════════════════════════════════════════════════════
+
+    /**
+     * Init search for cheat sheets. Finds input with ID "{prefix}-search"
+     * and sections with data-searchable within "{prefix}-content".
+     */
+    TCTP.initCheatSearch = function (prefix) {
+        var input = document.getElementById(prefix + '-search');
+        var content = document.getElementById(prefix + '-content');
+        if (!input || !content) return;
+        var sections = content.querySelectorAll('[data-searchable]');
+        input.addEventListener('input', function () {
+            var q = input.value.toLowerCase().trim();
+            sections.forEach(function (sec) {
+                var text = sec.textContent.toLowerCase();
+                sec.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+            });
+        });
+    };
+
+    // Auto-init cheat sheet search
+    function initAllCheatSearches() {
+        var prefixes = ['sql', 'git', 'linux', 'tailwind'];
+        prefixes.forEach(function (p) { TCTP.initCheatSearch(p); });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllCheatSearches);
+    } else {
+        initAllCheatSearches();
+    }
+
+    // ═══════════════════════════════════════════════════════════
     //  EXPOSE
     // ═══════════════════════════════════════════════════════════
 
