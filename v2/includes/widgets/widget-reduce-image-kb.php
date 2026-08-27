@@ -16,6 +16,13 @@ defined('ABSPATH') || exit;
 class Widget_Reduce_Image_Kb extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
+    protected string $preview_orig_label = 'Original';
+    protected string $preview_result_label = 'Reduced';
+    protected array $result_stats = [
+        ['Target', 'tc-kb-stat-target'],
+        ['Original', 'tc-kb-stat-orig'],
+        ['Reduced', 'tc-kb-stat-out'],
+    ];
 
     public function get_name(): string { return 'reduce_image_kb'; }
     public function get_title(): string { return 'Reduce Image Size to KB'; }
@@ -80,20 +87,12 @@ class Widget_Reduce_Image_Kb extends TextCraft_Tool_Base {
 
         <?php $this->render_actions( 'tc-kb-reduce', 'Reduce Size', 'tc-kb-download', 'Download' ); ?>
 
-        <div class="tc-stats-row">
-            <div class="tc-stat-item"><span class="tc-stat-label">Target</span><span class="tc-stat-value" id="tc-kb-stat-target">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-kb-stat-orig">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Reduced</span><span class="tc-stat-value" id="tc-kb-stat-out">—</span></div>
-        </div>
         <?php
     }
 
     protected function render_result_content( array $settings ): void {
+        // Result is shown in the Preview tabs (Original / Reduced). No extra box needed.
         ?>
-        <div class="tc-kb-result" id="tc-kb-result">
-            <div class="tc-kb-result-preview" id="tc-kb-result-preview">Your reduced image will appear here.</div>
-            <div class="tc-kb-result-msg" id="tc-kb-result-msg"></div>
-        </div>
         <?php
     }
 }

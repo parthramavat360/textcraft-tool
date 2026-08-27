@@ -208,8 +208,8 @@
         TCTP.hideFileRow('tc-ppt-file');
         if (imgEl) { imgEl.hidden = true; imgEl.removeAttribute('src'); }
         if (frameEl) frameEl.style.display = 'none';
-        var prev = document.getElementById('tc-ppt-result-preview');
-        if (prev) prev.textContent = 'Your passport photo will appear here.';
+        var prevRes = document.getElementById('tc-preview-result');
+        if (prevRes) prevRes.innerHTML = 'Photo preview will appear here';
     }
 
     // Compute source rectangle for the crop given the current view.
@@ -387,8 +387,6 @@
             TCTP.hideProgress('tc-ppt-progress');
 
             var url = URL.createObjectURL(blob);
-            var prev = document.getElementById('tc-ppt-result-preview');
-            if (prev) prev.innerHTML = '<img src="' + url + '" alt="Passport photo">';
             TCTP.showResultPreview(url);
             TCTP.switchToResultTab();
 

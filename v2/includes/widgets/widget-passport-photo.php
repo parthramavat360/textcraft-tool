@@ -18,6 +18,13 @@ defined('ABSPATH') || exit;
 class Widget_Passport_Photo extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
+    protected string $preview_orig_label = 'Original';
+    protected string $preview_result_label = 'Photo';
+    protected array $result_stats = [
+        ['Preset', 'tc-ppt-stat-preset'],
+        ['Output size', 'tc-ppt-stat-size'],
+        ['Background', 'tc-ppt-stat-bg'],
+    ];
 
     public function get_name(): string { return 'passport_photo_maker'; }
     public function get_title(): string { return 'Passport Photo Maker'; }
@@ -117,22 +124,14 @@ class Widget_Passport_Photo extends TextCraft_Tool_Base {
 
         <?php $this->render_actions( 'tc-ppt-make', 'Create Photo', 'tc-ppt-sheet', 'Download Print Sheet' ); ?>
 
-        <div class="tc-stats-row">
-            <div class="tc-stat-item"><span class="tc-stat-label">Preset</span><span class="tc-stat-value" id="tc-ppt-stat-preset">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Output size</span><span class="tc-stat-value" id="tc-ppt-stat-size">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Background</span><span class="tc-stat-value" id="tc-ppt-stat-bg">—</span></div>
-        </div>
         <?php
     }
 
     protected function render_result_content( array $settings ): void {
         ?>
-        <div class="tc-result-area tc-ppt-result" id="tc-ppt-result">
-            <div class="tc-ppt-result-preview" id="tc-ppt-result-preview">Your passport photo will appear here.</div>
-            <div class="tc-actions">
-                <button class="tc-btn tc-btn--accent" id="tc-ppt-download" type="button">Download Photo</button>
-                <button class="tc-btn tc-btn--ghost" id="tc-ppt-copy" type="button">New Photo</button>
-            </div>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-ppt-download" type="button">Download Photo</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-ppt-copy" type="button">New Photo</button>
         </div>
         <?php
     }

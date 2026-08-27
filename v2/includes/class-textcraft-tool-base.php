@@ -344,7 +344,24 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
      */
     protected bool $show_preview = false;
 
+    /**
+     * Preview tab labels. Child widgets can override to be tool-specific.
+     */
+    protected string $preview_orig_label = 'Original';
+    protected string $preview_result_label = 'Compressed';
+
+    /**
+     * Stats shown in the Result panel: each entry is [label, element_id, optional_class].
+     * Child widgets override with their own stat rows so values populate correctly.
+     */
+    protected array $result_stats = [
+        ['Original', 'tc-stat-orig'],
+        ['Compressed', 'tc-stat-comp'],
+        ['Saved', 'tc-stat-saved', 'saved'],
+    ];
+
     protected function render_result(array $settings): void {
+        $stats = (array) $this->result_stats;
         ?>
         <div class="tc-result-col">
             <div class="tc-panel">
@@ -354,20 +371,23 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                 </div>
                 <div class="tc-panel-body">
                     <div class="tc-stats">
-                        <div><span>Original</span><b id="tc-stat-orig">—</b></div>
-                        <div><span>Compressed</span><b id="tc-stat-comp">—</b></div>
-                        <div class="saved"><span>Saved</span><b id="tc-stat-saved">—</b></div>
+                        <?php foreach ($stats as $stat): ?>
+                        <div class="<?php echo esc_attr($stat[2] ?? ''); ?>">
+                            <span><?php echo esc_html($stat[0]); ?></span>
+                            <b id="<?php echo esc_attr($stat[1]); ?>">—</b>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                     <?php if ($this->show_preview): ?>
                     <div class="tc-tabs-header">
                         <h4>Preview</h4>
                         <div class="tc-tabs">
-                            <button class="on" data-tab="original">Original</button>
-                            <button data-tab="result">Compressed</button>
+                            <button class="on" data-tab="original"><?php echo esc_html($this->preview_orig_label); ?></button>
+                            <button data-tab="result"><?php echo esc_html($this->preview_result_label); ?></button>
                         </div>
                     </div>
-                    <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">Original preview will appear here</div>
-                    <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">Compressed preview will appear here</div>
+                    <div class="tc-preview" data-tab-content="original" id="tc-preview-orig"><?php echo esc_html($this->preview_orig_label); ?> preview will appear here</div>
+                    <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result"><?php echo esc_html($this->preview_result_label); ?> preview will appear here</div>
                     <?php endif; ?>
                     <?php $this->render_result_content($settings); ?>
                 </div>

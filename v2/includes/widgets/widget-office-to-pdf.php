@@ -17,6 +17,13 @@ defined('ABSPATH') || exit;
 class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
+    protected string $preview_orig_label = 'Original';
+    protected string $preview_result_label = 'PDF Result';
+    protected array $result_stats = [
+        ['File type', 'tc-ofp-stat-type'],
+        ['Pages', 'tc-ofp-stat-pages'],
+        ['Output size', 'tc-ofp-stat-size'],
+    ];
 
     public function get_name(): string { return 'office_to_pdf'; }
     public function get_title(): string { return 'Word/Excel/PPT to PDF'; }
@@ -35,12 +42,25 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
 
         <!-- Source format -->
         <div class="tc-rsz-section">
-            <h4 class="tc-rsz-heading">File Type</h4>
+            <h4 class="tc-rsz-heading">Document Type</h4>
             <div class="tc-ofp-fmts" id="tc-ofp-fmt-tabs">
-                <button class="tc-ofp-fmt sel" type="button" data-fmt="word">Word (.docx)</button>
-                <button class="tc-ofp-fmt" type="button" data-fmt="excel">Excel (.xlsx/.xls/.csv)</button>
-                <button class="tc-ofp-fmt" type="button" data-fmt="ppt">PowerPoint (.pptx)</button>
+                <button class="tc-ofp-fmt sel" type="button" data-fmt="word">
+                    <b>Word</b>
+                    <span>.docx document</span>
+                </button>
+                <button class="tc-ofp-fmt" type="button" data-fmt="excel">
+                    <b>Excel</b>
+                    <span>.xlsx &middot; .xls &middot; .csv</span>
+                </button>
+                <button class="tc-ofp-fmt" type="button" data-fmt="ppt">
+                    <b>PowerPoint</b>
+                    <span>.pptx slide deck</span>
+                </button>
             </div>
+        </div>
+
+        <div class="tc-rsz-section">
+            <p class="tc-ofp-outnote">Pick your file type so the right converter is used. Your document is rendered locally and exported as a single PDF.</p>
         </div>
 
         <?php $this->render_drop_zone( 'tc-ofp-drop', '.docx,.xlsx,.xls,.csv,.pptx', 'Drag & drop your Word, Excel, or PowerPoint file here' ); ?>
@@ -50,19 +70,12 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
 
         <?php $this->render_actions( 'tc-ofp-convert', 'Convert to PDF', 'tc-ofp-download', 'Download PDF' ); ?>
 
-        <div class="tc-stats-row">
-            <div class="tc-stat-item"><span class="tc-stat-label">File type</span><span class="tc-stat-value" id="tc-ofp-stat-type">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Pages</span><span class="tc-stat-value" id="tc-ofp-stat-pages">—</span></div>
-            <div class="tc-stat-item"><span class="tc-stat-label">Output size</span><span class="tc-stat-value" id="tc-ofp-stat-size">—</span></div>
-        </div>
         <?php
     }
 
     protected function render_result_content( array $settings ): void {
+        // Result is shown in the Preview tabs (Original / PDF Result). No extra box needed.
         ?>
-        <div class="tc-ofp-result" id="tc-ofp-result">
-            <div class="tc-ofp-result-preview" id="tc-ofp-result-preview">Your PDF will appear here. The rendered document is shown above so you can check it before downloading.</div>
-        </div>
         <?php
     }
 }

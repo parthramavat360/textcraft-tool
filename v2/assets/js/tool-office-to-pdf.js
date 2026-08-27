@@ -98,8 +98,6 @@
         var dl = document.getElementById('tc-ofp-download');
         if (dl) dl.disabled = true;
         showOriginalInfo(f);
-        var prev = document.getElementById('tc-ofp-result-preview');
-        if (prev) prev.textContent = 'Your PDF will appear here. Click Convert to PDF when ready.';
         var resTab = document.getElementById('tc-preview-result');
         if (resTab) resTab.innerHTML = '<div class="tc-preview-placeholder">Your PDF preview will appear here after conversion.</div>';
         TCTP.toast('File loaded: ' + f.name);
@@ -236,10 +234,8 @@
                 preview.style.left = 'auto';
                 preview.style.visibility = 'visible';
                 preview.style.width = '100%';
-                var host = document.getElementById('tc-ofp-result-preview');
-                if (host) { host.innerHTML = ''; host.appendChild(preview); }
                 var resTab = document.getElementById('tc-preview-result');
-                if (resTab) { resTab.innerHTML = ''; resTab.appendChild(preview.cloneNode(true)); }
+                if (resTab) { resTab.innerHTML = ''; resTab.appendChild(preview); }
                 TCTP.switchToResultTab();
                 TCTP.toast('Rendered below. Use "Print / Save as PDF" to save it.', '\u26A0\uFE0F');
             } else {
@@ -274,9 +270,7 @@
     // ── PDF preview via iframe ─────────────────────────────────
 
     function showPdf(blob) {
-        var url = showPdfPreview(blob);
-        var host = document.getElementById('tc-ofp-result-preview');
-        if (host) host.innerHTML = '<iframe class="tc-ofp-iframe" src="' + url + '" title="PDF preview"></iframe>';
+        showPdfPreview(blob);
         // switch to Result tab so the PDF is visible
         TCTP.switchToResultTab();
     }
@@ -314,8 +308,6 @@
         var dl = document.getElementById('tc-ofp-download');
         if (dl) dl.disabled = true;
         TCTP.hideFileRow('tc-ofp-file');
-        var prev = document.getElementById('tc-ofp-result-preview');
-        if (prev) prev.textContent = 'Your PDF will appear here.';
         var orig = document.getElementById('tc-preview-orig');
         if (orig) orig.innerHTML = '<div class="tc-preview-placeholder">Original preview will appear here</div>';
         var res = document.getElementById('tc-preview-result');

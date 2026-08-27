@@ -251,20 +251,7 @@
             var outKb = result.kb;
             var targetKbF = targetKb;
 
-            var preview = document.getElementById('tc-kb-result-preview');
             var url = URL.createObjectURL(result.blob);
-            if (preview) preview.innerHTML = '<img src="' + url + '" alt="Reduced image">';
-
-            var msg = document.getElementById('tc-kb-result-msg');
-            if (msg) {
-                var nearPad = Math.max(targetKbF * 0.05, 4);
-                var closeOff = Math.abs(outKb - targetKbF) <= nearPad;
-                var over = outKb > targetKbF;
-                var txt = 'Final size: <b>' + outKb.toFixed(1) + ' KB</b>' +
-                    (closeOff ? ' &mdash; on target!'
-                        : over ? ' &mdash; smallest achievable' : ' &mdash; slightly under target');
-                msg.innerHTML = '<span class="tc-kb-msg ' + (closeOff ? 'ok' : 'warn') + '">' + txt + '</span>';
-            }
 
             // Result panel stats
             var savedPct = originalBytes > 0 && result.blob.size < originalBytes
@@ -318,10 +305,8 @@
         var dr = document.getElementById('tc-kb-download');
         if (dr) dr.disabled = true;
         TCTP.hideFileRow('tc-kb-file');
-        var prev = document.getElementById('tc-kb-result-preview');
-        if (prev) prev.textContent = 'Your reduced image will appear here.';
-        var msg = document.getElementById('tc-kb-result-msg');
-        if (msg) msg.innerHTML = '';
+        var prevRes = document.getElementById('tc-preview-result');
+        if (prevRes) prevRes.innerHTML = 'Reduced preview will appear here';
         var origStat = document.getElementById('tc-kb-stat-orig');
         if (origStat) origStat.textContent = '—';
         var outStat = document.getElementById('tc-kb-stat-out');
