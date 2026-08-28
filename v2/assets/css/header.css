@@ -376,14 +376,21 @@
     /* Show hamburger */
     .tctp-hamburger { display: flex; }
 
-    /* Slide-out full-height panel */
+    /* Slide-out full-height panel.
+       NOTE: must use viewport-relative height (100vh/100dvh), NOT `100%`. This
+       panel is `position: fixed` inside a `position: sticky` header whose
+       flex row (`.tctp-wrap`) is only ~60-68px tall; `height:100%` resolves
+       against that row (not the viewport), collapsing the open menu to a thin
+       strip that only shows the first link. 100vh/100dvh always span the
+       viewport regardless of any ancestor containing block. */
     .tctp-nav-inner {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         width: min(84vw, 340px);
-        height: 100%;
+        height: 100vh;
+        height: 100dvh;
         background: #fff;
         flex-direction: column;
         align-items: stretch;
