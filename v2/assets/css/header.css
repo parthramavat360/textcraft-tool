@@ -183,12 +183,18 @@
 }
 
 /* --------------------------------------------------------------------------
-   Mega Menu — Multi-Column Grid (same as reference design)
+   Mega Menu — Multi-Column (fixed columns, centered when fewer than 5)
    -------------------------------------------------------------------------- */
 .tctp-mega-cols {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 28px;
+}
+
+.tctp-mcol {
+    width: 200px;
+    flex: 0 0 auto;
 }
 
 .tctp-mcol h5 {
@@ -263,7 +269,8 @@
 
 /* Desktop dropdown column collapse, matching reference design breakpoints */
 @media (min-width: 1025px) and (max-width: 1100px) {
-    .tctp-mega-cols { grid-template-columns: repeat(3, 1fr); row-gap: 26px; }
+    .tctp-mcol { width: 170px; }
+    .tctp-mega-cols { gap: 22px; row-gap: 26px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -484,9 +491,14 @@
     }
 
     .tctp-mega-cols {
-        grid-template-columns: 1fr 1fr;
+        flex-wrap: wrap;
+        justify-content: flex-start;
         gap: 22px 18px;
         padding: 18px 0 6px;
+    }
+
+    .tctp-mcol {
+        width: calc(50% - 9px);
     }
 
     .tctp-mega-inner {
@@ -511,7 +523,8 @@
 
 /* Tablet portrait: mega accordion single column for readability */
 @media (max-width: 640px) {
-    .tctp-mega-cols { grid-template-columns: 1fr; }
+    .tctp-mega-cols { justify-content: flex-start; }
+    .tctp-mcol { width: 100%; }
 }
 
 /* Extra small phones (<= 380px) */
