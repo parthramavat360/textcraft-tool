@@ -52,7 +52,6 @@
 .tctp-wrap.tctp-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 32px;
     height: 68px;
     max-width: 1200px;
@@ -94,6 +93,10 @@
     display: flex;
     align-items: center;
     min-width: 0;
+    /* Push the nav links + CTA to the right on desktop, like the reference
+       (.nav nav { margin-left: auto }). Overridden to 0 inside the mobile
+       media query so the slide-out panel is unaffected. */
+    margin-left: auto;
 }
 
 .tctp-nav-links {
