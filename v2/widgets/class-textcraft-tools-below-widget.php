@@ -368,58 +368,451 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
-		$this->start_controls_section( 'section_style', [
-			'label' => __( 'Style', 'textcrafttoolspro' ),
+		/* ============================================================
+		   STYLE — General (global) then one panel per section.
+		   Each section panel carries style controls for every field it
+		   renders. Helpers add_heading_style / add_text_style / add_bg
+		   keep the panels compact.
+		   ============================================================ */
+
+		$this->start_controls_section( 'style_general', [
+			'label' => __( 'General', 'textcrafttoolspro' ),
 			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 		] );
 
-		$this->add_control( 'accent', [
-			'label'     => __( 'Accent Color', 'textcrafttoolspro' ),
+		$this->add_control( 'general_wrapper_bg', [
+			'label'     => __( 'Wrapper Background', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#2563eb',
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-sections' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'general_section_bg', [
+			'label'     => __( 'Alternate Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#f6f8fb',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-sec.tcb-alt' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'general_section_border', [
+			'label'     => __( 'Section Divider Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-sec' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_typography( 'general_heading_typo', '{{WRAPPER}} .tcb-h2' );
+		$this->add_typography( 'general_desc_typo', '{{WRAPPER}} .tcb-desc' );
+		$this->add_control( 'general_kicker_color', [
+			'label'     => __( 'Kicker Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
 			'selectors' => [
 				'{{WRAPPER}} .tcb-kicker' => 'color: {{VALUE}}; border-color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card.step .tcb-num' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card.tool .tcb-tag' => 'background: {{VALUE}}',
-				'{{WRAPPER}} .tcb-btn' => 'background: {{VALUE}}',
-				'{{WRAPPER}} .tcb-facts dd' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-cta .tcb-btn' => 'background: {{VALUE}}',
 			],
 		] );
-		$this->add_control( 'accent_soft', [
-			'label'     => __( 'Accent Soft (backgrounds)', 'textcrafttoolspro' ),
+		$this->add_control( 'general_kicker_bg', [
+			'label'     => __( 'Kicker Background', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#eaf0ff',
+			'default'   => '',
 			'selectors' => [
 				'{{WRAPPER}} .tcb-kicker' => 'background: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card.step .tcb-num' => 'background: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card.tool .tcb-tag' => 'background: {{VALUE}}',
-				'{{WRAPPER}} .tcb-cat .tcb-caticon' => 'background: {{VALUE}}',
-			],
-		] );
-		$this->add_control( 'title_color', [
-			'label'     => __( 'Title Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#0b1220',
-			'selectors' => [
-				'{{WRAPPER}} .tcb-h2' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card h3' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-cta h3' => 'color: {{VALUE}}',
-			],
-		] );
-		$this->add_control( 'body_color', [
-			'label'     => __( 'Body Text Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#4a5568',
-			'selectors' => [
-				'{{WRAPPER}} .tcb-desc' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-card p' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-seo p' => 'color: {{VALUE}}',
-				'{{WRAPPER}} .tcb-cta p' => 'color: {{VALUE}}',
 			],
 		] );
 
 		$this->end_controls_section();
+
+		/* --- 1. How it Works --- */
+		$this->start_controls_section( 'style_how', [
+			'label' => __( '1. How it Works', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'how_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_heading_styles( 'how', [
+			'heading_sel' => '{{WRAPPER}} .tcb-how .tcb-h2',
+			'desc_sel'    => '',
+		], __( 'Section Title', 'textcrafttoolspro' ) );
+		$this->add_control( 'how_kicker_color', [
+			'label'     => __( 'Kicker Text / Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-kicker' => 'color: {{VALUE}}; border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'how_kicker_bg', [
+			'label'     => __( 'Kicker Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-kicker' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'how_card_bg', [
+			'label'     => __( 'Step Card Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-card.step' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'how_card_border', [
+			'label'     => __( 'Step Card Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-card.step' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'how_num_color', [
+			'label'     => __( 'Step Number Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-num' => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'how_num_bg', [
+			'label'     => __( 'Step Number Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-how .tcb-num' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_field_text_styles( 'how', '{{WRAPPER}} .tcb-how .tcb-card.step h3', __( 'Step Title' ) );
+		$this->add_field_text_styles( 'howbody', '{{WRAPPER}} .tcb-how .tcb-card.step p', __( 'Step Text' ) );
+
+		$this->end_controls_section();
+
+		/* --- 2. Most Used This Week --- */
+		$this->start_controls_section( 'style_most', [
+			'label' => __( '2. Most Used This Week', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'most_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-most' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_heading_styles( 'most', [
+			'heading_sel' => '{{WRAPPER}} .tcb-most .tcb-h2',
+			'desc_sel'    => '{{WRAPPER}} .tcb-most .tcb-desc',
+		], __( 'Section Title / Description', 'textcrafttoolspro' ) );
+		$this->add_text_control( 'most_gost_color', __( '"See all" Link Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-most .tcb-gost', 'color:{{VALUE}}' );
+		$this->add_control( 'most_gost_border', [
+			'label'     => __( '"See all" Link Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-most .tcb-gost' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'most_card_bg', [
+			'label'     => __( 'Tool Card Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-most .tcb-card.tool' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'most_card_border', [
+			'label'     => __( 'Tool Card Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-most .tcb-card.tool' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'most_tag_bg', [
+			'label'     => __( 'Category Tag Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-most .tcb-tag' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_text_control( 'most_tag_color', __( 'Category Tag Text Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-most .tcb-tag', 'color:{{VALUE}}' );
+		$this->add_field_text_styles( 'most', '{{WRAPPER}} .tcb-most .tcb-card.tool h3', __( 'Tool Title' ) );
+		$this->add_field_text_styles( 'mostbody', '{{WRAPPER}} .tcb-most .tcb-card.tool p', __( 'Tool Description' ) );
+
+		$this->end_controls_section();
+
+		/* --- 3. Browse by Category --- */
+		$this->start_controls_section( 'style_cat', [
+			'label' => __( '3. Browse by Category', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'cat_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cats' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_heading_styles( 'cat', [
+			'heading_sel' => '{{WRAPPER}} .tcb-cats .tcb-h2',
+			'desc_sel'    => '{{WRAPPER}} .tcb-cats .tcb-desc',
+		], __( 'Section Title / Description', 'textcrafttoolspro' ) );
+		$this->add_control( 'cat_card_bg', [
+			'label'     => __( 'Category Card Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cats .tcb-card.cat' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'cat_card_border', [
+			'label'     => __( 'Category Card Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cats .tcb-card.cat' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'cat_icon_color', [
+			'label'     => __( 'Icon Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cats .tcb-caticon' => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'cat_icon_bg', [
+			'label'     => __( 'Icon Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cats .tcb-caticon' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_text_control( 'cat_name_color', __( 'Category Name Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-cats .tcb-catname', 'color:{{VALUE}}' );
+		$this->add_text_control( 'cat_count_color', __( 'Tool Count Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-cats .tcb-catcount', 'color:{{VALUE}}' );
+
+		$this->end_controls_section();
+
+		/* --- 4. FAQ --- */
+		$this->start_controls_section( 'style_faq', [
+			'label' => __( '4. Questions People Ask', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'faq_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-faq' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_heading_styles( 'faq', [
+			'heading_sel' => '{{WRAPPER}} .tcb-faq .tcb-h2',
+			'desc_sel'    => '{{WRAPPER}} .tcb-faq .tcb-desc',
+		], __( 'Section Title / Description', 'textcrafttoolspro' ) );
+		$this->add_control( 'faq_card_bg', [
+			'label'     => __( 'FAQ Card Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-faq .tcb-card.faq' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'faq_card_border', [
+			'label'     => __( 'FAQ Card Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-faq .tcb-card.faq' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_field_text_styles( 'faqq', '{{WRAPPER}} .tcb-faq .tcb-card.faq summary', __( 'Question Text' ) );
+		$this->add_field_text_styles( 'faqa', '{{WRAPPER}} .tcb-faq .tcb-card.faq > p', __( 'Answer Text' ) );
+		$this->add_control( 'faq_plus_bg', [
+			'label'     => __( 'Question Icon (+) Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-faq .tcb-plus' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_text_control( 'faq_plus_color', __( 'Question Icon (+) Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-faq .tcb-plus', 'color:{{VALUE}}' );
+
+		$this->end_controls_section();
+
+		/* --- 5. SEO Body --- */
+		$this->start_controls_section( 'style_seo', [
+			'label' => __( '5. SEO Body', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'seo_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-seo' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_heading_styles( 'seo', [
+			'heading_sel' => '{{WRAPPER}} .tcb-seo .tcb-h2',
+			'desc_sel'    => '',
+		], __( 'Section Title', 'textcrafttoolspro' ) );
+		$this->add_field_text_styles( 'seobody', '{{WRAPPER}} .tcb-seobody p', __( 'Body Paragraph' ) );
+		$this->add_field_text_styles( 'seoh3', '{{WRAPPER}} .tcb-seobody h3', __( 'Body Heading' ) );
+		$this->add_control( 'seo_chip_bg', [
+			'label'     => __( 'Chip Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-seo .tcb-chip' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'seo_chip_border', [
+			'label'     => __( 'Chip Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-seo .tcb-chip' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_text_control( 'seo_chip_color', __( 'Chip Text Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-seo .tcb-chip', 'color:{{VALUE}}' );
+		$this->add_text_control( 'seo_fact_dt_color', __( 'At-a-glance Label Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-seo .tcb-facts dt', 'color:{{VALUE}}' );
+		$this->add_text_control( 'seo_fact_dd_color', __( 'At-a-glance Value Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-seo .tcb-facts dd', 'color:{{VALUE}}' );
+
+		$this->end_controls_section();
+
+		/* --- 6. CTA Band --- */
+		$this->start_controls_section( 'style_cta', [
+			'label' => __( '6. CTA Band', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'cta_section_bg', [
+			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cta' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'cta_gradient_from', [
+			'label'     => __( 'CTA Card Gradient (start)', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-sections' => '--tcb-cta-from: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'cta_gradient_to', [
+			'label'     => __( 'CTA Card Gradient (end)', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-sections' => '--tcb-cta-to: {{VALUE}}',
+			],
+		] );
+		$this->add_field_text_styles( 'ctatitle', '{{WRAPPER}} .tcb-cta .tcb-ctacard h3', __( 'CTA Title' ) );
+		$this->add_field_text_styles( 'ctadesc', '{{WRAPPER}} .tcb-cta .tcb-ctacard p', __( 'CTA Description' ) );
+		$this->add_control( 'cta_btn_bg', [
+			'label'     => __( 'Button Background', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				'{{WRAPPER}} .tcb-cta .tcb-btn' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_text_control( 'cta_btn_color', __( 'Button Text Color', 'textcrafttoolspro' ), '{{WRAPPER}} .tcb-cta .tcb-btn', 'color:{{VALUE}}' );
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * A filled color control that resolves a plain color to a CSS
+	 * "color: <value>" rule for a selector.
+	 */
+	private function add_text_control( $key, $label, $selector, $rule ) {
+		$this->add_control( $key, [
+			'label'     => $label,
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				$selector => $rule,
+			],
+		] );
+	}
+
+	/**
+	 * Add color + typography set for a section heading and (optionally) its
+	 * description, using per-section scoped selectors.
+	 */
+	private function add_heading_styles( $key, $selectors, $label ) {
+		$this->add_control( $key . '_heading_color', [
+			'label'     => sprintf( /* translators: %s: heading label */ __( '%s — color', 'textcrafttoolspro' ), $label ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				$selectors['heading_sel'] => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_typography( $key . '_heading_typo', $selectors['heading_sel'] );
+		if ( ! empty( $selectors['desc_sel'] ) ) {
+			$this->add_control( $key . '_desc_color', [
+				'label'     => sprintf( /* translators: %s: label */ __( '%s — description color', 'textcrafttoolspro' ), $label ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'default'   => '',
+				'selectors' => [
+					$selectors['desc_sel'] => 'color: {{VALUE}}',
+				],
+			] );
+			$this->add_typography( $key . '_desc_typo', $selectors['desc_sel'] );
+		}
+	}
+
+	/**
+	 * Add color + typography for an arbitrary field (e.g. a card title / text).
+	 */
+	private function add_field_text_styles( $key, $selector, $label ) {
+		$this->add_control( $key . '_color', [
+			'label'     => $label,
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '',
+			'selectors' => [
+				$selector => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_typography( $key . '_typo', $selector );
+	}
+
+	/**
+	 * Add a full Elementor typography group control (family, size, weight,
+	 * line height, transform, etc.) applied to a selector.
+	 */
+	private function add_typography( $key, $selector ) {
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name'     => $key,
+				'label'    => __( 'Typography', 'textcrafttoolspro' ),
+				'selector' => $selector,
+			]
+		);
 	}
 
 	protected function render() {

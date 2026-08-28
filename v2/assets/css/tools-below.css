@@ -8,6 +8,7 @@
   --ink:#0b1220; --ink-2:#1c2637; --body:#4a5568; --muted:#8792a6;
   --paper:#ffffff; --surface:#f6f8fb; --line:#e4e9f0;
   --accent:#2563eb; --accent-soft:#eaf0ff;
+  --tcb-cta-from:#0b1220; --tcb-cta-to:#1c2637;
   --radius:14px;
   --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px -12px rgba(16,24,40,.18);
   --shadow-lg:0 24px 60px -30px rgba(16,24,40,.4);
@@ -163,7 +164,7 @@
 
 /* CTA */
 .tcb-ctacard{
-  background:linear-gradient(135deg,#0b1220 0%,#1c2637 100%);
+  background:linear-gradient(135deg,var(--tcb-cta-from) 0%,var(--tcb-cta-to) 100%);
   border-radius:calc(var(--radius) + 6px); padding:56px 48px; text-align:center;
   box-shadow:var(--shadow-lg); position:relative; overflow:hidden;
 }
