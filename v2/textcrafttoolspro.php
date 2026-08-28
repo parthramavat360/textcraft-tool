@@ -134,6 +134,7 @@ function tctp_register_widgets( $widgets_manager ) {
     require_once TCTP_PLUGIN_DIR . 'widgets/class-textcraft-workflow-section-widget.php';
     require_once TCTP_PLUGIN_DIR . 'widgets/class-textcraft-cta-section-widget.php';
     require_once TCTP_PLUGIN_DIR . 'widgets/class-textcraft-tools-below-widget.php';
+    require_once TCTP_PLUGIN_DIR . 'widgets/class-textcraft-legal-widget.php';
 
     $widgets_manager->register( new \TextCraft_Header_Widget() );
     $widgets_manager->register( new \TextCraft_Footer_Widget() );
@@ -149,6 +150,7 @@ function tctp_register_widgets( $widgets_manager ) {
     $widgets_manager->register( new \TextCraft_Workflow_Section_Widget() );
     $widgets_manager->register( new \TextCraft_CTA_Section_Widget() );
     $widgets_manager->register( new \TextCraft_Tools_Below_Widget() );
+    $widgets_manager->register( new \TextCraft_Legal_Widget() );
 
     // New individual tool widgets
     require_once TCTP_PLUGIN_DIR . 'includes/class-textcraft-tool-base.php';
@@ -666,11 +668,27 @@ function tctp_enqueue_assets() {
     );
 
     wp_enqueue_style(
-        'tctp-tool-widgets-css',
-        TCTP_PLUGIN_URL . 'assets/css/tool-widgets.css',
+        'tctp-tools-below-css',
+        TCTP_PLUGIN_URL . 'assets/css/tools-below.css',
         [ 'tctp-google-fonts' ],
         TCTP_VERSION
     );
+
+    wp_enqueue_style(
+        'tctp-legal-css',
+        TCTP_PLUGIN_URL . 'assets/css/legal.css',
+        [ 'tctp-google-fonts' ],
+        TCTP_VERSION
+    );
+
+    wp_enqueue_script(
+        'tctp-legal-js',
+        TCTP_PLUGIN_URL . 'assets/js/legal.js',
+        [],
+        TCTP_VERSION,
+        true
+    );
+
 
     wp_enqueue_style(
         'tctp-tools-sections-css',
@@ -1001,6 +1019,13 @@ function tctp_enqueue_editor_assets() {
     wp_enqueue_style(
         'tctp-tools-below-css',
         TCTP_PLUGIN_URL . 'assets/css/tools-below.css',
+        [ 'tctp-google-fonts' ],
+        TCTP_VERSION
+    );
+
+    wp_enqueue_style(
+        'tctp-legal-css',
+        TCTP_PLUGIN_URL . 'assets/css/legal.css',
         [ 'tctp-google-fonts' ],
         TCTP_VERSION
     );

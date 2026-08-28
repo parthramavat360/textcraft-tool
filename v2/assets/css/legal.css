@@ -1,0 +1,566 @@
+/* ============================================================
+   TCTP: Legal & Policies widget
+   Scoped entirely under .tclp- to avoid collisions.
+   Mirrors the textcraft-legal-policies.html reference design.
+   ============================================================ */
+
+.tclp-legal {
+	/* tokens */
+	--tclp-radius: 0.875rem;
+	--tclp-ink: oklch(0.1831 0.0309 263.38);
+	--tclp-ink-2: oklch(0.2675 0.035 260.77);
+	--tclp-body-text: oklch(0.4474 0.0343 261.32);
+	--tclp-surface: oklch(0.9785 0.0045 258.32);
+	--tclp-line: oklch(0.9322 0.0109 256.7);
+	--tclp-line-strong: oklch(0.8789 0.0192 255.54);
+	--tclp-line-dash: oklch(0.8822 0.0233 258.36);
+	--tclp-ok: oklch(0.6271 0.1699 149.21);
+	--tclp-ok-soft: oklch(0.9615 0.0214 158.6);
+	--tclp-ok-ink: oklch(0.5273 0.1371 150.07);
+	--tclp-ok-line: oklch(0.9119 0.0471 157.75);
+	--tclp-accent-soft: oklch(0.955 0.0212 268.43);
+	--tclp-accent: oklch(0.5461 0.2152 262.88);
+	--tclp-muted-foreground: oklch(0.6579 0.0324 262.47);
+	--tclp-card: oklch(1 0 0);
+	--tclp-shadow-soft: 0 1px 2px oklch(0.2 0.03 264 / 0.05), 0 8px 24px -12px oklch(0.2 0.03 264 / 0.18);
+
+	font-family: "DM Sans", system-ui, sans-serif;
+	font-size: 16px;
+	line-height: 1.65;
+	color: var(--tclp-ink);
+	background: var(--tclp-card);
+	-webkit-font-smoothing: antialiased;
+}
+
+.tclp-legal h1,
+.tclp-legal h2,
+.tclp-legal h3,
+.tclp-legal h4 {
+	font-family: "Space Grotesk", system-ui, sans-serif;
+	letter-spacing: -0.02em;
+	color: var(--tclp-ink);
+	margin: 0;
+}
+
+.tclp-legal a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.tclp-wrap {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+/* ---- Hero ---- */
+.tclp-hero {
+	padding: 14px 0 40px;
+	background: radial-gradient(
+		60% 100% at 50% 0%,
+		oklch(0.9727 0.0121 262 / 1) 0%,
+		transparent 70%
+	);
+}
+
+.tclp-badges {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+}
+
+.tclp-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--tclp-body-text);
+	border: 1px solid var(--tclp-line);
+	background: var(--tclp-card);
+	padding: 5px 11px;
+	border-radius: 100px;
+}
+
+.tclp-pill-ok {
+	color: var(--tclp-ok-ink);
+	background: var(--tclp-ok-soft);
+	border-color: var(--tclp-ok-line);
+}
+
+.tclp-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--tclp-ok);
+	flex: 0 0 auto;
+}
+
+.tclp-h1 {
+	font-size: clamp(32px, 4.4vw, 50px);
+	line-height: 1.06;
+	max-width: 22ch;
+}
+
+.tclp-lede {
+	font-size: 17.5px;
+	color: var(--tclp-body-text);
+	max-width: 62ch;
+	margin: 14px 0 0;
+}
+
+/* ---- Layout ---- */
+.tclp-content {
+	display: grid;
+	grid-template-columns: 1fr 300px;
+	gap: 56px;
+	padding: 24px 24px 20px;
+	align-items: start;
+}
+
+.tclp-doc {
+	display: grid;
+	gap: 22px;
+}
+
+/* ---- Doc cards ---- */
+.tclp-doc-card {
+	border: 1px solid var(--tclp-line);
+	border-radius: 18px;
+	background: var(--tclp-card);
+	box-shadow: var(--tclp-shadow-soft);
+	scroll-margin-top: 96px;
+	overflow: hidden;
+}
+
+.tclp-doc-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 18px 24px;
+	border-bottom: 1px solid var(--tclp-line);
+	background: var(--tclp-surface);
+}
+
+.tclp-doc-head h2 {
+	font-size: 21px;
+}
+
+.tclp-meta {
+	font-size: 12.5px;
+	color: var(--tclp-muted-foreground);
+	white-space: nowrap;
+}
+
+.tclp-doc-body {
+	padding: 22px 24px 26px;
+}
+
+.tclp-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-family: "Space Grotesk", system-ui, sans-serif;
+	font-size: 11.5px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--tclp-accent);
+	background: var(--tclp-accent-soft);
+	border-radius: 100px;
+	padding: 5px 12px;
+}
+
+.tclp-doc-lede {
+	font-size: 16px;
+	margin: 14px 0 20px;
+	color: var(--tclp-body-text);
+}
+
+.tclp-prose h3 {
+	font-size: 16px;
+	margin: 22px 0 8px;
+}
+
+.tclp-prose h3:first-child {
+	margin-top: 0;
+}
+
+.tclp-prose p {
+	color: var(--tclp-body-text);
+	margin: 0 0 12px;
+	font-size: 15.5px;
+}
+
+.tclp-bullets {
+	padding: 0;
+	margin: 12px 0 0;
+	list-style: none;
+}
+
+.tclp-bullets li {
+	padding: 11px 0;
+	border-top: 1px solid var(--tclp-line);
+	font-size: 14.5px;
+	color: var(--tclp-body-text);
+}
+
+.tclp-bullets li strong {
+	color: var(--tclp-ink);
+	font-weight: 600;
+}
+
+.tclp-mini-list {
+	list-style: none;
+	padding: 0;
+	margin: 14px 0 0;
+	display: grid;
+	gap: 9px;
+}
+
+.tclp-mini-list li {
+	display: flex;
+	gap: 10px;
+	font-size: 14.5px;
+	color: var(--tclp-body-text);
+}
+
+.tclp-mini-list li::before {
+	content: "\2192";
+	color: var(--tclp-accent);
+	font-weight: 700;
+}
+
+.tclp-callout {
+	display: flex;
+	gap: 12px;
+	border: 1px solid var(--tclp-line);
+	background: var(--tclp-surface);
+	border-radius: 12px;
+	padding: 14px 16px;
+	margin-top: 16px;
+	font-size: 14px;
+	color: var(--tclp-body-text);
+}
+
+.tclp-tick {
+	flex: 0 0 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: var(--tclp-ok);
+	color: oklch(1 0 0);
+	display: grid;
+	place-items: center;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.tclp-grid-2 {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 14px;
+	margin-top: 16px;
+}
+
+.tclp-fcard {
+	border: 1px solid var(--tclp-line);
+	border-radius: 14px;
+	padding: 18px;
+	background: var(--tclp-card);
+	transition: 0.18s ease;
+}
+
+.tclp-fcard:hover {
+	border-color: var(--tclp-line-dash);
+	transform: translateY(-2px);
+	box-shadow: var(--tclp-shadow-soft);
+}
+
+.tclp-fcard h4 {
+	font-size: 15px;
+	margin-bottom: 6px;
+}
+
+.tclp-fcard p {
+	font-size: 13.5px;
+	color: var(--tclp-body-text);
+	margin: 0;
+}
+
+.tclp-faq {
+	border: 1px solid var(--tclp-line);
+	border-radius: 14px;
+	overflow: hidden;
+	margin-top: 16px;
+}
+
+.tclp-faq details {
+	border-bottom: 1px solid var(--tclp-line);
+	background: var(--tclp-card);
+}
+
+.tclp-faq details:last-child {
+	border: 0;
+}
+
+.tclp-faq summary {
+	cursor: pointer;
+	list-style: none;
+	padding: 16px 18px;
+	font-weight: 600;
+	font-size: 15px;
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+.tclp-faq summary::-webkit-details-marker {
+	display: none;
+}
+
+.tclp-faq summary::after {
+	content: "+";
+	color: var(--tclp-muted-foreground);
+	font-weight: 500;
+}
+
+.tclp-faq details[open] summary::after {
+	content: "\2013";
+}
+
+.tclp-faq p {
+	padding: 0 18px 16px;
+	margin: 0;
+	font-size: 14.5px;
+	color: var(--tclp-body-text);
+}
+
+/* ---- CTA band ---- */
+.tclp-cta-band {
+	background: var(--tclp-ink);
+	border-radius: 24px;
+	padding: 56px 48px;
+	color: oklch(1 0 0);
+	display: grid;
+	grid-template-columns: 1.4fr auto;
+	gap: 32px;
+	align-items: center;
+	position: relative;
+	overflow: hidden;
+}
+
+.tclp-cta-band::after {
+	content: "";
+	position: absolute;
+	right: -80px;
+	top: -80px;
+	width: 320px;
+	height: 320px;
+	border-radius: 50%;
+	background: oklch(0.5461 0.2152 262.88 / 0.35);
+	filter: blur(20px);
+}
+
+.tclp-cta-band > * {
+	position: relative;
+	z-index: 1;
+}
+
+.tclp-cta-band h2 {
+	color: oklch(1 0 0);
+	font-size: clamp(26px, 3.2vw, 34px);
+	margin: 0 0 10px;
+	line-height: 1.14;
+}
+
+.tclp-cta-band p {
+	margin: 0;
+	color: oklch(1 0 0 / 0.76);
+	font-size: 16px;
+	max-width: 52ch;
+}
+
+.tclp-cta-actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.tclp-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 42px;
+	padding: 0 18px;
+	border-radius: 10px;
+	font-weight: 600;
+	font-size: 14.5px;
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition: 0.16s ease;
+	white-space: nowrap;
+	font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.tclp-btn-light {
+	background: var(--tclp-card);
+	color: var(--tclp-ink);
+	border-color: var(--tclp-card);
+}
+
+.tclp-btn-light:hover {
+	background: var(--tclp-surface);
+}
+
+.tclp-btn-outline-light {
+	background: transparent;
+	color: oklch(1 0 0);
+	border-color: oklch(1 0 0 / 0.35);
+}
+
+.tclp-btn-outline-light:hover {
+	border-color: oklch(1 0 0 / 1);
+}
+
+/* ---- Sidebar ---- */
+.tclp-aside {
+	position: sticky;
+	top: 92px;
+	align-self: start;
+	display: grid;
+	gap: 16px;
+}
+
+.tclp-box {
+	border: 1px solid var(--tclp-line);
+	border-radius: 14px;
+	padding: 18px;
+	background: var(--tclp-card);
+}
+
+.tclp-box h4 {
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--tclp-muted-foreground);
+	margin-bottom: 12px;
+}
+
+.tclp-rel {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 10px;
+	margin-left: -10px;
+	border-radius: 9px;
+	font-size: 14px;
+	color: var(--tclp-body-text);
+}
+
+.tclp-rel:hover,
+.tclp-rel[data-active="true"] {
+	background: var(--tclp-surface);
+	color: var(--tclp-ink);
+}
+
+.tclp-rel i {
+	font-style: normal;
+	color: var(--tclp-muted-foreground);
+}
+
+.tclp-glance {
+	margin-top: 0;
+}
+
+.tclp-box-cta {
+	background: var(--tclp-ink);
+	color: oklch(1 0 0);
+	border-color: var(--tclp-ink);
+}
+
+.tclp-box-cta h4 {
+	color: oklch(1 0 0 / 0.6);
+}
+
+.tclp-box-cta p {
+	font-size: 14px;
+	color: oklch(1 0 0 / 0.78);
+	margin: 0 0 14px;
+}
+
+.tclp-box-cta .tclp-btn {
+	width: 100%;
+}
+
+.tclp-box-cta .tclp-mini-list li::before {
+	color: oklch(1 0 0 / 0.4);
+}
+
+/* ---- Strip ---- */
+.tclp-strip {
+	border-top: 1px solid var(--tclp-line);
+	border-bottom: 1px solid var(--tclp-line);
+	background: var(--tclp-surface);
+	margin-top: 48px;
+}
+
+.tclp-strip-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 36px;
+	padding: 44px 24px;
+}
+
+.tclp-strip h3 {
+	font-size: 16px;
+	margin-bottom: 6px;
+}
+
+.tclp-strip p {
+	margin: 0;
+	font-size: 14px;
+	color: var(--tclp-body-text);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1000px) {
+	.tclp-content {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+
+	.tclp-aside {
+		position: static;
+	}
+}
+
+@media (max-width: 760px) {
+	.tclp-grid-2,
+	.tclp-strip-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.tclp-cta-band {
+		grid-template-columns: 1fr;
+		padding: 36px 24px;
+		border-radius: 18px;
+	}
+
+	.tclp-cta-actions .tclp-btn {
+		width: 100%;
+	}
+
+	.tclp-doc-body {
+		padding: 20px 18px 22px;
+	}
+
+	.tclp-doc-head {
+		padding: 16px 18px;
+		flex-wrap: wrap;
+	}
+}
