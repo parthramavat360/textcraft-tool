@@ -378,12 +378,9 @@
     /* Show hamburger */
     .tctp-hamburger { display: flex; }
 
-    /* Keep the brand + hamburger (X) above the overlay/panel when the menu is
-       open; both are `position:relative` so their z-index is honored and the
-       layout stays brand-left / hamburger-right via space-between. */
+    /* Keep the brand above the overlay when the menu is open. */
     .tctp-header .tctp-brand {
         position: relative;
-        z-index: 10002;
     }
 
     /* Slide-out full-height panel.
