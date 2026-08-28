@@ -52,6 +52,7 @@
 .tctp-wrap.tctp-nav {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 32px;
     height: 68px;
     max-width: 1200px;
@@ -92,7 +93,6 @@
 .tctp-nav-inner {
     display: flex;
     align-items: center;
-    margin-left: auto;
     min-width: 0;
 }
 
@@ -306,6 +306,7 @@
     border-radius: 10px;
     cursor: pointer;
     flex-shrink: 0;
+    position: relative;
     z-index: 10002;
 }
 
@@ -365,6 +366,7 @@
    in splits, Safari, Windows touch, etc. */
 @media (max-width: 1024px) {
     .tctp-wrap.tctp-nav {
+        justify-content: space-between;
         gap: 16px;
         height: 60px;
         padding: 0 16px;
@@ -375,6 +377,14 @@
 
     /* Show hamburger */
     .tctp-hamburger { display: flex; }
+
+    /* Keep the brand + hamburger (X) above the overlay/panel when the menu is
+       open; both are `position:relative` so their z-index is honored and the
+       layout stays brand-left / hamburger-right via space-between. */
+    .tctp-header .tctp-brand {
+        position: relative;
+        z-index: 10002;
+    }
 
     /* Slide-out full-height panel.
        NOTE: must use viewport-relative height (100vh/100dvh), NOT `100%`. This
