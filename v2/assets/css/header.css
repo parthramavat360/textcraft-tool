@@ -177,19 +177,25 @@
 }
 
 .tctp-mega-inner {
-    max-width: 1200px;
+    max-width: 1440px;
     margin: 0 auto;
     padding: 34px 24px 8px;
 }
 
 /* --------------------------------------------------------------------------
-   Mega Menu — 5-Column Grid
+   Mega Menu — Multi-Column Grid (16 categories, wraps responsively)
    -------------------------------------------------------------------------- */
 .tctp-mega-cols {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 28px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 18px 24px;
+    align-items: start;
+    max-height: min(58vh, 560px);
+    overflow-y: auto;
+    padding-right: 4px;
 }
+.tctp-mega-cols::-webkit-scrollbar { width: 8px; }
+.tctp-mega-cols::-webkit-scrollbar-thumb { background: var(--tctp-line); border-radius: 8px; }
 
 .tctp-mcol h5 {
     font-family: var(--tctp-font-display);
@@ -215,14 +221,15 @@
 
 .tctp-mcol a {
     display: block;
-    padding: 5px 8px;
-    margin-left: -8px;
-    border-radius: 7px;
-    font-size: 14px;
+    padding: 4px 6px;
+    margin-left: -6px;
+    border-radius: 6px;
+    font-size: 13px;
     color: var(--tctp-body);
     text-decoration: none;
     transition: background .15s ease, color .15s ease;
     overflow-wrap: break-word;
+    line-height: 1.35;
 }
 
 .tctp-mcol a:hover {
