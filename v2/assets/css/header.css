@@ -52,7 +52,7 @@
 .tctp-wrap.tctp-nav {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 32px;
     height: 68px;
     max-width: 1200px;
     margin: 0 auto;
@@ -102,7 +102,7 @@
 .tctp-nav-links {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 26px;
     font-size: 14.5px;
     color: var(--tctp-body);
     font-weight: 500;
@@ -129,18 +129,14 @@
 .tctp-mega-trigger {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: var(--tctp-surface);
-    border: 1px solid var(--tctp-line);
-    border-radius: 8px;
-    padding: 6px 12px;
-    margin: -6px 0;
+    gap: 6px;
+    background: none;
+    border: 0;
+    padding: 0;
     cursor: pointer;
     font: inherit;
-    font-size: 13.5px;
-    font-weight: 500;
     color: var(--tctp-body);
-    transition: color .18s ease, background .18s ease, border-color .18s ease;
+    transition: color .18s ease;
     white-space: nowrap;
 }
 
@@ -150,13 +146,6 @@
 
 .tctp-mega-wrap.open .tctp-mega-trigger {
     color: var(--tctp-ink);
-    background: var(--tctp-accent-soft);
-    border-color: var(--tctp-accent);
-}
-
-.tctp-mega-trigger:hover {
-    color: var(--tctp-ink);
-    border-color: var(--tctp-line);
 }
 
 .tctp-mega-wrap.open .tctp-mega-trigger svg {
@@ -188,25 +177,19 @@
 }
 
 .tctp-mega-inner {
-    max-width: 1440px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 34px 24px 8px;
 }
 
 /* --------------------------------------------------------------------------
-   Mega Menu — Multi-Column Grid (16 categories, wraps responsively)
+   Mega Menu — Multi-Column Grid (same as reference design)
    -------------------------------------------------------------------------- */
 .tctp-mega-cols {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 18px 24px;
-    align-items: start;
-    max-height: min(58vh, 560px);
-    overflow-y: auto;
-    padding-right: 4px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 28px;
 }
-.tctp-mega-cols::-webkit-scrollbar { width: 8px; }
-.tctp-mega-cols::-webkit-scrollbar-thumb { background: var(--tctp-line); border-radius: 8px; }
 
 .tctp-mcol h5 {
     font-family: var(--tctp-font-display);
@@ -232,15 +215,13 @@
 
 .tctp-mcol a {
     display: block;
-    padding: 4px 6px;
-    margin-left: -6px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 5px 8px;
+    margin-left: -8px;
+    border-radius: 7px;
+    font-size: 14px;
     color: var(--tctp-body);
     text-decoration: none;
     transition: background .15s ease, color .15s ease;
-    overflow-wrap: break-word;
-    line-height: 1.35;
 }
 
 .tctp-mcol a:hover {
@@ -249,14 +230,13 @@
 }
 
 .tctp-mcol a.tctp-mviewall {
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid var(--tctp-line);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--tctp-accent);
     white-space: nowrap;
-    overflow-wrap: normal;
 }
 
 /* --------------------------------------------------------------------------
@@ -279,6 +259,11 @@
     color: var(--tctp-accent);
     font-weight: 600;
     text-decoration: none;
+}
+
+/* Desktop dropdown column collapse, matching reference design breakpoints */
+@media (min-width: 1025px) and (max-width: 1100px) {
+    .tctp-mega-cols { grid-template-columns: repeat(3, 1fr); row-gap: 26px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -389,7 +374,6 @@
 
 /* Large / Small desktop: shrink the desktop nav a touch (>= 1025px) */
 @media (max-width: 1200px) {
-    .tctp-nav-links { gap: 20px; }
     .tctp-btn-primary { margin-left: 14px; padding: 0 15px; }
 }
 
@@ -537,10 +521,8 @@
     .tctp-wrap.tctp-nav { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
 }
 
-/* Tall screens / very wide (cinema/ultrawide): center, cap mega inner width */
-@media (min-width: 1700px) {
-    .tctp-mega-inner { max-width: 1400px; }
-}
+/* Tall screens / very wide (cinema/ultrawide): center, cap mega inner width
+   (kept at the reference max-width of 1200px) */
 
 /* --------------------------------------------------------------------------
    AUTHORITATIVE CTA VISIBILITY  (placed last so it always wins the cascade)

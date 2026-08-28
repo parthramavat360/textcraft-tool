@@ -276,20 +276,12 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                 'fields'      => $mega_group_repeater->get_controls(),
                 'default'     => [
                     [
-                        'group_label'         => 'PDF & Compress',
-                        'group_columns_text'  => "pdf-tools|PDF\ncompression|Compression",
+                        'group_label'         => 'PDF & Images',
+                        'group_columns_text'  => "pdf-tools|PDF\ncompression|Compression\nimage-media|Image & Media\nimage-editing|Image Editing",
                     ],
                     [
-                        'group_label'         => 'Images',
-                        'group_columns_text'  => "image-media|Image & Media\nimage-editing|Image Editing",
-                    ],
-                    [
-                        'group_label'         => 'Text & Case',
-                        'group_columns_text'  => "text-tools|Text Tools\ncase-converters|Case Converters",
-                    ],
-                    [
-                        'group_label'         => 'Developer',
-                        'group_columns_text'  => "developer|Developer\ndata-code-tools|Data & Code",
+                        'group_label'         => 'Text & Developer',
+                        'group_columns_text'  => "text-tools|Text Tools\ncase-converters|Case Converters\ndeveloper|Developer\ndata-code-tools|Data & Code",
                     ],
                     [
                         'group_label'         => 'More',
