@@ -170,11 +170,10 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                 'type'        => \Elementor\Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
-                    [ 'nav_label' => 'PDF', 'nav_url' => [ 'url' => '#pdf' ] ],
-                    [ 'nav_label' => 'Image', 'nav_url' => [ 'url' => '#image' ] ],
-                    [ 'nav_label' => 'Text', 'nav_url' => [ 'url' => '#text' ] ],
-                    [ 'nav_label' => 'Developer', 'nav_url' => [ 'url' => '#dev' ] ],
+                    [ 'nav_label' => 'Home', 'nav_url' => [ 'url' => '/' ] ],
+                    [ 'nav_label' => 'About', 'nav_url' => [ 'url' => '#' ] ],
                     [ 'nav_label' => 'Blog', 'nav_url' => [ 'url' => '#' ] ],
+                    [ 'nav_label' => 'Contact', 'nav_url' => [ 'url' => '#' ] ],
                 ],
                 'title_field' => 'nav_label',
             ]
@@ -182,33 +181,25 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
 
         $this->end_controls_section();
 
-        /* ---------- Mega Menu Controls ---------- */
+        /* ---------- Mega Menu Groups Controls ---------- */
         $this->start_controls_section(
             'section_mega',
-            [ 'label' => __( 'Mega Menu', 'textcrafttoolspro' ) ]
-        );
-
-        $this->add_control(
-            'mega_trigger_text',
-            [
-                'label'   => __( 'Trigger Text', 'textcrafttoolspro' ),
-                'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => 'All Tools',
-            ]
+            [ 'label' => __( 'Mega Menu Groups', 'textcrafttoolspro' ) ]
         );
 
         $this->add_control(
             'mega_info',
             [
                 'type' => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'  => __( 'Select a WordPress menu for each column. Create menus under Appearance → Menus.', 'textcrafttoolspro' ),
+                'raw'  => __( 'Each group becomes its own dropdown in the header. Give it a short trigger label and select the WordPress menus (categories) to show as columns. Keep labels short so they fit the nav bar. Create menus under Appearance → Menus.', 'textcrafttoolspro' ),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
             ]
         );
 
-        $mega_col_repeater = new \Elementor\Repeater();
+        /* Per-column repeater (WordPress menu + optional title override) */
+        $group_col_repeater = new \Elementor\Repeater();
 
-        $mega_col_repeater->add_control(
+        $group_col_repeater->add_control(
             'col_menu',
             [
                 'label'   => __( 'WordPress Menu', 'textcrafttoolspro' ),
@@ -218,7 +209,7 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $mega_col_repeater->add_control(
+        $group_col_repeater->add_control(
             'col_title',
             [
                 'label'       => __( 'Column Title (override)', 'textcrafttoolspro' ),
@@ -227,62 +218,97 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
-            'mega_columns',
+        /* Per-group repeater (short trigger + its columns) */
+        $mega_group_repeater = new \Elementor\Repeater();
+
+        $mega_group_repeater->add_control(
+            'group_label',
             [
-                'label'       => __( 'Mega Menu Columns', 'textcrafttoolspro' ),
+                'label'       => __( 'Dropdown Label (short)', 'textcrafttoolspro' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'description' => __( 'Shown in the nav bar. Keep short, e.g. "Images" or "PDF & Compress".', 'textcrafttoolspro' ),
+                'default'     => '',
+            ]
+        );
+
+        $mega_group_repeater->add_control(
+            'group_columns',
+            [
+                'label'       => __( 'Columns (categories)', 'textcrafttoolspro' ),
                 'type'        => \Elementor\Controls_Manager::REPEATER,
-                'fields'      => $mega_col_repeater->get_controls(),
-                'default'     => [
-                    [
-                        'col_menu'   => 'pdf-tools',
-                        'col_title'  => '',
-                    ],
-                    [
-                        'col_menu'   => 'compression',
-                        'col_title'  => '',
-                    ],
-                    [
-                        'col_menu'   => 'image-media',
-                        'col_title'  => '',
-                    ],
-                    [
-                        'col_menu'   => 'text-tools',
-                        'col_title'  => '',
-                    ],
-                    [
-                        'col_menu'   => 'developer',
-                        'col_title'  => '',
-                    ],
-                ],
+                'fields'      => $group_col_repeater->get_controls(),
                 'title_field' => 'col_title',
             ]
         );
 
-        $this->add_control(
-            'mega_footer_text',
+        $mega_group_repeater->add_control(
+            'group_foot_label',
             [
-                'label'   => __( 'Footer Text', 'textcrafttoolspro' ),
+                'label'   => __( 'Group Footer Link Label (optional)', 'textcrafttoolspro' ),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => '207 tools across 16 categories — all free, no signup.',
+                'default' => 'Browse all 208 tools →',
             ]
         );
 
-        $this->add_control(
-            'mega_footer_link_label',
+        $mega_group_repeater->add_control(
+            'group_foot_url',
             [
-                'label'   => __( 'Footer Link Label', 'textcrafttoolspro' ),
-                'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => 'View the full index →',
-            ]
-        );
-
-        $this->add_control(
-            'mega_footer_link_url',
-            [
-                'label'   => __( 'Footer Link URL', 'textcrafttoolspro' ),
+                'label'   => __( 'Group Footer Link URL', 'textcrafttoolspro' ),
                 'type'    => \Elementor\Controls_Manager::URL,
                 'default' => [ 'url' => '#tools' ],
+            ]
+        );
+
+        $this->add_control(
+            'mega_groups',
+            [
+                'label'       => __( 'Mega Menu Groups', 'textcrafttoolspro' ),
+                'type'        => \Elementor\Controls_Manager::REPEATER,
+                'fields'      => $mega_group_repeater->get_controls(),
+                'default'     => [
+                    [
+                        'group_label'    => 'PDF & Compress',
+                        'group_columns'  => [
+                            [ 'col_menu' => 'pdf-tools', 'col_title' => 'PDF' ],
+                            [ 'col_menu' => 'compression', 'col_title' => 'Compression' ],
+                        ],
+                    ],
+                    [
+                        'group_label'    => 'Images',
+                        'group_columns'  => [
+                            [ 'col_menu' => 'image-media', 'col_title' => 'Image & Media' ],
+                            [ 'col_menu' => 'image-editing', 'col_title' => 'Image Editing' ],
+                        ],
+                    ],
+                    [
+                        'group_label'    => 'Text & Case',
+                        'group_columns'  => [
+                            [ 'col_menu' => 'text-tools', 'col_title' => 'Text Tools' ],
+                            [ 'col_menu' => 'case-converters', 'col_title' => 'Case Converters' ],
+                        ],
+                    ],
+                    [
+                        'group_label'    => 'Developer',
+                        'group_columns'  => [
+                            [ 'col_menu' => 'developer', 'col_title' => 'Developer' ],
+                            [ 'col_menu' => 'data-code-tools', 'col_title' => 'Data & Code' ],
+                        ],
+                    ],
+                    [
+                        'group_label'    => 'More',
+                        'group_columns'  => [
+                            [ 'col_menu' => 'ciphers-encoding', 'col_title' => 'Ciphers' ],
+                            [ 'col_menu' => 'calculators', 'col_title' => 'Calculators' ],
+                            [ 'col_menu' => 'generators', 'col_title' => 'Generators' ],
+                            [ 'col_menu' => 'fonts-text-styles', 'col_title' => 'Fonts' ],
+                            [ 'col_menu' => 'ai-prompts', 'col_title' => 'AI' ],
+                            [ 'col_menu' => 'seo-web', 'col_title' => 'SEO' ],
+                            [ 'col_menu' => 'cheat-sheets', 'col_title' => 'Cheat Sheets' ],
+                            [ 'col_menu' => 'web-css-tools', 'col_title' => 'Web & CSS' ],
+                        ],
+                    ],
+                ],
+                'title_field' => 'group_label',
             ]
         );
 
@@ -466,17 +492,12 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
         /* --- Nav Links --- */
         $nav_links = $settings['nav_links'];
 
-        /* --- Mega Menu Columns --- */
-        $mega_columns = $settings['mega_columns'];
+        /* --- Mega Menu Groups --- */
+        $mega_groups = isset( $settings['mega_groups'] ) ? $settings['mega_groups'] : [];
 
         /* --- CTA --- */
         $cta_label = esc_html( $settings['cta_label'] );
         $cta_url   = $settings['cta_url']['url'] ? esc_url( $settings['cta_url']['url'] ) : '#tools';
-
-        /* --- Mega Footer --- */
-        $mega_footer_text       = esc_html( $settings['mega_footer_text'] );
-        $mega_footer_link_label = esc_html( $settings['mega_footer_link_label'] );
-        $mega_footer_link_url   = $settings['mega_footer_link_url']['url'] ? esc_url( $settings['mega_footer_link_url']['url'] ) : '#tools';
         ?>
         <header class="tctp-header">
             <div class="tctp-wrap tctp-nav">
@@ -495,90 +516,98 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                             </a>
                         <?php endforeach; ?>
 
-                        <!-- Mega Menu Trigger -->
-                        <div class="tctp-mega-wrap">
-                            <button class="tctp-mega-trigger" aria-expanded="false" aria-controls="tctp-megamenu">
-                                <?php echo esc_html( $settings['mega_trigger_text'] ); ?>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
-                            </button>
+                        <!-- Mega Menu Groups (each = one dropdown) -->
+                        <?php foreach ( $mega_groups as $group ) :
+                            $group_label     = ! empty( $group['group_label'] ) ? $group['group_label'] : 'Tools';
+                            $group_cols      = isset( $group['group_columns'] ) ? $group['group_columns'] : [];
+                            $group_foot_label = ! empty( $group['group_foot_label'] ) ? $group['group_foot_label'] : '';
+                            $group_foot_url  = ! empty( $group['group_foot_url']['url'] ) ? $group['group_foot_url']['url'] : '#tools';
+                        ?>
+                            <div class="tctp-mega-wrap">
+                                <button class="tctp-mega-trigger" aria-expanded="false">
+                                    <?php echo esc_html( $group_label ); ?>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+                                </button>
 
-                            <!-- Mega Menu Panel -->
-                            <div class="tctp-mega" id="tctp-megamenu" role="menu">
-                                <div class="tctp-mega-inner">
-                                    <div class="tctp-mega-cols">
-                                        <?php foreach ( $mega_columns as $col ) :
-                                            /* Pull links from the selected WordPress menu */
-                                            $menu_items = $this->get_menu_items( $col['col_menu'] );
-                                            if ( empty( $menu_items ) ) {
-                                                continue;
-                                            }
+                                <!-- Mega Menu Panel -->
+                                <div class="tctp-mega" role="menu">
+                                    <div class="tctp-mega-inner">
+                                        <div class="tctp-mega-cols">
+                                            <?php foreach ( $group_cols as $col ) :
+                                                /* Pull links from the selected WordPress menu */
+                                                $menu_items = $this->get_menu_items( $col['col_menu'] );
+                                                if ( empty( $menu_items ) ) {
+                                                    continue;
+                                                }
 
-                                            /* Column title: use override or fall back to menu name */
-                                            $col_title = ! empty( $col['col_title'] ) ? $col['col_title'] : '';
-                                            if ( empty( $col_title ) && ! empty( $col['col_menu'] ) ) {
-                                                $menus     = wp_get_nav_menus();
-                                                foreach ( $menus as $m ) {
-                                                    if ( $m->slug === $col['col_menu'] ) {
-                                                        $col_title = $m->name;
-                                                        break;
+                                                /* Column title: use override or fall back to menu name */
+                                                $col_title = ! empty( $col['col_title'] ) ? $col['col_title'] : '';
+                                                if ( empty( $col_title ) && ! empty( $col['col_menu'] ) ) {
+                                                    $menus     = wp_get_nav_menus();
+                                                    foreach ( $menus as $m ) {
+                                                        if ( $m->slug === $col['col_menu'] ) {
+                                                            $col_title = $m->name;
+                                                            break;
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            $col_title     = esc_html( $col_title );
-                                            $item_count    = count( $menu_items );
-                                            $preview_items = array_slice( $menu_items, 0, 10 );
+                                                $col_title     = esc_html( $col_title );
+                                                $item_count    = count( $menu_items );
+                                                $preview_items = array_slice( $menu_items, 0, 10 );
 
-                                            /* Map menu slug -> catalog category key for "View all" deep-link */
-                                            $cat_key_map = array(
-                                                'pdf-tools'         => 'pdf',
-                                                'compression'       => 'compress',
-                                                'image-media'       => 'image',
-                                                'image-editing'     => 'image_edit',
-                                                'text-tools'        => 'text',
-                                                'case-converters'   => 'case',
-                                                'developer'         => 'dev',
-                                                'data-code-tools'   => 'dev_convert',
-                                                'ciphers-encoding'  => 'cipher',
-                                                'calculators'       => 'calc',
-                                                'generators'        => 'gen',
-                                                'fonts-text-styles' => 'fonts',
-                                                'ai-prompts'        => 'ai',
-                                                'seo-web'           => 'seo',
-                                                'cheat-sheets'      => 'cheat',
-                                                'web-css-tools'     => 'webdev',
-                                            );
-                                            $cat_key = isset( $cat_key_map[ $col['col_menu'] ] )
-                                                ? $cat_key_map[ $col['col_menu'] ]
-                                                : '';
-                                            $view_all_url = ! empty( $cat_key )
-                                                ? home_url( '/#tools-' . rawurlencode( $cat_key ) )
-                                                : home_url( '/#tools' );
-                                        ?>
-                                            <div class="tctp-mcol">
-                                                <h5>
-                                                    <?php echo $col_title; ?>
-                                                    <i><?php echo $item_count; ?></i>
-                                                </h5>
-                                                <?php foreach ( $preview_items as $item ) : ?>
-                                                    <a href="<?php echo esc_url( $item['url'] ); ?>">
-                                                        <?php echo esc_html( $item['label'] ); ?>
+                                                /* Map menu slug -> catalog category key for "View all" deep-link */
+                                                $cat_key_map = array(
+                                                    'pdf-tools'         => 'pdf',
+                                                    'compression'       => 'compress',
+                                                    'image-media'       => 'image',
+                                                    'image-editing'     => 'image_edit',
+                                                    'text-tools'        => 'text',
+                                                    'case-converters'   => 'case',
+                                                    'developer'         => 'dev',
+                                                    'data-code-tools'   => 'dev_convert',
+                                                    'ciphers-encoding'  => 'cipher',
+                                                    'calculators'       => 'calc',
+                                                    'generators'        => 'gen',
+                                                    'fonts-text-styles' => 'fonts',
+                                                    'ai-prompts'        => 'ai',
+                                                    'seo-web'           => 'seo',
+                                                    'cheat-sheets'      => 'cheat',
+                                                    'web-css-tools'     => 'webdev',
+                                                );
+                                                $cat_key = isset( $cat_key_map[ $col['col_menu'] ] )
+                                                    ? $cat_key_map[ $col['col_menu'] ]
+                                                    : '';
+                                                $view_all_url = ! empty( $cat_key )
+                                                    ? home_url( '/#tools-' . rawurlencode( $cat_key ) )
+                                                    : home_url( '/#tools' );
+                                            ?>
+                                                <div class="tctp-mcol">
+                                                    <h5>
+                                                        <?php echo $col_title; ?>
+                                                        <i><?php echo $item_count; ?></i>
+                                                    </h5>
+                                                    <?php foreach ( $preview_items as $item ) : ?>
+                                                        <a href="<?php echo esc_url( $item['url'] ); ?>">
+                                                            <?php echo esc_html( $item['label'] ); ?>
+                                                        </a>
+                                                    <?php endforeach; ?>
+                                                    <a class="tctp-mviewall" href="<?php echo esc_url( $view_all_url ); ?>">
+                                                        View all <?php echo (int) $item_count; ?> &rarr;
                                                     </a>
-                                                <?php endforeach; ?>
-                                                <a class="tctp-mviewall" href="<?php echo esc_url( $view_all_url ); ?>">
-                                                    View all <?php echo (int) $item_count; ?> &rarr;
-                                                </a>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
 
-                                    <!-- Mega Footer -->
-                                    <div class="tctp-mega-foot">
-                                        <span><?php echo $mega_footer_text; ?></span>
-                                        <a href="<?php echo $mega_footer_link_url; ?>"><?php echo $mega_footer_link_label; ?></a>
+                                        <?php if ( ! empty( $group_foot_label ) ) : ?>
+                                            <div class="tctp-mega-foot">
+                                                <span></span>
+                                                <a href="<?php echo esc_url( $group_foot_url ); ?>"><?php echo esc_html( $group_foot_label ); ?></a>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
 
                     <!-- Mobile CTA Button (only inside the slide-out panel) -->
@@ -613,7 +642,6 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             var s = settings;
             var brandUrl = ( s.brand_url && s.brand_url.url ) ? s.brand_url.url : '/';
             var ctaUrl = ( s.cta_url && s.cta_url.url ) ? s.cta_url.url : '#tools';
-            var megaFootUrl = ( s.mega_footer_link_url && s.mega_footer_link_url.url ) ? s.mega_footer_link_url.url : '#tools';
         #>
         <header class="tctp-header">
             <div class="tctp-wrap tctp-nav">
@@ -626,28 +654,32 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                         <# _.each( s.nav_links, function( link ) { #>
                             <a href="{{{ link.nav_url.url }}}">{{{ link.nav_label }}}</a>
                         <# }); #>
-                        <div class="tctp-mega-wrap">
-                            <button class="tctp-mega-trigger" aria-expanded="false">
-                                {{{ s.mega_trigger_text }}}
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
-                            </button>
-                            <div class="tctp-mega" id="tctp-megamenu" role="menu">
-                                <div class="tctp-mega-inner">
-                                    <div class="tctp-mega-cols">
-                                        <# _.each( s.mega_columns, function( col ) { #>
-                                            <div class="tctp-mcol">
-                                                <h5>{{{ col.col_title || 'Menu' }}} <i>&nbsp;</i></h5>
-                                                <p style="font-size:13px;color:#8792a6;margin:0">Select a WP menu in column settings</p>
+                        <# _.each( s.mega_groups, function( group, gi ) { #>
+                            <div class="tctp-mega-wrap">
+                                <button class="tctp-mega-trigger" aria-expanded="false">
+                                    {{{ group.group_label || 'Tools' }}}
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+                                </button>
+                                <div class="tctp-mega" role="menu">
+                                    <div class="tctp-mega-inner">
+                                        <div class="tctp-mega-cols">
+                                            <# _.each( group.group_columns, function( col ) { #>
+                                                <div class="tctp-mcol">
+                                                    <h5>{{{ col.col_title || 'Menu' }}} <i>&nbsp;</i></h5>
+                                                    <p style="font-size:13px;color:#8792a6;margin:0">Select a WP menu in column settings</p>
+                                                </div>
+                                            <# }); #>
+                                        </div>
+                                        <# if ( group.group_foot_label ) { #>
+                                            <div class="tctp-mega-foot">
+                                                <span></span>
+                                                <a href="{{{ group.group_foot_url.url || '#tools' }}}">{{{ group.group_foot_label }}}</a>
                                             </div>
-                                        <# }); #>
-                                    </div>
-                                    <div class="tctp-mega-foot">
-                                        <span>{{{ s.mega_footer_text }}}</span>
-                                        <a href="{{ megaFootUrl }}">{{{ s.mega_footer_link_label }}}</a>
+                                        <# } #>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <# }); #>
                     </div>
                 </nav>
                 <a class="tctp-btn tctp-btn-primary" href="{{ ctaUrl }}">{{{ s.cta_label }}}</a>
