@@ -26,6 +26,78 @@ define( 'TCTP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TCTP_DATA_VERSION', 4 );
 
 /**
+ * Ensure the tool-views tracking table exists.
+ */
+function tctp_ensure_tool_views_table() {
+	global $wpdb;
+	$table = $wpdb->prefix . 'tctp_tool_views';
+	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+		$charset = $wpdb->get_charset_collate();
+		$wpdb->query(
+			"CREATE TABLE $table (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+				slug VARCHAR(200) NOT NULL,
+				day DATE NOT NULL,
+				views BIGINT UNSIGNED NOT NULL DEFAULT 0,
+				PRIMARY KEY  (id),
+				UNIQUE KEY uq_slug_day (slug, day)
+			) $charset"
+		);
+	}
+}
+
+/**
+ * Record a view for the current tool page (front-end singular pages under the
+ * tools parent), one row per slug per day. Counts real page loads only.
+ */
+function tctp_record_tool_view() {
+	if ( is_admin() || ! is_singular( 'page' ) || is_user_logged_in() ) {
+		return;
+	}
+	$post = get_queried_object();
+	if ( ! $post || (int) $post->post_parent !== 168 ) {
+		return;
+	}
+	if ( ! empty( $_GET['elementor-preview'] ) || ! empty( $_GET['elementor_library'] ) ) {
+		return;
+	}
+	tctp_ensure_tool_views_table();
+	global $wpdb;
+	$table = $wpdb->prefix . 'tctp_tool_views';
+	$wpdb->query(
+		$wpdb->prepare(
+			"INSERT INTO $table (slug, day, views) VALUES (%s, %s, 1)
+			 ON DUPLICATE KEY UPDATE views = views + 1",
+			$post->post_name,
+			current_time( 'Y-m-d' )
+		)
+	);
+}
+add_action( 'template_redirect', 'tctp_record_tool_view', 20 );
+
+/**
+ * Return the slugs of the most-viewed tools within the last 7 days.
+ */
+function tctp_get_most_used_tools( $limit = 4 ) {
+	tctp_ensure_tool_views_table();
+	global $wpdb;
+	$table = $wpdb->prefix . 'tctp_tool_views';
+	$since = gmdate( 'Y-m-d', strtotime( '-7 days' ) );
+	$rows  = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT slug, SUM(views) AS total FROM $table WHERE day >= %s GROUP BY slug ORDER BY total DESC, slug ASC LIMIT %d",
+			$since,
+			$limit
+		)
+	);
+	$slugs = [];
+	foreach ( $rows as $r ) {
+		$slugs[] = $r->slug;
+	}
+	return $slugs;
+}
+
+/**
  * Check if Elementor is active before initializing.
  */
 function tctp_check_elementor() {

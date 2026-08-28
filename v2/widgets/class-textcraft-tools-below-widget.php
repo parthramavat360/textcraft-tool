@@ -113,7 +113,7 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'most_link_text', [
 			'label'   => __( '"See all" link text', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
-			'default' => 'See all 74 tools',
+			'default' => 'See all 207 tools',
 		] );
 		$this->add_control( 'most_link_url', [
 			'label'   => __( '"See all" link URL', 'textcrafttoolspro' ),
@@ -320,7 +320,7 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			'type'        => \Elementor\Controls_Manager::REPEATER,
 			'fields'      => $fact->get_controls(),
 			'default'     => [
-				[ 'dt' => 'Tools available', 'dd' => '74' ],
+				[ 'dt' => 'Tools available', 'dd' => '207' ],
 				[ 'dt' => 'Price', 'dd' => 'Free, forever' ],
 				[ 'dt' => 'Sign-up', 'dd' => 'Not required' ],
 				[ 'dt' => 'File handling', 'dd' => 'Local-first in your browser' ],
@@ -353,12 +353,12 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			'label'   => __( 'Description', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXTAREA,
 			'rows'    => 2,
-			'default' => 'Seventy-four utilities, no installs, no accounts. Press “/” anywhere to start typing.',
+			'default' => '207 utilities, no installs, no accounts. Press “/” anywhere to start typing.',
 		] );
 		$this->add_control( 'cta_btn_text', [
 			'label'   => __( 'Button text', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
-			'default' => 'Browse all 74 tools',
+			'default' => 'Browse all 207 tools',
 		] );
 		$this->add_control( 'cta_btn_url', [
 			'label'   => __( 'Button URL', 'textcrafttoolspro' ),
@@ -468,7 +468,8 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 		if ( ! $this->show( $s, 'most_show' ) ) {
 			return;
 		}
-		$link = ! empty( $s['most_link_url']['url'] ) ? $s['most_link_url']['url'] : '#tools';
+		$link  = ! empty( $s['most_link_url']['url'] ) ? $s['most_link_url']['url'] : '#tools';
+		$cards = $this->resolve_tool_cards( 4 );
 		?>
 		<section class="tcb-sec tcb-alt tcb-most">
 			<div class="tcb-wrap">
@@ -481,7 +482,17 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 						<a class="tcb-gost" href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $s['most_link_text'] ); ?></a>
 					<?php endif; ?>
 				</div>
-				<?php if ( ! empty( $s['most_items'] ) ) : ?>
+				<?php if ( $cards ) : ?>
+					<div class="tcb-grid4">
+						<?php foreach ( $cards as $c ) : ?>
+							<a class="tcb-card tool" href="<?php echo esc_url( $c['url'] ); ?>">
+								<span class="tcb-tag"><?php echo esc_html( $c['tag'] ); ?></span>
+								<h3><?php echo esc_html( $c['name'] ); ?></h3>
+								<p><?php echo esc_html( $c['desc'] ); ?></p>
+							</a>
+						<?php endforeach; ?>
+					</div>
+				<?php elseif ( ! empty( $s['most_items'] ) ) : ?>
 					<div class="tcb-grid4">
 						<?php foreach ( $s['most_items'] as $i ) : ?>
 							<?php $u = ! empty( $i['link']['url'] ) ? $i['link']['url'] : '#tools'; ?>
@@ -496,6 +507,107 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			</div>
 		</section>
 		<?php
+	}
+
+	private function get_tool_map() {
+		static $map = null;
+		if ( $map !== null ) {
+			return $map;
+		}
+		$map  = [];
+		$data = ( new \TextCraft_Tools_Section_Widget() )->get_tools_data();
+		foreach ( $data as $cat_key => $cat ) {
+			foreach ( $cat['tools'] as $tool ) {
+				$slug = '';
+				if ( preg_match( '#/tools/([^/]+)/#', $tool['url'], $m ) ) {
+					$slug = $m[1];
+				}
+				$map[ $slug ] = [
+					'name' => $tool['name'],
+					'desc' => $tool['desc'],
+					'icon' => $tool['icon'],
+					'cat'  => $cat_key,
+				];
+			}
+		}
+		return $map;
+	}
+
+	private function cat_tag( $cat ) {
+		$tags = [
+			'pdf'         => 'PDF',
+			'compress'    => 'IMG',
+			'image'       => 'IMG',
+			'image_edit'  => 'IMG',
+			'text'        => 'TXT',
+			'case'        => 'TXT',
+			'dev'         => 'DEV',
+			'dev_convert' => 'DEV',
+			'cipher'      => 'DEV',
+			'calc'        => 'CAL',
+			'gen'         => 'GEN',
+			'fonts'       => 'FNT',
+			'ai'          => 'AI',
+			'seo'         => 'SEO',
+			'cheat'       => 'DEV',
+			'webdev'      => 'WEB',
+		];
+		return $tags[ $cat ] ?? 'TOOL';
+	}
+
+	private function resolve_tool_cards( $limit = 4 ) {
+		$map    = $this->get_tool_map();
+		$byName = [];
+		foreach ( $map as $slug => $info ) {
+			$byName[ strtolower( $info['name'] ) ] = $info;
+		}
+
+		$pages = get_posts( [
+			'post_type'   => 'page',
+			'post_parent' => 168,
+			'post_status' => 'publish',
+			'numberposts' => -1,
+		] );
+
+		$real      = [];
+		$realSlugs = [];
+		foreach ( $pages as $p ) {
+			$realSlugs[]                = $p->post_name;
+			$real[ $p->post_name ]      = [
+				'name' => get_the_title( $p ),
+				'url'  => get_permalink( $p ),
+			];
+		}
+
+		$used = [];
+		if ( function_exists( 'tctp_get_most_used_tools' ) ) {
+			foreach ( tctp_get_most_used_tools( $limit ) as $slug ) {
+				if ( isset( $real[ $slug ] ) ) {
+					$used[] = $slug;
+				}
+			}
+		}
+
+		if ( count( $used ) < $limit ) {
+			$pool = array_diff( $realSlugs, $used );
+			shuffle( $pool );
+			foreach ( array_slice( $pool, 0, $limit - count( $used ) ) as $slug ) {
+				$used[] = $slug;
+			}
+		}
+
+		$cards = [];
+		foreach ( $used as $slug ) {
+			$rp   = $real[ $slug ];
+			$info = $map[ $slug ] ?? ( $byName[ strtolower( $rp['name'] ) ] ?? null );
+			$cards[] = [
+				'tag'  => $info ? $this->cat_tag( $info['cat'] ) : 'TOOL',
+				'name' => $rp['name'],
+				'desc' => $info ? $info['desc'] : 'A free, browser-based TextCraft utility with a single, focused purpose.',
+				'url'  => $rp['url'],
+			];
+		}
+		return $cards;
 	}
 
 	private function render_cat( $s ) {
@@ -613,7 +725,7 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 	}
 
 	private function default_seo_body() {
-		return '<p><strong>TextCraft Tools</strong> is a collection of 74 free online utilities built for everyday file and text work: compressing a PDF before you email it, converting a PNG to WebP for a faster page, counting words in an article, cleaning messy text, formatting JSON, generating a strong password or a UUID. Every tool has a single purpose and a single screen, so you are never more than one click from the result you came for.</p>
+		return '<p><strong>TextCraft Tools</strong> is a collection of 207 free online utilities built for everyday file and text work: compressing a PDF before you email it, converting a PNG to WebP for a faster page, counting words in an article, cleaning messy text, formatting JSON, generating a strong password or a UUID. Every tool has a single purpose and a single screen, so you are never more than one click from the result you came for.</p>
 <p>Most utilities are <strong>local-first</strong>: the processing runs with JavaScript and WebAssembly inside your own browser tab, so the document, photo or snippet you drop in is never uploaded to a server. That matters for invoices, contracts, ID scans, client work and anything else you would rather not hand to a third party. It is also why the tools feel instant — there is no upload, no queue and no download step waiting on someone else’s bandwidth.</p>
 <h3>What you can do with the PDF and image tools</h3>
 <p>The PDF group covers the tasks that usually push people toward paid desktop software: compress PDF to reduce file size for email limits, merge several PDFs into one document, split or extract specific pages, rotate a badly scanned file, and convert PDF to and from Word, JPG and PNG. The image group handles resizing, cropping, batch conversion between JPG, PNG, WebP and AVIF, and lossy or lossless compression that keeps photos sharp while cutting page weight — a direct win for Core Web Vitals and mobile load times.</p>

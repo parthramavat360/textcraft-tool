@@ -2,7 +2,7 @@
 /**
  * Tools Section Elementor Widget
  *
- * All 74 tools from textcrafttools.com, 6 categories matching HTML design.
+ * All 207 tools from textcrafttools.com, 16 categories matching HTML design.
  *
  * @package    TextCraftToolsPro
  * @subpackage Widgets
@@ -30,7 +30,7 @@ class TextCraft_Tools_Section_Widget extends \Elementor\Widget_Base {
         return [ 'textcrafttools' ];
     }
 
-    private function get_tools_data() {
+    public function get_tools_data() {
         return [
             'pdf' => [
                 'title' => 'PDF',
