@@ -280,9 +280,13 @@
     background: var(--tctp-ink-2);
 }
 
-/* The mobile CTA lives inside the slide-out panel — hidden on desktop */
-.tctp-btn-mobile {
-    display: none;
+/* The mobile CTA lives inside the slide-out panel — hidden on desktop.
+   Scoped + !important so it wins over the later `.tctp-btn { display:inline-flex }`
+   base rule (source-order/specificity defeat). */
+@media (min-width: 1025px) {
+    .tctp-btn-mobile {
+        display: none !important;
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -369,9 +373,8 @@
         padding-right: max(16px, env(safe-area-inset-right));
     }
 
-    /* Show hamburger, hide desktop CTA */
+    /* Show hamburger */
     .tctp-hamburger { display: flex; }
-    .tctp-btn-desktop { display: none; }
 
     /* Slide-out full-height panel */
     .tctp-nav-inner {
@@ -491,4 +494,19 @@
 /* Tall screens / very wide (cinema/ultrawide): center, cap mega inner width */
 @media (min-width: 1700px) {
     .tctp-mega-inner { max-width: 1400px; }
+}
+
+/* --------------------------------------------------------------------------
+   AUTHORITATIVE CTA VISIBILITY  (placed last so it always wins the cascade)
+   The `.tctp-btn { display:inline-flex }` base rule earlier in this file has
+   equal specificity but comes first in source order; these rules use a higher
+   specificity selector + !important so exactly one CTA ever shows per width.
+   -------------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+    .tctp-nav .tctp-btn-desktop { display: inline-flex !important; }
+    .tctp-nav .tctp-btn-mobile  { display: none    !important; }
+}
+@media (max-width: 1024px) {
+    .tctp-nav .tctp-btn-desktop { display: none    !important; }
+    .tctp-nav .tctp-btn-mobile  { display: inline-flex !important; }
 }
