@@ -312,8 +312,11 @@
 
 /* ── 6. Stats ───────────────────────────────────────────────── */
 
-.stats,
-.tctp-stats {
+/* NOTE: only `.stats` is scoped here. The hero widget uses `.tctp-stats`
+   and styles it (flex row, 40px gap) in hero.css — adding `.tctp-stats` to
+   these selectors would override that hero layout (grid / 1px gaps / bordered
+   cells). No tool markup uses `.tctp-stats`. */
+.stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
@@ -323,14 +326,12 @@
   border: 1px solid var(--line);
 }
 
-.stats div,
-.tctp-stats div {
+.stats div {
   background: #fff;
   padding: 16px;
 }
 
-.stats span,
-.tctp-stats span {
+.stats span {
   display: block;
   font-size: 12px;
   color: var(--muted);
@@ -339,8 +340,7 @@
   font-weight: 600;
 }
 
-.stats b,
-.tctp-stats b {
+.stats b {
   display: block;
   font-family: var(--font-display);
   font-size: 22px;
@@ -348,8 +348,7 @@
   margin-top: 4px;
 }
 
-.stats .saved b,
-.tctp-stats .saved b { color: var(--ok); }
+.stats .saved b { color: var(--ok); }
 
 /* ── 7. Progress Bar ────────────────────────────────────────── */
 
