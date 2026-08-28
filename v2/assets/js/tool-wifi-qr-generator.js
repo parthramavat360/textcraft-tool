@@ -222,7 +222,7 @@
     }
 
     function placeFormatInfo(matrix, reserved, mask, modules) {
-        var ecLevelBits = 01;
+        var ecLevelBits = 1;
         var formatBits = (ecLevelBits << 3) | mask;
         var bch = formatBits;
         var gen = 0x537;
