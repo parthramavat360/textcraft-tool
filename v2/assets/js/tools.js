@@ -150,7 +150,38 @@
         /* ---------------------------------------------------------------
            Initial state — default to All
         --------------------------------------------------------------- */
-        filterByCategory('all');
+        /* ---------------------------------------------------------------
+           Deep-link — preselect a category from URL
+           Supported: #tools-<key> hash or ?toolcat=<key> query param
+        --------------------------------------------------------------- */
+        var initCat = 'all';
+        var hashKey = ( window.location.hash || '' ).match( /^#tools-([\w_]+)/ );
+        if ( hashKey ) initCat = hashKey[1];
+        var qKey = new URLSearchParams( window.location.search ).get( 'toolcat' );
+        if ( qKey ) initCat = qKey;
+
+        var categoryExists = links.some(function (link) {
+            return link.getAttribute( 'data-category' ) === initCat;
+        });
+        if ( ! categoryExists ) {
+            initCat = 'all';
+        }
+
+        filterByCategory( initCat );
+
+        /* Scroll to the section when a deep-linked category is active */
+        if ( initCat !== 'all' ) {
+            var deepTarget = document.getElementById( 'tctp-' + initCat );
+            if ( deepTarget ) {
+                setTimeout(function () {
+                    deepTarget.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+                }, 300 );
+            } else if ( main ) {
+                setTimeout(function () {
+                    main.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+                }, 300 );
+            }
+        }
     }
 
     if (document.readyState === 'loading') {

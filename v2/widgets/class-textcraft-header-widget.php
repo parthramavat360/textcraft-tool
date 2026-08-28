@@ -264,7 +264,7 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             [
                 'label'   => __( 'Footer Text', 'textcrafttoolspro' ),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => '74 tools across 6 categories — all free, no signup.',
+                'default' => '207 tools across 16 categories — all free, no signup.',
             ]
         );
 
@@ -299,7 +299,7 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             [
                 'label'   => __( 'Button Text', 'textcrafttoolspro' ),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => 'Browse all 74',
+                'default' => 'Browse all 207',
             ]
         );
 
@@ -524,19 +524,49 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                                                     }
                                                 }
                                             }
-                                            $col_title = esc_html( $col_title );
-                                            $item_count = count( $menu_items );
+                                            $col_title     = esc_html( $col_title );
+                                            $item_count    = count( $menu_items );
+                                            $preview_items = array_slice( $menu_items, 0, 10 );
+
+                                            /* Map menu slug -> catalog category key for "View all" deep-link */
+                                            $cat_key_map = array(
+                                                'pdf-tools'         => 'pdf',
+                                                'compression'       => 'compress',
+                                                'image-media'       => 'image',
+                                                'image-editing'     => 'image_edit',
+                                                'text-tools'        => 'text',
+                                                'case-converters'   => 'case',
+                                                'developer'         => 'dev',
+                                                'data-code-tools'   => 'dev_convert',
+                                                'ciphers-encoding'  => 'cipher',
+                                                'calculators'       => 'calc',
+                                                'generators'        => 'gen',
+                                                'fonts-text-styles' => 'fonts',
+                                                'ai-prompts'        => 'ai',
+                                                'seo-web'           => 'seo',
+                                                'cheat-sheets'      => 'cheat',
+                                                'web-css-tools'     => 'webdev',
+                                            );
+                                            $cat_key = isset( $cat_key_map[ $col['col_menu'] ] )
+                                                ? $cat_key_map[ $col['col_menu'] ]
+                                                : '';
+                                            $view_all_url = ! empty( $cat_key )
+                                                ? home_url( '/#tools-' . rawurlencode( $cat_key ) )
+                                                : home_url( '/#tools' );
                                         ?>
                                             <div class="tctp-mcol">
                                                 <h5>
                                                     <?php echo $col_title; ?>
                                                     <i><?php echo $item_count; ?></i>
                                                 </h5>
-                                                <?php foreach ( $menu_items as $item ) : ?>
+                                                <?php foreach ( $preview_items as $item ) : ?>
                                                     <a href="<?php echo esc_url( $item['url'] ); ?>">
                                                         <?php echo esc_html( $item['label'] ); ?>
                                                     </a>
                                                 <?php endforeach; ?>
+                                                <a class="tctp-mviewall" href="<?php echo esc_url( $view_all_url ); ?>">
+                                                    View all <?php echo (int) $item_count; ?> &rarr;
+                                                </a>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
