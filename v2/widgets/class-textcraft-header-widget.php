@@ -487,7 +487,7 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                 </a>
 
                 <!-- Navigation -->
-                <nav class="tctp-nav-inner">
+                <nav class="tctp-nav-inner" aria-label="<?php esc_attr_e( 'Primary navigation', 'textcrafttoolspro' ); ?>">
                     <div class="tctp-nav-links">
                         <?php foreach ( $nav_links as $link ) : ?>
                             <a href="<?php echo esc_url( $link['nav_url']['url'] ); ?>">
@@ -550,18 +550,26 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Mobile CTA Button (only inside the slide-out panel) -->
+                    <a class="tctp-btn tctp-btn-primary tctp-btn-mobile" href="<?php echo $cta_url; ?>">
+                        <?php echo $cta_label; ?>
+                    </a>
                 </nav>
 
-                <!-- CTA Button -->
-                <a class="tctp-btn tctp-btn-primary" href="<?php echo $cta_url; ?>">
+                <!-- Call-to-action (desktop bar) -->
+                <a class="tctp-btn tctp-btn-primary tctp-btn-desktop" href="<?php echo $cta_url; ?>">
                     <?php echo $cta_label; ?>
                 </a>
 
                 <!-- Mobile Hamburger -->
-                <button class="tctp-hamburger" aria-label="<?php esc_attr_e( 'Toggle menu', 'textcrafttoolspro' ); ?>" aria-expanded="false">
+                <button class="tctp-hamburger" aria-label="<?php esc_attr_e( 'Toggle menu', 'textcrafttoolspro' ); ?>" aria-expanded="false" aria-controls="tctp-mobile-nav">
                     <span></span><span></span><span></span>
                 </button>
             </div>
+
+            <!-- Mobile menu overlay (click to close) -->
+            <div class="tctp-overlay" hidden></div>
         </header>
         <?php
     }
