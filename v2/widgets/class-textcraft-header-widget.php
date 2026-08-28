@@ -100,6 +100,37 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
     }
 
     /**
+     * Parse pipe-delimited column text into menu-slug => title pairs.
+     * Format: one "[menu-slug]|[Column Title]" per line.
+     *
+     * @param string $text Raw textarea value.
+     * @return array List of [ 'col_menu' => slug, 'col_title' => title ].
+     */
+    private function parse_columns_text( $text ) {
+        if ( empty( $text ) ) {
+            return [];
+        }
+        $cols = [];
+        $lines = preg_split( '/\r\n|\r|\n/', $text );
+        foreach ( $lines as $line ) {
+            $line = trim( $line );
+            if ( $line === '' ) {
+                continue;
+            }
+            $parts = explode( '|', $line, 2 );
+            $slug  = trim( $parts[0] );
+            $title = isset( $parts[1] ) ? trim( $parts[1] ) : '';
+            if ( $slug !== '' ) {
+                $cols[] = [
+                    'col_menu'  => $slug,
+                    'col_title' => $title,
+                ];
+            }
+        }
+        return $cols;
+    }
+
+    /**
      * Register controls.
      */
     protected function register_controls() {
@@ -191,34 +222,12 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
             'mega_info',
             [
                 'type' => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'  => __( 'Each group becomes its own dropdown in the header. Give it a short trigger label and select the WordPress menus (categories) to show as columns. Keep labels short so they fit the nav bar. Create menus under Appearance → Menus.', 'textcrafttoolspro' ),
+                'raw'  => __( 'Each group becomes its own dropdown in the header. Give it a short trigger label. Set "Columns" as one "menu-slug|Column Title" per line — keep labels short so the nav bar stays compact. Create menus under Appearance → Menus.', 'textcrafttoolspro' ),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
             ]
         );
 
-        /* Per-column repeater (WordPress menu + optional title override) */
-        $group_col_repeater = new \Elementor\Repeater();
-
-        $group_col_repeater->add_control(
-            'col_menu',
-            [
-                'label'   => __( 'WordPress Menu', 'textcrafttoolspro' ),
-                'type'    => \Elementor\Controls_Manager::SELECT,
-                'options' => $this->get_wp_menus(),
-                'default' => '',
-            ]
-        );
-
-        $group_col_repeater->add_control(
-            'col_title',
-            [
-                'label'       => __( 'Column Title (override)', 'textcrafttoolspro' ),
-                'type'        => \Elementor\Controls_Manager::TEXT,
-                'description' => __( 'Leave empty to use the menu name as title.', 'textcrafttoolspro' ),
-            ]
-        );
-
-        /* Per-group repeater (short trigger + its columns) */
+        /* Per-group repeater (short trigger + its columns as pipe-delimited text) */
         $mega_group_repeater = new \Elementor\Repeater();
 
         $mega_group_repeater->add_control(
@@ -232,12 +241,12 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
         );
 
         $mega_group_repeater->add_control(
-            'group_columns',
+            'group_columns_text',
             [
-                'label'       => __( 'Columns (categories)', 'textcrafttoolspro' ),
-                'type'        => \Elementor\Controls_Manager::REPEATER,
-                'fields'      => $group_col_repeater->get_controls(),
-                'title_field' => 'col_title',
+                'label'       => __( 'Columns', 'textcrafttoolspro' ),
+                'type'        => \Elementor\Controls_Manager::TEXTAREA,
+                'description' => __( 'One per line: menu-slug|Column Title', 'textcrafttoolspro' ),
+                'default'     => '',
             ]
         );
 
@@ -267,45 +276,24 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                 'fields'      => $mega_group_repeater->get_controls(),
                 'default'     => [
                     [
-                        'group_label'    => 'PDF & Compress',
-                        'group_columns'  => [
-                            [ 'col_menu' => 'pdf-tools', 'col_title' => 'PDF' ],
-                            [ 'col_menu' => 'compression', 'col_title' => 'Compression' ],
-                        ],
+                        'group_label'         => 'PDF & Compress',
+                        'group_columns_text'  => "pdf-tools|PDF\ncompression|Compression",
                     ],
                     [
-                        'group_label'    => 'Images',
-                        'group_columns'  => [
-                            [ 'col_menu' => 'image-media', 'col_title' => 'Image & Media' ],
-                            [ 'col_menu' => 'image-editing', 'col_title' => 'Image Editing' ],
-                        ],
+                        'group_label'         => 'Images',
+                        'group_columns_text'  => "image-media|Image & Media\nimage-editing|Image Editing",
                     ],
                     [
-                        'group_label'    => 'Text & Case',
-                        'group_columns'  => [
-                            [ 'col_menu' => 'text-tools', 'col_title' => 'Text Tools' ],
-                            [ 'col_menu' => 'case-converters', 'col_title' => 'Case Converters' ],
-                        ],
+                        'group_label'         => 'Text & Case',
+                        'group_columns_text'  => "text-tools|Text Tools\ncase-converters|Case Converters",
                     ],
                     [
-                        'group_label'    => 'Developer',
-                        'group_columns'  => [
-                            [ 'col_menu' => 'developer', 'col_title' => 'Developer' ],
-                            [ 'col_menu' => 'data-code-tools', 'col_title' => 'Data & Code' ],
-                        ],
+                        'group_label'         => 'Developer',
+                        'group_columns_text'  => "developer|Developer\ndata-code-tools|Data & Code",
                     ],
                     [
-                        'group_label'    => 'More',
-                        'group_columns'  => [
-                            [ 'col_menu' => 'ciphers-encoding', 'col_title' => 'Ciphers' ],
-                            [ 'col_menu' => 'calculators', 'col_title' => 'Calculators' ],
-                            [ 'col_menu' => 'generators', 'col_title' => 'Generators' ],
-                            [ 'col_menu' => 'fonts-text-styles', 'col_title' => 'Fonts' ],
-                            [ 'col_menu' => 'ai-prompts', 'col_title' => 'AI' ],
-                            [ 'col_menu' => 'seo-web', 'col_title' => 'SEO' ],
-                            [ 'col_menu' => 'cheat-sheets', 'col_title' => 'Cheat Sheets' ],
-                            [ 'col_menu' => 'web-css-tools', 'col_title' => 'Web & CSS' ],
-                        ],
+                        'group_label'         => 'More',
+                        'group_columns_text'  => "ciphers-encoding|Ciphers\ncalculators|Calculators\ngenerators|Generators\nfonts-text-styles|Fonts\nai-prompts|AI\nseo-web|SEO\ncheat-sheets|Cheat Sheets\nweb-css-tools|Web & CSS",
                     ],
                 ],
                 'title_field' => 'group_label',
@@ -519,7 +507,7 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                         <!-- Mega Menu Groups (each = one dropdown) -->
                         <?php foreach ( $mega_groups as $group ) :
                             $group_label     = ! empty( $group['group_label'] ) ? $group['group_label'] : 'Tools';
-                            $group_cols      = isset( $group['group_columns'] ) ? $group['group_columns'] : [];
+                            $group_cols      = $this->parse_columns_text( isset( $group['group_columns_text'] ) ? $group['group_columns_text'] : '' );
                             $group_foot_label = ! empty( $group['group_foot_label'] ) ? $group['group_foot_label'] : '';
                             $group_foot_url  = ! empty( $group['group_foot_url']['url'] ) ? $group['group_foot_url']['url'] : '#tools';
                         ?>
@@ -663,9 +651,9 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                                 <div class="tctp-mega" role="menu">
                                     <div class="tctp-mega-inner">
                                         <div class="tctp-mega-cols">
-                                            <# _.each( group.group_columns, function( col ) { #>
+                                            <# var _lines = ( group.group_columns_text || '' ).split(/\r?\n/); _.each( _lines, function( _ln ) { var _t = String(_ln||'').trim(); if(!_t) return; var _parts = _t.split('|'); var _title = (_parts[1]||'').trim() || (_parts[0]||'').trim(); #>
                                                 <div class="tctp-mcol">
-                                                    <h5>{{{ col.col_title || 'Menu' }}} <i>&nbsp;</i></h5>
+                                                    <h5>{{{ _title }}} <i>&nbsp;</i></h5>
                                                     <p style="font-size:13px;color:#8792a6;margin:0">Select a WP menu in column settings</p>
                                                 </div>
                                             <# }); #>
