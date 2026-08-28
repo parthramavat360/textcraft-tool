@@ -284,8 +284,12 @@ class TextCraft_Header_Widget extends \Elementor\Widget_Base {
                         'group_columns_text'  => "text-tools|Text Tools\ncase-converters|Case Converters\ndeveloper|Developer\ndata-code-tools|Data & Code",
                     ],
                     [
-                        'group_label'         => 'More',
-                        'group_columns_text'  => "ciphers-encoding|Ciphers\ncalculators|Calculators\ngenerators|Generators\nfonts-text-styles|Fonts\nai-prompts|AI\nseo-web|SEO\ncheat-sheets|Cheat Sheets\nweb-css-tools|Web & CSS",
+                        'group_label'         => 'Tools',
+                        'group_columns_text'  => "ciphers-encoding|Ciphers\ncalculators|Calculators\ngenerators|Generators",
+                    ],
+                    [
+                        'group_label'         => 'Resources',
+                        'group_columns_text'  => "fonts-text-styles|Fonts\nai-prompts|AI\nseo-web|SEO\ncheat-sheets|Cheat Sheets\nweb-css-tools|Web & CSS",
                     ],
                 ],
                 'title_field' => 'group_label',
