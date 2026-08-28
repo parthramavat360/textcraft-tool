@@ -1,0 +1,197 @@
+/* =========================================================================
+   TextCraft Tools Home Below Sections
+   How it works, Most used, Browse by category, FAQ, SEO body, CTA band.
+   White theme, tctp design tokens. Scoped under .tcb-sections root.
+   ========================================================================= */
+
+.tcb-sections {
+  --ink:#0b1220; --ink-2:#1c2637; --body:#4a5568; --muted:#8792a6;
+  --paper:#ffffff; --surface:#f6f8fb; --line:#e4e9f0;
+  --accent:#2563eb; --accent-soft:#eaf0ff;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px -12px rgba(16,24,40,.18);
+  --shadow-lg:0 24px 60px -30px rgba(16,24,40,.4);
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"DM Sans",system-ui,sans-serif;
+  box-sizing:border-box;
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.tcb-sections *,
+.tcb-sections *::before,
+.tcb-sections *::after { box-sizing:border-box; }
+.tcb-sections h2,.tcb-sections h3,.tcb-sections h4 {
+  font-family:var(--font-display);
+  letter-spacing:-.02em;
+  color:var(--ink);
+  margin:0;
+}
+.tcb-sections a{color:inherit;text-decoration:none}
+.tcb-sections .tcb-gost{color:var(--accent)}
+.tcb-sections .tcb-cta .tcb-btn{color:#fff}
+
+/* Section shell */
+.tcb-sec{ padding:72px 0; border-top:1px solid var(--line); }
+.tcb-sec.tcb-alt{ background:var(--surface); }
+.tcb-wrap{ max-width:1200px; margin:0 auto; padding:0 24px; }
+
+/* Kicker badge */
+.tcb-kicker{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--font-display);
+  font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:100px; padding:5px 12px;
+}
+
+/* Section headings */
+.tcb-h2{ font-size:clamp(26px,3.4vw,36px); line-height:1.12; margin:16px 0 12px; }
+.tcb-desc{ margin:0 0 28px; font-size:16.5px; color:var(--body); max-width:62ch; }
+
+/* Head row (most used) */
+.tcb-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:24px; margin-bottom:28px;
+}
+.tcb-head .tcb-h2{ margin-bottom:8px; }
+.tcb-head .tcb-desc{ margin:0; }
+.tcb-gost{
+  font-family:var(--font-display); font-weight:600; font-size:14.5px;
+  color:var(--accent); border:1px solid var(--line); border-radius:100px;
+  padding:9px 18px; white-space:nowrap; background:var(--paper);
+  transition:border-color .18s, box-shadow .18s, background .18s;
+}
+.tcb-gost:hover{ border-color:var(--accent); background:var(--accent-soft); box-shadow:var(--shadow); }
+
+/* Grids */
+.tcb-grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:30px; }
+.tcb-grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.tcb-gridcat{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
+
+/* Cards */
+.tcb-card{
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+  padding:24px; box-shadow:var(--shadow);
+  transition:transform .18s, box-shadow .18s, border-color .18s;
+  display:block;
+}
+.tcb-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
+.tcb-card h3{ font-size:19px; line-height:1.25; margin:0 0 8px; }
+.tcb-card p{ margin:0; font-size:15px; color:var(--body); }
+
+/* Step cards */
+.tcb-num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:10px;
+  font-family:var(--font-display); font-weight:700; font-size:14px;
+  color:var(--accent); background:var(--accent-soft); margin-bottom:16px;
+}
+
+/* Tool cards */
+.tcb-tag{
+  display:inline-block; font-family:var(--font-display); font-weight:700;
+  font-size:10px; letter-spacing:.08em; border-radius:6px; padding:3px 7px;
+  background:var(--accent); color:#fff; margin-bottom:14px;
+}
+.tcb-card.tool h3{ margin-bottom:6px; }
+.tcb-card.tool p{ font-size:14px; }
+
+/* Category cards */
+.tcb-card.cat{
+  display:flex; align-items:center; gap:12px;
+  padding:16px 18px;
+}
+.tcb-caticon{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  font-family:var(--font-display); font-weight:700; font-size:13px;
+  color:var(--accent); background:var(--accent-soft);
+}
+.tcb-catname{ font-family:var(--font-display); font-weight:600; font-size:15px; flex:1; }
+.tcb-catcount{
+  font-size:12.5px; color:var(--muted); font-weight:600;
+  background:var(--surface); border-radius:100px; padding:3px 9px; white-space:nowrap;
+}
+
+/* FAQ */
+.tcb-faqwrap{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:48px; }
+.tcb-faqwrap > div:last-child{ display:grid; gap:12px; }
+.tcb-card.faq{ padding:0; overflow:hidden; }
+.tcb-card.faq summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px; font-family:var(--font-display); font-weight:600; font-size:16px; color:var(--ink);
+}
+.tcb-card.faq summary::-webkit-details-marker{ display:none; }
+.tcb-plus{
+  flex-shrink:0; width:26px; height:26px; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--accent-soft); color:var(--accent); font-size:18px; line-height:1;
+  transition:transform .2s;
+}
+.tcb-card.faq[open] .tcb-plus{ transform:rotate(45deg); }
+.tcb-card.faq > p{ padding:0 22px 20px; }
+
+/* SEO body */
+.tcb-seowrap{ display:grid; grid-template-columns:1.6fr 1fr; gap:48px; align-items:start; }
+.tcb-seobody{ margin-top:18px; }
+.tcb-seobody p{ margin:0 0 18px; color:var(--body); font-size:16px; }
+.tcb-seobody h3{ font-size:20px; margin:26px 0 10px; }
+.tcb-seobody strong{ color:var(--ink); }
+
+/* Aside cards */
+.tcb-card.side{ margin-top:18px; }
+.tcb-card.side:first-child{ margin-top:0; }
+.tcb-card.side h3{ font-size:17px; margin-bottom:14px; }
+.tcb-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.tcb-chip{
+  font-size:13px; font-weight:600; color:var(--body);
+  background:var(--surface); border:1px solid var(--line); border-radius:100px; padding:6px 12px;
+}
+.tcb-chip:hover{ border-color:var(--accent); color:var(--accent); }
+.tcb-facts{ margin:0; }
+.tcb-facts > div{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:11px 0; border-top:1px solid var(--line); font-size:14px;
+}
+.tcb-facts > div:first-child{ border-top:none; }
+.tcb-facts dt{ color:var(--muted); }
+.tcb-facts dd{ color:var(--accent); font-weight:700; margin:0; text-align:right; }
+
+/* CTA */
+.tcb-ctacard{
+  background:linear-gradient(135deg,#0b1220 0%,#1c2637 100%);
+  border-radius:calc(var(--radius) + 6px); padding:56px 48px; text-align:center;
+  box-shadow:var(--shadow-lg); position:relative; overflow:hidden;
+}
+.tcb-ctacard::before{
+  content:""; position:absolute; width:340px; height:340px; border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.45),transparent 65%);
+  top:-120px; right:-90px;
+}
+.tcb-ctacard h3{ color:#fff; font-size:clamp(24px,3.2vw,34px); line-height:1.15; position:relative; }
+.tcb-ctacard p{ color:#c3cbd9; margin:14px auto 26px; max-width:48ch; position:relative; }
+.tcb-btn{
+  position:relative; display:inline-block;
+  font-family:var(--font-display); font-weight:600; font-size:15px;
+  background:var(--accent); color:#fff; border-radius:100px; padding:13px 28px;
+  box-shadow:0 10px 24px -8px rgba(37,99,235,.6);
+  transition:transform .18s, box-shadow .18s;
+}
+.tcb-btn:hover{ transform:translateY(-2px); box-shadow:0 16px 30px -8px rgba(37,99,235,.7); }
+
+/* Responsive */
+@media (max-width:920px){
+  .tcb-grid4{ grid-template-columns:repeat(2,1fr); }
+  .tcb-gridcat{ grid-template-columns:repeat(2,1fr); }
+  .tcb-faqwrap, .tcb-seowrap{ grid-template-columns:1fr; gap:28px; }
+  .tcb-head{ flex-direction:column; align-items:flex-start; }
+}
+@media (max-width:600px){
+  .tcb-sec{ padding:52px 0; }
+  .tcb-grid3, .tcb-gridcat{ grid-template-columns:1fr; }
+  .tcb-ctacard{ padding:44px 24px; }
+}
