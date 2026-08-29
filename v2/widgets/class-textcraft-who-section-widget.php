@@ -83,26 +83,80 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
+		/* ─── Section ★ ─────────────────────────────────────────── */
 		$this->start_controls_section( 'style_who', [
-			'label' => __( 'Style', 'textcrafttoolspro' ),
+			'label' => __( 'Section', 'textcrafttoolspro' ),
 			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 		] );
 
+		$this->add_control( 'section_bg_type', [
+			'label'   => __( 'Background Type', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::CHOOSE,
+			'options' => [
+				'color' => [ 'title' => __( 'Color', 'textcrafttoolspro' ), 'icon' => 'eicon-paint-brush' ],
+				'none'  => [ 'title' => __( 'None', 'textcrafttoolspro' ), 'icon' => 'eicon-ban' ],
+			],
+			'default' => 'color',
+		] );
 		$this->add_control( 'section_alt', [
-			'label'     => __( 'Alternate Background', 'textcrafttoolspro' ),
+			'label'     => __( 'Background Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#f6f8fb',
+			'condition' => [ 'section_bg_type' => 'color' ],
 			'selectors' => [
 				'{{WRAPPER}} .tcs-section' => 'background: {{VALUE}}',
 			],
 		] );
 		$this->add_control( 'section_border', [
-			'label'     => __( 'Section Border', 'textcrafttoolspro' ),
+			'label'     => __( 'Top Border Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#e4e9f0',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-section' => 'border-color: {{VALUE}}',
 			],
+		] );
+		$this->add_control( 'section_border_width', [
+			'label'      => __( 'Top Border Width', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 10 ] ],
+			'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'border-top-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'section_padding', [
+			'label'      => __( 'Section Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em', '%' ],
+			'default'    => [ 'top' => '72', 'right' => '0', 'bottom' => '72', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_responsive_control( 'section_gap', [
+			'label'      => __( 'Content Width (max)', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 800, 'max' => 1600 ] ],
+			'default'    => [ 'size' => 1200, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-wrap' => 'max-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		/* ─── Section Heading ★ ─────────────────────────────────── */
+		$this->start_controls_section( 'style_heading', [
+			'label' => __( 'Heading', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'kicker_typography',
+			'label'    => __( 'Kicker Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-kicker',
 		] );
 		$this->add_control( 'kicker_bg', [
 			'label'     => __( 'Kicker Background', 'textcrafttoolspro' ),
@@ -120,6 +174,30 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-kicker' => 'color: {{VALUE}}',
 			],
 		] );
+		$this->add_control( 'kicker_radius', [
+			'label'      => __( 'Kicker Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 100, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-kicker' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_control( 'heading_radius', [
+			'label'      => __( 'Kicker Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '5', 'right' => '12', 'bottom' => '5', 'left' => '12', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-kicker' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'title_typography',
+			'label'    => __( 'Title Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-shead h2',
+		] );
 		$this->add_control( 'title_color', [
 			'label'     => __( 'Title Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -127,6 +205,20 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 			'selectors' => [
 				'{{WRAPPER}} .tcs-shead h2' => 'color: {{VALUE}}',
 			],
+		] );
+		$this->add_responsive_control( 'title_margin', [
+			'label'      => __( 'Title Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '16', 'right' => '0', 'bottom' => '12', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-shead h2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'desc_typography',
+			'label'    => __( 'Description Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-shead p',
 		] );
 		$this->add_control( 'desc_color', [
 			'label'     => __( 'Description Color', 'textcrafttoolspro' ),
@@ -136,6 +228,54 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-shead p' => 'color: {{VALUE}}',
 			],
 		] );
+		$this->add_responsive_control( 'heading_spacing', [
+			'label'      => __( 'Heading Bottom Spacing', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+			'default'    => [ 'size' => 34, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-shead' => 'margin-bottom: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		/* ─── Grid ★ ─────────────────────────────────────────────── */
+		$this->start_controls_section( 'style_grid', [
+			'label' => __( 'Grid', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_control( 'grid_columns', [
+			'label'      => __( 'Columns (Desktop)', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 1, 'max' => 6 ] ],
+			'default'    => [ 'size' => 4, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who-grid' => 'grid-template-columns: repeat({{SIZE}}, 1fr)',
+			],
+		] );
+		$this->add_responsive_control( 'grid_gap', [
+			'label'      => __( 'Columns Gap', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'default'    => [ 'size' => 16, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who-grid' => 'gap: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		/* ─── Cards ★ ─────────────────────────────────────────────── */
+		$this->start_controls_section( 'style_cards', [
+			'label' => __( 'Cards', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
 		$this->add_control( 'card_bg', [
 			'label'     => __( 'Card Background', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -151,6 +291,95 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 			'selectors' => [
 				'{{WRAPPER}} .tcs-who' => 'border-color: {{VALUE}}',
 			],
+		] );
+		$this->add_control( 'card_radius', [
+			'label'      => __( 'Card Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'default'    => [ 'size' => 16, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'card_padding', [
+			'label'      => __( 'Card Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '22', 'right' => '22', 'bottom' => '22', 'left' => '22', 'unit' => 'px', 'isLinked' => true ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'who_title_typography',
+			'label'    => __( 'Card Title Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-who h3',
+		] );
+		$this->add_control( 'who_title_color', [
+			'label'     => __( 'Card Title Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#0b1220',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-who h3' => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_responsive_control( 'who_title_margin', [
+			'label'      => __( 'Card Title Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '0', 'right' => '0', 'bottom' => '6', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who h3' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'who_desc_typography',
+			'label'    => __( 'Card Text Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-who p',
+		] );
+		$this->add_control( 'who_desc_color', [
+			'label'     => __( 'Card Text Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#4a5568',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-who p' => 'color: {{VALUE}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		/* ─── Avatar ★ ────────────────────────────────────────────── */
+		$this->start_controls_section( 'style_avatar', [
+			'label' => __( 'Avatar', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_responsive_control( 'avatar_size', [
+			'label'      => __( 'Avatar Size', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 20, 'max' => 100 ] ],
+			'default'    => [ 'size' => 38, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who-av' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+			],
+		] );
+		$this->add_control( 'avatar_radius', [
+			'label'      => __( 'Avatar Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ], '%' => [ 'min' => 0, 'max' => 50 ] ],
+			'default'    => [ 'size' => 50, 'unit' => '%' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who-av' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'avatar_typography',
+			'label'    => __( 'Avatar Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-who-av',
 		] );
 		$this->add_control( 'avatar_bg', [
 			'label'     => __( 'Avatar Background', 'textcrafttoolspro' ),
@@ -168,20 +397,13 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-who-av' => 'color: {{VALUE}}',
 			],
 		] );
-		$this->add_control( 'who_title_color', [
-			'label'     => __( 'Card Title Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#0b1220',
-			'selectors' => [
-				'{{WRAPPER}} .tcs-who h3' => 'color: {{VALUE}}',
-			],
-		] );
-		$this->add_control( 'who_desc_color', [
-			'label'     => __( 'Card Text Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#4a5568',
-			'selectors' => [
-				'{{WRAPPER}} .tcs-who p' => 'color: {{VALUE}}',
+		$this->add_responsive_control( 'avatar_margin', [
+			'label'      => __( 'Avatar Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '0', 'right' => '0', 'bottom' => '12', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-who-av' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 			],
 		] );
 
