@@ -14,6 +14,8 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'pdf_splitter'; }
     public function get_title(): string { return 'PDF Splitter'; }
     public function get_icon(): string { return 'eicon-editor-expand'; }
@@ -25,18 +27,27 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Split a PDF into multiple files. Choose to split every N pages, extract a page range, or split into individual pages. Download as a ZIP archive. Everything runs in your browser — your files are never uploaded.
+            Split a PDF into multiple files &mdash; every N pages, a page range, or individual pages &mdash; and download them as a ZIP. Everything runs in your browser, your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-ps-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
         <?php $this->render_file_row('tc-ps-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:16px">
+        <div class="tc-input-group" style="margin-top:18px">
             <label class="tc-label">Split Mode</label>
-            <div class="tc-modes" data-group="ps-mode">
-                <button class="tc-btn tc-btn--ghost sel" data-val="every" type="button">Every N Pages</button>
-                <button class="tc-btn tc-btn--ghost" data-val="range" type="button">Page Range</button>
-                <button class="tc-btn tc-btn--ghost" data-val="individual" type="button">Individual Pages</button>
+            <div class="tc-modes tc-modes--cards" data-group="ps-mode">
+                <button class="tc-btn tc-btn--ghost sel" data-val="every" type="button">
+                    <span class="tc-card-title">Every N Pages</span>
+                    <span class="tc-card-desc">Group pages in fixed-size chunks</span>
+                </button>
+                <button class="tc-btn tc-btn--ghost" data-val="range" type="button">
+                    <span class="tc-card-title">Page Range</span>
+                    <span class="tc-card-desc">Extract specific pages you choose</span>
+                </button>
+                <button class="tc-btn tc-btn--ghost" data-val="individual" type="button">
+                    <span class="tc-card-title">Individual Pages</span>
+                    <span class="tc-card-desc">One PDF per page</span>
+                </button>
             </div>
         </div>
 
@@ -54,6 +65,7 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
         <div class="tc-actions">
             <button class="tc-btn tc-btn--accent" id="tc-ps-split" type="button">Split PDF</button>
             <button class="tc-btn tc-btn--ghost" id="tc-ps-download" type="button" style="display:none">Download ZIP</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-ps-clear" type="button">Clear all</button>
         </div>
 
         <div class="tc-stats-row">

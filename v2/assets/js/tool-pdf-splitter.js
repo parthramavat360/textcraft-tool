@@ -110,10 +110,11 @@
         ensureLibs().then(function () {
             return file.arrayBuffer();
         }).then(function (ab) {
+            var previewBytes = ab.slice(0);
             return window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise.then(function (pdf) {
                 totalPages = pdf.numPages;
                 setStat('tc-ps-stat-total', totalPages + ' pages');
-                return renderPageToImage(ab.slice(0), 1);
+                return renderPageToImage(previewBytes, 1);
             });
         }).then(function (dataUrl) {
             TCTP.showOriginalPreview(dataUrl);
@@ -125,6 +126,17 @@
 
     var removeBtn = document.querySelector('#tc-ps-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
+        resetTool();
+    });
+
+    var clearBtn = document.getElementById('tc-ps-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        resetTool();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
+    function resetTool() {
+        if (removeBtn) removeBtn.blur();
         file = null;
         totalPages = 0;
         lastZip = null;
@@ -132,7 +144,14 @@
         setStat('tc-ps-stat-total', '-');
         setStat('tc-ps-stat-files', '-');
         setStat('tc-ps-stat-status', 'Ready');
-    });
+        var dlBtn = document.getElementById('tc-ps-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        var orig = document.getElementById('tc-preview-orig');
+        var result = document.getElementById('tc-preview-result');
+        if (orig) orig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        if (result) result.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+    }
 
     function parseRange(rangeStr, max) {
         var pages = [];

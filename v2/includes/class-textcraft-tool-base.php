@@ -288,7 +288,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
     protected function render(): void {
         $settings = $this->get_settings_for_display();
         ?>
-        <div class="tc-workspace-wrap">
+        <div class="tc-workspace-wrap<?php echo $this->premium ? ' tc-premium' : ''; ?>">
             <?php $this->render_hero($settings); ?>
             <div class="tc-workspace">
                 <div class="tc-panel">
@@ -326,6 +326,9 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
                 <span class="tc-pill tc-pill--ok"><span class="tc-dot"></span> Runs locally in your browser</span>
                 <span class="tc-pill">Free forever</span>
                 <span class="tc-pill">No signup</span>
+                <?php if ($this->premium): ?>
+                    <span class="tc-pill">Median run &lt; 1s</span>
+                <?php endif; ?>
             </div>
             <h1><?php echo esc_html($title); ?></h1>
             <?php if ($subtitle): ?>
@@ -343,6 +346,13 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
      * Text/generator tools should leave this false.
      */
     protected bool $show_preview = false;
+
+    /**
+     * Opt-in premium workspace styling. When true, the wrapper gets the
+     * unique `tc-premium` class and premium markup extras are rendered.
+     * Only specific PDF tools enable this — everything else stays untouched.
+     */
+    protected bool $premium = false;
 
     /**
      * Preview tab labels. Child widgets can override to be tool-specific.

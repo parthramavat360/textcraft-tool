@@ -14,7 +14,7 @@
     var file = null;
     var compressedBlob = null;
     var originalUrl = null;
-    var level = 3;
+    var level = 2;
 
     /* ------------------------------------------------------------------ */
     /*  Library loader                                                     */
@@ -196,6 +196,27 @@
         if (r) r.innerHTML = '<span style="color:var(--muted);font-size:13px">Compressed preview will appear here</span>';
     }
 
+    var LEVEL_HINTS = {
+        1: 'Less \u2014 near-lossless compression that keeps text and images crisp.',
+        2: 'Recommended \u2014 the best balance between file size and visual quality.',
+        3: 'Strong \u2014 maximum file-size reduction with slightly softer images.'
+    };
+
+    function updateLevelHint(lvl) {
+        var hint = document.getElementById('tc-pdf-level-hint');
+        if (hint && LEVEL_HINTS[lvl]) hint.textContent = LEVEL_HINTS[lvl];
+    }
+
+    function resetTool() {
+        file = null;
+        compressedBlob = null;
+        if (originalUrl) { URL.revokeObjectURL(originalUrl); originalUrl = null; }
+        TCTP.hideFileRow('tc-pdf-file');
+        clearPreviews();
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        TCTP.switchToOriginalTab();
+    }
+
     TCTP.initDropZone('tc-pdf-drop', 'tc-pdf-drop-input', function (f) {
         if (f.type !== 'application/pdf') {
             TCTP.toast('Please select a PDF file.', '\u26A0\uFE0F');
@@ -222,12 +243,13 @@
 
     var removeBtn = document.querySelector('#tc-pdf-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
-        file = null;
-        compressedBlob = null;
-        if (originalUrl) { URL.revokeObjectURL(originalUrl); originalUrl = null; }
-        TCTP.hideFileRow('tc-pdf-file');
-        clearPreviews();
-        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        resetTool();
+    });
+
+    var clearBtn = document.getElementById('tc-pdf-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        resetTool();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
     });
 
     /* ------------------------------------------------------------------ */
@@ -238,8 +260,10 @@
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             level = parseInt(btn.getAttribute('data-val')) || 2;
+            updateLevelHint(level);
         });
     });
+    updateLevelHint(level);
 
     /* ------------------------------------------------------------------ */
     /*  Compress button                                                    */
