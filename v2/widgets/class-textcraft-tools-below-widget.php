@@ -226,6 +226,11 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			'return_value' => 'yes',
 			'default'      => 'yes',
 		] );
+		$this->add_control( 'faq_kicker', [
+			'label'   => __( 'Kicker', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::TEXT,
+			'default' => 'Support',
+		] );
 		$this->add_control( 'faq_title', [
 			'label'   => __( 'Title', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
@@ -1039,6 +1044,9 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 		<section class="tcb-sec tcb-alt tcb-faq">
 			<div class="tcb-wrap tcb-faqwrap">
 				<div>
+					<?php if ( ! empty( $s['faq_kicker'] ) ) : ?>
+						<span class="tcb-kicker"><?php echo esc_html( $s['faq_kicker'] ); ?></span>
+					<?php endif; ?>
 					<h2 class="tcb-h2"><?php echo esc_html( $s['faq_title'] ); ?></h2>
 					<p class="tcb-desc"><?php echo esc_html( $s['faq_desc'] ); ?></p>
 				</div>
