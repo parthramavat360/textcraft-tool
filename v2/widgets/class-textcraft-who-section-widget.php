@@ -413,7 +413,7 @@ class TextCraft_Who_Section_Widget extends \Elementor\Widget_Base {
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
-		$this->add_render_attribute( 'wrap', 'class', 'tcs-section is-alt tcs-who' );
+		$this->add_render_attribute( 'wrap', 'class', 'tcs-section is-alt' );
 		?>
 		<section <?php echo $this->get_render_attribute_string( 'wrap' ); ?>>
 			<div class="tcs-wrap">
