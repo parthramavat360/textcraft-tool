@@ -249,7 +249,7 @@ class TextCraft_Tools_Section_Widget extends \Elementor\Widget_Base {
                     [ 'name' => 'Dice Roller', 'desc' => 'Roll die with any number of sides.', 'url' => '/tools/dice-roller/', 'icon' => '🎲' ],
                     [ 'name' => 'Coin Flipper', 'desc' => 'Flip a virtual coin with instant results.', 'url' => '/tools/coin-flipper/', 'icon' => '🪙' ],
                     [ 'name' => 'Random Emoji Picker', 'desc' => 'Pick a random emoji to add some fun.', 'url' => '/tools/random-emoji-picker/', 'icon' => '🎭' ],
-                    [ 'name' => 'Choice Picker', 'desc' => 'Randomly pick from any list of choices.', 'url' => '/tools/spinpick-choice-picker/', 'icon' => '🎲' ],
+                    [ 'name' => 'Choice Picker', 'desc' => 'Randomly pick from any list of choices.', 'url' => '/tools/random-choice-picker/', 'icon' => '🎲' ],
                     [ 'name' => 'APA Format Generator', 'desc' => 'Generate APA 7th edition citations and references.', 'url' => '/tools/apa-format-generator/', 'icon' => '📚' ],
                     [ 'name' => 'Online Notepad', 'desc' => 'Free online notepad with auto-save - write notes in your browser.', 'url' => '/tools/online-notepad/', 'icon' => '📝' ],
                     [ 'name' => 'Password Strength Checker', 'desc' => 'Check how strong a password really is.', 'url' => '/tools/password-strength-checker/', 'icon' => '🔐' ],
