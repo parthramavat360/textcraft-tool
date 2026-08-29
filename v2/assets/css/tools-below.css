@@ -119,22 +119,34 @@
 }
 
 /* FAQ */
-.tcb-faqwrap{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:48px; }
-.tcb-faqwrap > div:last-child{ display:grid; gap:12px; }
-.tcb-card.faq{ padding:0; overflow:hidden; }
-.tcb-card.faq summary{
-  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
-  padding:18px 22px; font-family:var(--font-display); font-weight:600; font-size:16px; color:var(--ink);
+.tcb-faqwrap{ max-width:820px; margin:0 auto; }
+.tcb-faq .tcb-h2,
+.tcb-faq .tcb-desc{ text-align:center; }
+.tcb-faq .tcb-desc{ margin-left:auto; margin-right:auto; }
+.tcb-faqwrap > div:last-child{ display:grid; gap:12px; margin-top:16px; }
+.tcb-card.faq{
+  padding:0; overflow:hidden; border:1px solid var(--line); border-radius:16px;
+  background:var(--paper);
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+  transition:border-color .18s, box-shadow .18s, transform .18s;
 }
+.tcb-card.faq:hover{ border-color:#c9d6ea; box-shadow:var(--shadow); }
+.tcb-card.faq[open]{ border-color:var(--accent); box-shadow:var(--shadow); }
+.tcb-card.faq summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:18px;
+  padding:20px 24px; font-family:var(--font-display); font-weight:600; font-size:16.5px; color:var(--ink);
+  transition:color .18s;
+}
+.tcb-card.faq summary:hover{ color:var(--accent); }
 .tcb-card.faq summary::-webkit-details-marker{ display:none; }
 .tcb-plus{
-  flex-shrink:0; width:26px; height:26px; border-radius:50%;
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:var(--accent-soft); color:var(--accent); font-size:18px; line-height:1;
-  transition:transform .2s;
+  background:var(--accent-soft); color:var(--accent); font-size:19px; font-weight:600; line-height:1;
+  transition:transform .2s, background .18s;
 }
-.tcb-card.faq[open] .tcb-plus{ transform:rotate(45deg); }
-.tcb-card.faq > p{ padding:0 22px 20px; }
+.tcb-card.faq[open] .tcb-plus{ transform:rotate(45deg); background:var(--accent); color:#fff; }
+.tcb-card.faq > p{ padding:0 24px 22px; }
 
 /* SEO body */
 .tcb-seowrap{ display:grid; grid-template-columns:1.6fr 1fr; gap:48px; align-items:start; }
@@ -188,7 +200,7 @@
 @media (max-width:920px){
   .tcb-grid4{ grid-template-columns:repeat(2,1fr); }
   .tcb-gridcat{ grid-template-columns:repeat(2,1fr); }
-  .tcb-faqwrap, .tcb-seowrap{ grid-template-columns:1fr; gap:28px; }
+  .tcb-seowrap{ grid-template-columns:1fr; gap:28px; }
   .tcb-head{ flex-direction:column; align-items:flex-start; }
 }
 @media (max-width:600px){
