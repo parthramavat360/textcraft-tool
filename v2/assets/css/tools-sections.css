@@ -74,7 +74,7 @@
 /* ── 2. Who It's For ───────────────────────────── */
 .tcs-who-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
 .tcs-who{
-  background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px;
+  background:#fff; border:none; border-radius:16px; padding:22px;
   position:relative; overflow:hidden;
 }
 .tcs-who .tcs-who-av{
