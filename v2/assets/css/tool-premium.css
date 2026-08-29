@@ -13,9 +13,6 @@
 /* ── Hero: gradient depth, refined pills ───────────────────────── */
 .tc-premium .tc-tool-hero{
   padding:26px 0 34px;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(37,99,235,.10) 0%, rgba(37,99,235,.04) 34%, transparent 68%),
-    radial-gradient(90% 80% at 85% 10%, rgba(22,163,74,.05) 0%, transparent 60%);
 }
 .tc-premium .tc-tool-hero h1{
   background:linear-gradient(180deg,var(--ink) 40%,#1d3a7a);
