@@ -4,7 +4,7 @@
    ================================================================
    --ink:#0b1220  --ink-2:#1c2637  --body:#4a5568  --muted:#8792a6
    --paper:#fff   --surface:#f6f8fb --line:#e4e9f0
-   --accent:#2563eb --accent-soft:#eaf0ff
+   --accent:#0b1220 --accent-soft:#eaf0ff
    --ok:#16a34a  --ok-soft:#e7f7ed
    --radius:14px
    ================================================================ */
@@ -367,7 +367,7 @@
   display: block;
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, var(--accent), #60a5fa);
+  background: linear-gradient(90deg, var(--accent), #0b1220);
   transition: width 0.3s ease;
   font-style: normal;
 }
@@ -422,7 +422,7 @@
 .tctp-textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.12);
 }
 
 .tctp-textarea[readonly] {
@@ -522,7 +522,7 @@
 .tctp-toggle.sel {
   border-color: var(--accent);
   background: var(--accent-soft);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.12);
 }
 
 .tctp-toggle b {
@@ -791,7 +791,7 @@
 .tctp-level.tctp-sel {
   border-color: var(--accent);
   background: var(--accent-soft);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.12);
 }
 
 .level b,

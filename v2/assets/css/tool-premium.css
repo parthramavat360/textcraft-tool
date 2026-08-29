@@ -65,7 +65,7 @@
 }
 .tc-premium .tc-workspace > .tc-panel:hover{
   border-color:#c8d6f2;
-  box-shadow:0 1px 2px rgba(16,24,40,.04),0 16px 40px -18px rgba(37,99,235,.28);
+  box-shadow:0 1px 2px rgba(16,24,40,.04),0 16px 40px -18px rgba(11, 18, 32, .28);
 }
 .tc-premium .tc-panel-head{
   padding:18px 22px;
@@ -103,7 +103,7 @@
   border-radius:18px;
   padding:50px 24px 44px;
   background:
-    radial-gradient(90% 100% at 50% 0%, rgba(37,99,235,.05), transparent 70%),
+    radial-gradient(90% 100% at 50% 0%, rgba(11, 18, 32, .05), transparent 70%),
     linear-gradient(180deg,#fbfcfe,#f4f7fb);
   overflow:hidden;
   transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease;
@@ -119,7 +119,7 @@
 .tc-premium .tc-drop:hover,.tc-premium .tc-drop.hot{
   border-color:var(--accent);
   transform:translateY(-2px);
-  box-shadow:0 18px 42px -22px rgba(37,99,235,.35);
+  box-shadow:0 18px 42px -22px rgba(11, 18, 32, .35);
 }
 .tc-premium .tc-drop:hover::before,.tc-premium .tc-drop.hot::before{
   transform:translateX(100%);
@@ -127,9 +127,9 @@
 }
 .tc-premium .tc-drop-ic{
   width:58px;height:58px;border-radius:18px;margin-bottom:16px;
-  background:linear-gradient(160deg,#3b82f6,#2563eb);
+  background:linear-gradient(160deg,#0b1220,#0b1220);
   color:#fff;border:0;
-  box-shadow:0 10px 24px -10px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.25);
+  box-shadow:0 10px 24px -10px rgba(11, 18, 32, .6),inset 0 1px 0 rgba(255,255,255,.25);
   transition:transform .18s ease;
 }
 .tc-premium .tc-drop:hover .tc-drop-ic{transform:translateY(-3px) scale(1.04)}
@@ -171,7 +171,7 @@
 .tc-premium .tc-modes--cards .tc-btn.sel{
   border-color:var(--accent);
   background:linear-gradient(180deg,#f3f7ff,#eaf0ff);
-  box-shadow:0 0 0 4px rgba(37,99,235,.12),0 10px 20px -14px rgba(37,99,235,.4);
+  box-shadow:0 0 0 4px rgba(11, 18, 32, .12),0 10px 20px -14px rgba(11, 18, 32, .4);
 }
 .tc-premium .tc-modes--cards .tc-btn.sel::after{
   content:"";
@@ -180,7 +180,7 @@
   background:var(--accent);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
   background-size:11px;background-position:center;background-repeat:no-repeat;
-  box-shadow:0 4px 10px -4px rgba(37,99,235,.6);
+  box-shadow:0 4px 10px -4px rgba(11, 18, 32, .6);
 }
 .tc-premium .tc-btn--ghost.sel{color:var(--accent)}
 .tc-premium .tc-card-title{
@@ -208,13 +208,13 @@
 .tc-premium .tc-actions{margin-top:22px;gap:12px}
 .tc-premium .tc-btn{border-radius:12px;font-size:14.5px}
 .tc-premium .tc-btn--accent{
-  background:linear-gradient(180deg,#3b82f6,#2563eb);
-  box-shadow:0 10px 20px -10px rgba(37,99,235,.55),inset 0 1px 0 rgba(255,255,255,.25);
+  background:linear-gradient(180deg,#0b1220,#0b1220);
+  box-shadow:0 10px 20px -10px rgba(11, 18, 32, .55),inset 0 1px 0 rgba(255,255,255,.25);
 }
 .tc-premium .tc-btn--accent:hover{
   filter:brightness(1.05);
   transform:translateY(-1px);
-  box-shadow:0 14px 26px -12px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.25);
+  box-shadow:0 14px 26px -12px rgba(11, 18, 32, .6),inset 0 1px 0 rgba(255,255,255,.25);
 }
 .tc-premium .tc-btn--ghost{
   background:#fff;border-color:#dbe3ee;
@@ -237,7 +237,7 @@
   background:#eef2f7;border:1px solid var(--line);
 }
 .tc-premium .tc-bar-fill{
-  background:linear-gradient(90deg,#2563eb,#3b82f6);
+  background:linear-gradient(90deg,#0b1220,#0b1220);
   position:relative;overflow:hidden;
 }
 .tc-premium .tc-bar-fill::after{
@@ -283,7 +283,7 @@
 .tc-premium .tc-stat-item .tc-stat-value:empty::after{content:"-"}
 .tc-premium .tc-stat-item:hover{
   border-color:var(--accent);
-  box-shadow:0 0 0 4px var(--accent-soft),0 10px 20px -14px rgba(37,99,235,.35);
+  box-shadow:0 0 0 4px var(--accent-soft),0 10px 20px -14px rgba(11, 18, 32, .35);
 }
 
 /* ── Preview tabs + area ───────────────────────────────────────── */
@@ -326,8 +326,8 @@
 }
 .tc-premium .tc-range::-webkit-slider-thumb{
   width:22px;height:22px;
-  background:linear-gradient(160deg,#3b82f6,#2563eb);
-  box-shadow:0 4px 12px -4px rgba(37,99,235,.6);
+  background:linear-gradient(160deg,#0b1220,#0b1220);
+  box-shadow:0 4px 12px -4px rgba(11, 18, 32, .6);
 }
 
 /* ── Side list ─────────────────────────────────────────────────── */

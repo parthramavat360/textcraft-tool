@@ -1,7 +1,7 @@
 /* ==========================================================================
    Tools Section — Matching HTML design exactly
    Colors from HTML: --ink:#0b1220 --body:#4a5568 --muted:#8792a6
-   --paper:#fff --surface:#f6f8fb --line:#e4e9f0 --accent:#2563eb
+   --paper:#fff --surface:#f6f8fb --line:#e4e9f0 --accent:#0b1220
    --radius:14px --shadow card hover
    ========================================================================== */
 
@@ -190,7 +190,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 11px;
     font-weight: 600;
-    color: #2563eb;
+    color: #0b1220;
     background: #eaf0ff;
     border-radius: 6px;
     padding: 2px 7px;
