@@ -291,6 +291,11 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			'return_value' => 'yes',
 			'default'      => 'yes',
 		] );
+		$this->add_control( 'seo_kicker', [
+			'label'   => __( 'Kicker', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::TEXT,
+			'default' => 'Overview',
+		] );
 		$this->add_control( 'seo_title', [
 			'label'   => __( 'Title', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
@@ -1089,10 +1094,13 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 		<section class="tcb-sec tcb-seo">
 			<div class="tcb-wrap tcb-seowrap">
 				<div>
+					<?php if ( ! empty( $s['seo_kicker'] ) ) : ?>
+						<span class="tcb-kicker"><?php echo esc_html( $s['seo_kicker'] ); ?></span>
+					<?php endif; ?>
 					<h2 class="tcb-h2"><?php echo esc_html( $s['seo_title'] ); ?></h2>
 					<div class="tcb-seobody"><?php echo wp_kses_post( $s['seo_body'] ); ?></div>
 				</div>
-				<aside>
+				<aside class="tcb-seo-aside">
 					<?php if ( ! empty( $s['seo_chips'] ) ) : ?>
 						<div class="tcb-card side">
 							<h3>Popular searches</h3>
