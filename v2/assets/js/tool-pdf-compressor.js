@@ -318,6 +318,7 @@
             } catch (_) { /* preview optional */ }
 
             TCTP.setProgress('tc-pdf-progress', 100, 'Done!');
+            TCTP.hideProgress('tc-pdf-progress');
             TCTP.toast('Compressed! Saved ' + saved + '%');
 
         } catch (e) {

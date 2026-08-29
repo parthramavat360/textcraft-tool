@@ -232,6 +232,7 @@
             var zipBlob = await zip.generateAsync({ type: 'blob' });
 
             TCTP.setProgress('tc-ps-progress', 100, 'Done!');
+            TCTP.hideProgress('tc-ps-progress');
             lastName = (file ? file.name.replace(/\.pdf$/i, '') : 'document') + '-split.zip';
             lastZip = zipBlob;
             setStat('tc-ps-stat-files', chunks.length);
