@@ -124,25 +124,113 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
-		$this->start_controls_section( 'style_split', [
-			'label' => __( 'Style', 'textcrafttoolspro' ),
+		$this->start_controls_section( 'style_section', [
+			'label' => __( 'Section', 'textcrafttoolspro' ),
 			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 		] );
 
+		$this->add_control( 'section_bg_type', [
+			'label'   => __( 'Background Type', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::CHOOSE,
+			'options' => [
+				'color' => [ 'title' => __( 'Color', 'textcrafttoolspro' ), 'icon' => 'eicon-paint-brush' ],
+				'none'  => [ 'title' => __( 'None', 'textcrafttoolspro' ), 'icon' => 'eicon-ban' ],
+			],
+			'default' => 'color',
+		] );
 		$this->add_control( 'section_bg', [
-			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'label'     => __( 'Background Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#ffffff',
+			'condition' => [ 'section_bg_type' => 'color' ],
 			'selectors' => [
 				'{{WRAPPER}} .tcs-section' => 'background: {{VALUE}}',
 			],
+		] );
+		$this->add_control( 'section_border', [
+			'label'     => __( 'Top Border Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#e4e9f0',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-section' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'section_border_width', [
+			'label'      => __( 'Top Border Width', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 10 ] ],
+			'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'border-top-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'section_padding', [
+			'label'      => __( 'Section Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em', '%' ],
+			'default'    => [ 'top' => '72', 'right' => '0', 'bottom' => '72', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_control( 'section_maxwidth', [
+			'label'      => __( 'Content Width (max)', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 800, 'max' => 1600 ] ],
+			'default'    => [ 'size' => 1200, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-wrap' => 'max-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_split_layout', [
+			'label' => __( 'Split Layout', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_responsive_control( 'split_gap', [
+			'label'      => __( 'Columns Gap', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 120 ] ],
+			'default'    => [ 'size' => 56, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-split' => 'gap: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'split_rows_gap', [
+			'label'      => __( 'Between Splits', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 160 ] ],
+			'default'    => [ 'size' => 72, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-split + .tcs-split' => 'margin-top: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_header', [
+			'label' => __( 'Heading', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'kicker_typography',
+			'label'    => __( 'Kicker Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-split-copy .tcs-kicker',
 		] );
 		$this->add_control( 'kicker_color', [
 			'label'     => __( 'Kicker Text', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#2563eb',
 			'selectors' => [
-				'{{WRAPPER}} .tcs-kicker' => 'color: {{VALUE}}',
+				'{{WRAPPER}} .tcs-split-copy .tcs-kicker' => 'color: {{VALUE}}',
 			],
 		] );
 		$this->add_control( 'kicker_bg', [
@@ -150,8 +238,23 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#eaf0ff',
 			'selectors' => [
-				'{{WRAPPER}} .tcs-kicker' => 'background: {{VALUE}}',
+				'{{WRAPPER}} .tcs-split-copy .tcs-kicker' => 'background: {{VALUE}}',
 			],
+		] );
+		$this->add_control( 'kicker_radius', [
+			'label'      => __( 'Kicker Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 100, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-split-copy .tcs-kicker' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'title_typography',
+			'label'    => __( 'Title Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-split h3',
 		] );
 		$this->add_control( 'title_color', [
 			'label'     => __( 'Title Color', 'textcrafttoolspro' ),
@@ -161,6 +264,20 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-split h3' => 'color: {{VALUE}}',
 			],
 		] );
+		$this->add_responsive_control( 'title_margin', [
+			'label'      => __( 'Title Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '14', 'right' => '0', 'bottom' => '12', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-split h3' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'desc_typography',
+			'label'    => __( 'Description Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-split p',
+		] );
 		$this->add_control( 'desc_color', [
 			'label'     => __( 'Description Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -169,12 +286,65 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-split p' => 'color: {{VALUE}}',
 			],
 		] );
+
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_media', [
+			'label' => __( 'Media', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
 		$this->add_control( 'media_bg', [
 			'label'     => __( 'Media Box Background', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#eaf0ff',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-split-media' => 'background: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'media_border', [
+			'label'     => __( 'Media Box Border', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#e4e9f0',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-split-media' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'media_radius', [
+			'label'      => __( 'Media Box Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'default'    => [ 'size' => 20, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-split-media' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_mini', [
+			'label' => __( 'Mini List', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+
+		$this->add_responsive_control( 'mini_gap', [
+			'label'      => __( 'Mini Gap', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+			'default'    => [ 'size' => 9, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-mini-list' => 'gap: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'mini_margin', [
+			'label'      => __( 'Mini List Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '16', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-mini-list' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 			],
 		] );
 		$this->add_control( 'mini_border', [
@@ -185,6 +355,11 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-mini-list li' => 'border-color: {{VALUE}}',
 			],
 		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'mini_num_typography',
+			'label'    => __( 'Mini Number Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-mini-list b',
+		] );
 		$this->add_control( 'mini_num_color', [
 			'label'     => __( 'Mini Number Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -192,6 +367,11 @@ class TextCraft_Workflow_Section_Widget extends \Elementor\Widget_Base {
 			'selectors' => [
 				'{{WRAPPER}} .tcs-mini-list b' => 'color: {{VALUE}}',
 			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'mini_text_typography',
+			'label'    => __( 'Mini Text Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-mini-list span',
 		] );
 		$this->add_control( 'mini_text_color', [
 			'label'     => __( 'Mini Text Color', 'textcrafttoolspro' ),

@@ -90,22 +90,69 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 		] );
 	}
 
-	private function tctp_section_style_controls() {
+	private function tctp_style_section() {
+		$this->add_control( 'section_bg_type', [
+			'label'   => __( 'Background Type', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::CHOOSE,
+			'options' => [
+				'color' => [ 'title' => __( 'Color', 'textcrafttoolspro' ), 'icon' => 'eicon-paint-brush' ],
+				'none'  => [ 'title' => __( 'None', 'textcrafttoolspro' ), 'icon' => 'eicon-ban' ],
+			],
+			'default' => 'color',
+		] );
 		$this->add_control( 'section_bg', [
-			'label'     => __( 'Section Background', 'textcrafttoolspro' ),
+			'label'     => __( 'Background Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#ffffff',
+			'condition' => [ 'section_bg_type' => 'color' ],
 			'selectors' => [
 				'{{WRAPPER}} .tcs-section' => 'background: {{VALUE}}',
 			],
 		] );
 		$this->add_control( 'section_border', [
-			'label'     => __( 'Section Border', 'textcrafttoolspro' ),
+			'label'     => __( 'Top Border Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'default'   => '#e4e9f0',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-section' => 'border-color: {{VALUE}}',
 			],
+		] );
+		$this->add_control( 'section_border_width', [
+			'label'      => __( 'Top Border Width', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 10 ] ],
+			'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'border-top-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'section_padding', [
+			'label'      => __( 'Section Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em', '%' ],
+			'default'    => [ 'top' => '72', 'right' => '0', 'bottom' => '72', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-section' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_control( 'section_maxwidth', [
+			'label'      => __( 'Content Width (max)', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 800, 'max' => 1600 ] ],
+			'default'    => [ 'size' => 1200, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-wrap' => 'max-width: {{SIZE}}{{UNIT}}',
+			],
+		] );
+	}
+
+	private function tctp_style_heading() {
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'kicker_typography',
+			'label'    => __( 'Kicker Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-kicker',
 		] );
 		$this->add_control( 'kicker_bg', [
 			'label'     => __( 'Kicker Background', 'textcrafttoolspro' ),
@@ -123,6 +170,30 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-kicker' => 'color: {{VALUE}}',
 			],
 		] );
+		$this->add_control( 'kicker_radius', [
+			'label'      => __( 'Kicker Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 100, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-kicker' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'kicker_padding', [
+			'label'      => __( 'Kicker Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '5', 'right' => '12', 'bottom' => '5', 'left' => '12', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-kicker' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'title_typography',
+			'label'    => __( 'Title Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-shead h2',
+		] );
 		$this->add_control( 'title_color', [
 			'label'     => __( 'Title Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -130,6 +201,20 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 			'selectors' => [
 				'{{WRAPPER}} .tcs-shead h2' => 'color: {{VALUE}}',
 			],
+		] );
+		$this->add_responsive_control( 'title_margin', [
+			'label'      => __( 'Title Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '16', 'right' => '0', 'bottom' => '12', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-shead h2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'desc_typography',
+			'label'    => __( 'Description Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-shead p',
 		] );
 		$this->add_control( 'desc_color', [
 			'label'     => __( 'Description Color', 'textcrafttoolspro' ),
@@ -139,6 +224,42 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-shead p' => 'color: {{VALUE}}',
 			],
 		] );
+		$this->add_responsive_control( 'heading_spacing', [
+			'label'      => __( 'Heading Bottom Spacing', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+			'default'    => [ 'size' => 34, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-shead' => 'margin-bottom: {{SIZE}}{{UNIT}}',
+			],
+		] );
+	}
+
+	private function tctp_style_grid() {
+		$this->add_control( 'grid_columns', [
+			'label'      => __( 'Columns (Desktop)', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 1, 'max' => 6 ] ],
+			'default'    => [ 'size' => 3, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-grid' => 'grid-template-columns: repeat({{SIZE}}, 1fr)',
+			],
+		] );
+		$this->add_responsive_control( 'grid_gap', [
+			'label'      => __( 'Columns Gap', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'default'    => [ 'size' => 16, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-grid' => 'gap: {{SIZE}}{{UNIT}}',
+			],
+		] );
+	}
+
+	private function tctp_style_cards() {
 		$this->add_control( 'card_bg', [
 			'label'     => __( 'Card Background', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
@@ -153,6 +274,93 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 			'default'   => '#e4e9f0',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-ben' => 'border-color: {{VALUE}}',
+			],
+		] );
+		$this->add_control( 'card_radius', [
+			'label'      => __( 'Card Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'default'    => [ 'size' => 16, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_responsive_control( 'card_padding', [
+			'label'      => __( 'Card Padding', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '24', 'right' => '24', 'bottom' => '24', 'left' => '24', 'unit' => 'px', 'isLinked' => true ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'ben_title_typography',
+			'label'    => __( 'Card Title Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-ben h3',
+		] );
+		$this->add_control( 'ben_title_color', [
+			'label'     => __( 'Card Title Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#0b1220',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-ben h3' => 'color: {{VALUE}}',
+			],
+		] );
+		$this->add_responsive_control( 'ben_title_margin', [
+			'label'      => __( 'Card Title Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '0', 'right' => '0', 'bottom' => '7', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben h3' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			],
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name'     => 'ben_desc_typography',
+			'label'    => __( 'Card Text Typography', 'textcrafttoolspro' ),
+			'selector' => '{{WRAPPER}} .tcs-ben p',
+		] );
+		$this->add_control( 'ben_desc_color', [
+			'label'     => __( 'Card Text Color', 'textcrafttoolspro' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'default'   => '#4a5568',
+			'selectors' => [
+				'{{WRAPPER}} .tcs-ben p' => 'color: {{VALUE}}',
+			],
+		] );
+	}
+
+	private function tctp_style_icon() {
+		$this->add_responsive_control( 'icon_size', [
+			'label'      => __( 'Icon Box Size', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 20, 'max' => 80 ] ],
+			'default'    => [ 'size' => 42, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-ic' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+			],
+		] );
+		$this->add_control( 'icon_radius', [
+			'label'      => __( 'Icon Radius', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+			'default'    => [ 'size' => 12, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-ic' => 'border-radius: {{SIZE}}{{UNIT}}',
+			],
+		] );
+		$this->add_control( 'icon_font_size', [
+			'label'      => __( 'Icon Size', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 10, 'max' => 50 ] ],
+			'default'    => [ 'size' => 18, 'unit' => 'px' ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-ic' => 'font-size: {{SIZE}}{{UNIT}}',
 			],
 		] );
 		$this->add_control( 'icon_bg', [
@@ -171,20 +379,13 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 				'{{WRAPPER}} .tcs-ben-ic' => 'color: {{VALUE}}',
 			],
 		] );
-		$this->add_control( 'ben_title_color', [
-			'label'     => __( 'Card Title Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#0b1220',
-			'selectors' => [
-				'{{WRAPPER}} .tcs-ben h3' => 'color: {{VALUE}}',
-			],
-		] );
-		$this->add_control( 'ben_desc_color', [
-			'label'     => __( 'Card Text Color', 'textcrafttoolspro' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#4a5568',
-			'selectors' => [
-				'{{WRAPPER}} .tcs-ben p' => 'color: {{VALUE}}',
+		$this->add_responsive_control( 'icon_margin', [
+			'label'      => __( 'Icon Margin', 'textcrafttoolspro' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'default'    => [ 'top' => '0', 'right' => '0', 'bottom' => '14', 'left' => '0', 'unit' => 'px', 'isLinked' => false ],
+			'selectors'  => [
+				'{{WRAPPER}} .tcs-ben-ic' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 			],
 		] );
 	}
@@ -197,11 +398,39 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 		$this->tctp_add_benefits_repeater();
 		$this->end_controls_section();
 
-		$this->start_controls_section( 'style_benefits', [
-			'label' => __( 'Style', 'textcrafttoolspro' ),
+		$this->start_controls_section( 'style_section', [
+			'label' => __( 'Section', 'textcrafttoolspro' ),
 			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 		] );
-		$this->tctp_section_style_controls();
+		$this->tctp_style_section();
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_heading', [
+			'label' => __( 'Heading', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+		$this->tctp_style_heading();
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_grid', [
+			'label' => __( 'Grid', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+		$this->tctp_style_grid();
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_cards', [
+			'label' => __( 'Cards', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+		$this->tctp_style_cards();
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'style_icon', [
+			'label' => __( 'Icon', 'textcrafttoolspro' ),
+			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+		] );
+		$this->tctp_style_icon();
 		$this->end_controls_section();
 	}
 
