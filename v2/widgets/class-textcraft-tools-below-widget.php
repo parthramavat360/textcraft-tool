@@ -172,6 +172,11 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 			'return_value' => 'yes',
 			'default'      => 'yes',
 		] );
+		$this->add_control( 'cat_kicker', [
+			'label'   => __( 'Kicker', 'textcrafttoolspro' ),
+			'type'    => \Elementor\Controls_Manager::TEXT,
+			'default' => 'Explore',
+		] );
 		$this->add_control( 'cat_title', [
 			'label'   => __( 'Title', 'textcrafttoolspro' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
@@ -1023,6 +1028,9 @@ class TextCraft_Tools_Below_Widget extends \Elementor\Widget_Base {
 		?>
 		<section class="tcb-sec tcb-cats">
 			<div class="tcb-wrap">
+				<?php if ( ! empty( $s['cat_kicker'] ) ) : ?>
+					<span class="tcb-kicker"><?php echo esc_html( $s['cat_kicker'] ); ?></span>
+				<?php endif; ?>
 				<h2 class="tcb-h2"><?php echo esc_html( $s['cat_title'] ); ?></h2>
 				<p class="tcb-desc"><?php echo esc_html( $s['cat_desc'] ); ?></p>
 				<?php if ( ! empty( $s['cat_items'] ) ) : ?>
