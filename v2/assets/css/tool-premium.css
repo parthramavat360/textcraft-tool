@@ -14,12 +14,6 @@
 .tc-premium .tc-tool-hero{
   padding:26px 0 34px;
 }
-.tc-premium .tc-tool-hero h1{
-  background:linear-gradient(180deg,var(--ink) 40%,#1d3a7a);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
 .tc-premium .tc-lede{
   max-width:64ch;
   font-size:16px;
