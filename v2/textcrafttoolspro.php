@@ -691,13 +691,6 @@ function tctp_enqueue_assets() {
 
 
 wp_enqueue_style(
-        'tctp-tool-widgets-css',
-        TCTP_PLUGIN_URL . 'assets/css/tool-widgets.css',
-        [ 'tctp-google-fonts' ],
-        TCTP_VERSION
-    );
-
-    wp_enqueue_style(
         'tctp-tool-premium-css',
         TCTP_PLUGIN_URL . 'assets/css/tool-premium.css',
         [ 'tctp-tool-widgets-css' ],
@@ -705,8 +698,8 @@ wp_enqueue_style(
     );
 
     wp_enqueue_style(
-        'tctp-tools-below-css',
-        TCTP_PLUGIN_URL . 'assets/css/tools-below.css',
+        'tctp-tools-sections-css',
+        TCTP_PLUGIN_URL . 'assets/css/tools-sections.css',
         [ 'tctp-google-fonts' ],
         TCTP_VERSION
     );
@@ -1034,6 +1027,13 @@ function tctp_enqueue_editor_assets() {
         'tctp-tool-premium-css',
         TCTP_PLUGIN_URL . 'assets/css/tool-premium.css',
         [ 'tctp-tool-widgets-css' ],
+        TCTP_VERSION
+    );
+
+    wp_enqueue_style(
+        'tctp-tools-sections-css',
+        TCTP_PLUGIN_URL . 'assets/css/tools-sections.css',
+        [ 'tctp-google-fonts' ],
         TCTP_VERSION
     );
 
