@@ -38,19 +38,19 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" style="margin-top:18px">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">OCR Language</label>
-            <div class="tc-modes tc-modes--cards" data-group="ocr-lang">
-                <button class="tc-btn tc-btn--ghost sel" data-val="eng" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">English</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="spa" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Spanish</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="fra" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">French</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="deu" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">German</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="ita" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Italian</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="por" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Portuguese</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="jpn" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Japanese</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="chi_sim" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Chinese</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="kor" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Korean</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="ara" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Arabic</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="hin" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Hindi</span></button>
-                <button class="tc-btn tc-btn--ghost" data-val="rus" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Russian</span></button>
+            <div class="tc-modes" data-group="ocr-lang">
+                <button class="tc-btn tc-btn--ghost sel" data-val="eng" type="button">English</button>
+                <button class="tc-btn tc-btn--ghost" data-val="spa" type="button">Spanish</button>
+                <button class="tc-btn tc-btn--ghost" data-val="fra" type="button">French</button>
+                <button class="tc-btn tc-btn--ghost" data-val="deu" type="button">German</button>
+                <button class="tc-btn tc-btn--ghost" data-val="ita" type="button">Italian</button>
+                <button class="tc-btn tc-btn--ghost" data-val="por" type="button">Portuguese</button>
+                <button class="tc-btn tc-btn--ghost" data-val="jpn" type="button">Japanese</button>
+                <button class="tc-btn tc-btn--ghost" data-val="chi_sim" type="button">Chinese</button>
+                <button class="tc-btn tc-btn--ghost" data-val="kor" type="button">Korean</button>
+                <button class="tc-btn tc-btn--ghost" data-val="ara" type="button">Arabic</button>
+                <button class="tc-btn tc-btn--ghost" data-val="hin" type="button">Hindi</button>
+                <button class="tc-btn tc-btn--ghost" data-val="rus" type="button">Russian</button>
             </div>
         </div>
 
