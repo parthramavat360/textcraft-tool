@@ -34,7 +34,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-rp-file'); ?>
 
         <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label">Rotate by</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Rotate by</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-rotation">
                 <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">
                     <span class="tc-card-title">90&deg; CW</span>
@@ -55,7 +55,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Apply to</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Apply to</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-scope">
                 <button class="tc-btn tc-btn--ghost sel" data-val="all" type="button">
                     <span class="tc-card-title">All pages</span>
@@ -72,7 +72,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-rp-pages-opts" style="display:none">
-            <label class="tc-label" for="tc-rp-pages">Page numbers (e.g. 1, 3-5)</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-pages">Page numbers (e.g. 1, 3-5)</label>
             <input type="text" class="tc-input" id="tc-rp-pages" placeholder="1, 3-5">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to rotate.</p>
         </div>
@@ -89,7 +89,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" for="tc-rp-name">Output file name</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-name">Output file name</label>
             <input type="text" class="tc-input" id="tc-rp-name" placeholder="rotated-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>

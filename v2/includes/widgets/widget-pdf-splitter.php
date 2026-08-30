@@ -34,7 +34,7 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-ps-file'); ?>
 
         <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label">Split Mode</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Split Mode</label>
             <div class="tc-modes tc-modes--cards" data-group="ps-mode">
                 <button class="tc-btn tc-btn--ghost sel" data-val="every" type="button">
                     <span class="tc-card-title">Every N Pages</span>
@@ -59,12 +59,12 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-ps-range-opts" style="display:none">
-            <label class="tc-label">Page Range (e.g. 1-5, 8, 10-12)</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Range (e.g. 1-5, 8, 10-12)</label>
             <input type="text" class="tc-input" id="tc-ps-range" placeholder="1-5, 8, 10-12">
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Output File Naming</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Output File Naming</label>
             <div class="tc-modes" data-group="ps-name">
                 <button class="tc-btn sel" data-val="pages" type="button">Pages</button>
                 <button class="tc-btn" data-val="sequential" type="button">Sequential</button>

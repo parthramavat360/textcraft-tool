@@ -34,7 +34,7 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-pdf-file'); ?>
 
         <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label">Compression Mode</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Compression Mode</label>
             <div class="tc-modes" data-group="pdf-mode">
                 <button class="tc-btn sel" data-val="auto" type="button">Auto &mdash; smallest file</button>
                 <button class="tc-btn" data-val="lossless" type="button">Lossless</button>
@@ -46,7 +46,7 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Compression Level</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Compression Level</label>
             <div class="tc-modes tc-modes--cards" data-group="pdf-level">
                 <button class="tc-btn tc-btn--ghost" data-val="1" type="button">
                     <span class="tc-card-title">Less</span>
@@ -68,7 +68,7 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-pdf-quality-wrap">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" for="tc-pdf-quality">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-pdf-quality">
                     Image Quality: <span id="tc-pdf-quality-val">88%</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-pdf-quality" min="15" max="100" value="88">

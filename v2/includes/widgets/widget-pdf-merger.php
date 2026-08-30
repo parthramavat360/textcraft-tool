@@ -35,7 +35,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
         <div class="tc-file-list" id="tc-pm-list" style="display:none"></div>
 
         <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label">Merge Mode</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Merge Mode</label>
             <div class="tc-modes tc-modes--cards" data-group="pm-mode">
                 <button class="tc-btn tc-btn--ghost sel" data-val="append" type="button">
                     <span class="tc-card-title">Append</span>
@@ -52,7 +52,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Page Size</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Size</label>
             <div class="tc-modes" data-group="pm-size">
                 <button class="tc-btn sel" data-val="auto" type="button">Keep original</button>
                 <button class="tc-btn" data-val="a4" type="button">A4</button>
@@ -64,7 +64,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Orientation</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Orientation</label>
             <div class="tc-modes" data-group="pm-orient">
                 <button class="tc-btn sel" data-val="keep" type="button">Keep</button>
                 <button class="tc-btn" data-val="portrait" type="button">Portrait</button>

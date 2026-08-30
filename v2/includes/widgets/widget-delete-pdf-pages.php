@@ -34,7 +34,7 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         <?php $this->render_file_row('tc-dp-file'); ?>
 
         <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label">Select pages by</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Select pages by</label>
             <div class="tc-modes tc-modes--cards" data-group="dp-method">
                 <button class="tc-btn tc-btn--ghost sel" data-val="click" type="button">
                     <span class="tc-card-title">Click thumbnails</span>
@@ -51,20 +51,20 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-dp-numbers-opts" style="display:none">
-            <label class="tc-label" for="tc-dp-pages">Page numbers (e.g. 1-3, 5, 8)</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-pages">Page numbers (e.g. 1-3, 5, 8)</label>
             <input type="text" class="tc-input" id="tc-dp-pages" placeholder="2-4, 6">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to act on.</p>
         </div>
 
         <div id="tc-dp-grid-wrap" style="display:none">
             <div class="tc-input-group" style="margin-bottom:4px">
-                <label class="tc-label">Page Thumbnails</label>
+                <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Thumbnails</label>
             </div>
             <div class="tc-page-grid" id="tc-dp-grid"></div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label">Action</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Action</label>
             <div class="tc-modes" data-group="dp-action">
                 <button class="tc-btn sel" data-val="delete" type="button">Delete selected</button>
                 <button class="tc-btn" data-val="keep" type="button">Keep only selected</button>
@@ -86,7 +86,7 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" for="tc-dp-name">Output file name</label>
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-name">Output file name</label>
             <input type="text" class="tc-input" id="tc-dp-name" placeholder="cleaned-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
