@@ -103,7 +103,22 @@
     if (downloadBtn) downloadBtn.addEventListener('click', function () {
         if (!resultBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
         var ext = webpCheck && webpCheck.checked ? '.webp' : '.png';
-        var name = (file ? file.name.replace(/\.[^.]+$/, '') : 'image') + '-no-bg' + ext;
-        TCTP.downloadBlob(resultBlob, name);
+        var nameInput = document.getElementById('tc-rmbg-name');
+        var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.[^.]+$/, '') : (file ? file.name.replace(/\.[^.]+$/, '') : 'image');
+        TCTP.downloadBlob(resultBlob, base + ext);
+    });
+
+    var clearBtn = document.getElementById('tc-rmbg-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        file = null; resultBlob = null;
+        TCTP.hideFileRow('tc-rmbg-file');
+        setStat('tc-rmbg-stat-orig', '-'); setStat('tc-rmbg-stat-comp', '-'); setStat('tc-rmbg-stat-fmt', 'PNG');
+        var dl = document.getElementById('tc-rmbg-download'); if (dl) dl.style.display = 'none';
+        var nameInput = document.getElementById('tc-rmbg-name'); if (nameInput) nameInput.value = '';
+        var origP = document.getElementById('tc-preview-orig');
+        if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var resP = document.getElementById('tc-preview-result');
+        if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        TCTP.switchToOriginalTab();
     });
 })();

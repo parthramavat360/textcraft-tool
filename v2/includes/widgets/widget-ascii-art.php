@@ -16,6 +16,8 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'ascii_art'; }
     public function get_title(): string { return 'ASCII Art Generator'; }
     public function get_icon(): string { return 'eicon-code'; }
@@ -33,51 +35,58 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-ascii-drop', 'image/*', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-ascii-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Density</h4>
-                <div class="tc-modes" data-group="ascii-density">
-                    <button class="tc-btn tc-btn--ghost" data-val="simple" type="button">Simple</button>
-                    <button class="tc-btn tc-btn--ghost sel" data-val="medium" type="button">Medium</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="detailed" type="button">Detailed</button>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Density</label>
+            <div class="tc-modes" data-group="ascii-density">
+                <button class="tc-btn tc-btn--ghost" data-val="simple" type="button">Simple</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="medium" type="button">Medium</button>
+                <button class="tc-btn tc-btn--ghost" data-val="detailed" type="button">Detailed</button>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Character Set</h4>
-                <div class="tc-modes" data-group="ascii-format">
-                    <button class="tc-btn tc-btn--ghost sel" data-val="blocks" type="button">Blocks</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="characters" type="button">Characters</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="symbols" type="button">Symbols</button>
-                </div>
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Character Set</label>
+            <div class="tc-modes" data-group="ascii-format">
+                <button class="tc-btn tc-btn--ghost sel" data-val="blocks" type="button">Blocks</button>
+                <button class="tc-btn tc-btn--ghost" data-val="characters" type="button">Characters</button>
+                <button class="tc-btn tc-btn--ghost" data-val="symbols" type="button">Symbols</button>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Width <span class="tc-rsz-quality-badge" id="tc-ascii-width-val">120</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">40</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-ascii-width" min="40" max="300" value="120" step="5">
-                    <span class="tc-rsz-slider-max">300</span>
-                </div>
+        <div class="tc-input-group">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ascii-width">
+                    Width: <span id="tc-ascii-width-val">120</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-ascii-width" min="40" max="300" value="120" step="5">
+                <p class="tc-lvl-hint">Maximum width of the ASCII art in characters.</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Invert</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-ascii-invert">
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Reverse brightness (light on dark)</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-ascii-invert">
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Invert</b>
+                    <small>Reverse brightness (light on dark).</small>
+                </span>
+            </label>
+        </div>
 
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ascii-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ascii-name" placeholder="my-ascii-art">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar('tc-ascii-progress', 'Generating...'); ?>
 
-        <?php $this->render_actions('tc-ascii-generate', 'Generate ASCII Art', 'tc-ascii-download', 'Download .txt'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-ascii-generate" type="button">Generate ASCII Art</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-ascii-download" type="button" style="display:none">Download .txt</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-ascii-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-ascii-stat-orig">-</span></div>

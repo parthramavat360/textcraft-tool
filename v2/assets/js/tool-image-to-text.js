@@ -360,7 +360,9 @@
             var text = outputMode === 'hocr' ? extractedHocr : extractedText;
             if (!text) { TCTP.toast('No text to download yet.', '\u26A0\uFE0F'); return; }
             var ext = outputMode === 'hocr' ? '.hocr' : '.txt';
-            var name = (file ? file.name.replace(/\.[^.]+$/, '') : 'image') + '-ocr' + ext;
+            var nameInput = document.getElementById('tc-ocr-name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.[^.]+$/, '') : (file ? file.name.replace(/\.[^.]+$/, '') : 'image');
+            var name = base + '-ocr' + ext;
             var blob = new Blob([text], { type: outputMode === 'hocr' ? 'text/html' : 'text/plain;charset=utf-8' });
             TCTP.downloadBlob(blob, name);
         });
@@ -371,6 +373,32 @@
     if (copyBtn) {
         copyBtn.addEventListener('click', function () {
             TCTP.copyText(extractedText, 'Extracted text');
+        });
+    }
+
+    /* ── Clear all ─────────────────────────────────────────── */
+    var clearBtn = document.getElementById('tc-ocr-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            extractedText = '';
+            extractedHocr = '';
+            rawText = '';
+            TCTP.hideFileRow('tc-ocr-file');
+            setStat('tc-ocr-stat-orig', '-');
+            setStat('tc-ocr-stat-words', '-');
+            setStat('tc-ocr-stat-lines', '-');
+            setStat('tc-ocr-stat-conf', '-');
+            var dlBtn = document.getElementById('tc-ocr-download');
+            if (dlBtn) dlBtn.style.display = 'none';
+            var nameInput = document.getElementById('tc-ocr-name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Extracted text will appear here</span>';
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 })();

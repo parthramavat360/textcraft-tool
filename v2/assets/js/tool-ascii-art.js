@@ -191,7 +191,9 @@
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!generatedAscii) { TCTP.toast('No ASCII art to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.[^.]+$/, '') : 'image') + '-ascii.txt';
+            var nameInput = document.getElementById('tc-ascii-name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.[^.]+$/, '') : (file ? file.name.replace(/\.[^.]+$/, '') : 'image');
+            var name = base + '-ascii.txt';
             var blob = new Blob([generatedAscii], { type: 'text/plain;charset=utf-8' });
             TCTP.downloadBlob(blob, name);
         });
@@ -202,6 +204,30 @@
     if (copyBtn) {
         copyBtn.addEventListener('click', function () {
             TCTP.copyText(generatedAscii, 'ASCII art');
+        });
+    }
+
+    /* ── Clear all ─────────────────────────────────────────── */
+    var clearBtn = document.getElementById('tc-ascii-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            generatedAscii = '';
+            TCTP.hideFileRow('tc-ascii-file');
+            setStat('tc-ascii-stat-orig', '-');
+            setStat('tc-ascii-stat-w', '-');
+            setStat('tc-ascii-stat-chars', '-');
+            setStat('tc-ascii-stat-lines', '-');
+            var dlBtn = document.getElementById('tc-ascii-download');
+            if (dlBtn) dlBtn.style.display = 'none';
+            var nameInput = document.getElementById('tc-ascii-name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) { resP.classList.remove('is-mono'); resP.innerHTML = '<span style="color:var(--muted);font-size:13px">ASCII art will appear here</span>'; }
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 })();

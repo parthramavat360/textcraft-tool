@@ -17,6 +17,8 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'image_to_text'; }
     public function get_title(): string { return 'Image to Text (OCR)'; }
     public function get_icon(): string { return 'eicon-document'; }
@@ -34,61 +36,67 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-ocr-drop', 'image/*', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-ocr-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">OCR Language</h4>
-                <div class="tc-modes" data-group="ocr-lang">
-                    <button class="tc-btn tc-btn--ghost sel" data-val="eng" type="button">English</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="spa" type="button">Spanish</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="fra" type="button">French</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="deu" type="button">German</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="ita" type="button">Italian</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="por" type="button">Portuguese</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="jpn" type="button">Japanese</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="chi_sim" type="button">Chinese</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="kor" type="button">Korean</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="ara" type="button">Arabic</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="hin" type="button">Hindi</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="rus" type="button">Russian</button>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">OCR Language</label>
+            <div class="tc-modes tc-modes--cards" data-group="ocr-lang">
+                <button class="tc-btn tc-btn--ghost sel" data-val="eng" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">English</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="spa" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Spanish</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="fra" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">French</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="deu" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">German</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="ita" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Italian</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="por" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Portuguese</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="jpn" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Japanese</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="chi_sim" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Chinese</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="kor" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Korean</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="ara" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Arabic</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="hin" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Hindi</span></button>
+                <button class="tc-btn tc-btn--ghost" data-val="rus" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Russian</span></button>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Image Preprocessing</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-ocr-preprocess" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Auto-enhance contrast &amp; sharpen for better accuracy</span>
-                </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-ocr-preprocess" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Image Preprocessing</b>
+                    <small>Auto-enhance contrast &amp; sharpen for better accuracy.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-ocr-cleanup" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Text Cleanup</b>
+                    <small>Fix broken words, join sentences, clean whitespace.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Output Format</label>
+            <div class="tc-modes" data-group="ocr-output">
+                <button class="tc-btn tc-btn--ghost sel" data-val="text" type="button">Plain Text</button>
+                <button class="tc-btn tc-btn--ghost" data-val="hocr" type="button">hOCR (Structured)</button>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Text Cleanup</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-ocr-cleanup" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Fix broken words, join sentences, clean whitespace</span>
-                </div>
-            </div>
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Output Format</h4>
-                <div class="tc-modes" data-group="ocr-output">
-                    <button class="tc-btn tc-btn--ghost sel" data-val="text" type="button">Plain Text</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="hocr" type="button">hOCR (Structured)</button>
-                </div>
-            </div>
-
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ocr-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ocr-name" placeholder="my-text">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar('tc-ocr-progress', 'Recognizing text...'); ?>
 
-        <?php $this->render_actions('tc-ocr-extract', 'Extract Text', 'tc-ocr-download', 'Download .txt'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-ocr-extract" type="button">Extract Text</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-ocr-download" type="button" style="display:none">Download .txt</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-ocr-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-ocr-stat-orig">-</span></div>

@@ -16,6 +16,8 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'jpg_to_webp'; }
     public function get_title(): string { return 'JPG to WebP Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -33,44 +35,51 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2w-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2w-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Quality <span class="tc-rsz-quality-badge" id="tc-j2w-quality-badge">92</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">1</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-j2w-quality" min="1" max="100" value="92">
-                    <span class="tc-rsz-slider-max">100</span>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2w-quality">
+                    Quality: <span id="tc-j2w-quality-badge">92</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-j2w-quality" min="1" max="100" value="92">
+                <p class="tc-lvl-hint">Higher quality keeps more detail but produces larger files.</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Presets</h4>
-                <div class="tc-modes" data-group="j2w-quality">
-                    <button class="tc-btn tc-btn--ghost" data-val="60" type="button">Small (60%)</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="75" type="button">Good (75%)</button>
-                    <button class="tc-btn tc-btn--ghost sel" data-val="82" type="button">Best (82%)</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="95" type="button">HQ (95%)</button>
-                    <button class="tc-btn tc-btn--ghost" data-val="100" type="button">Lossless</button>
-                </div>
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Presets</label>
+            <div class="tc-modes" data-group="j2w-quality">
+                <button class="tc-btn tc-btn--ghost" data-val="60" type="button">Small (60%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="75" type="button">Good (75%)</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="82" type="button">Best (82%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="95" type="button">HQ (95%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="100" type="button">Lossless</button>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Options</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-j2w-ios" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span style="font-size:12px;opacity:0.6">Auto-downscale large images on iOS (4096px max)</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-j2w-ios" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>iOS-Compatible Downscale</b>
+                    <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
+                </span>
+            </label>
+        </div>
 
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2w-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2w-name" placeholder="my-image">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar('tc-j2w-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-j2w-convert', 'Convert to WebP', 'tc-j2w-download', 'Download WebP'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-j2w-convert" type="button">Convert to WebP</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-j2w-download" type="button" style="display:none">Download WebP</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-j2w-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (JPG)</span><span class="tc-stat-value" id="tc-j2w-stat-orig">-</span></div>

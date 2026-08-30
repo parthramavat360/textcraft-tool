@@ -174,8 +174,38 @@
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.webp';
-            TCTP.downloadBlob(convertedBlob, name);
+            var nameInput = document.getElementById(prefix + 'name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.webp$/i, '') : (file ? file.name.replace(/\.jpe?g$/i, '') : 'image');
+            TCTP.downloadBlob(convertedBlob, base + '.webp');
+        });
+    }
+
+    // ── Clear all ─────────────────────────────────────────────
+
+    var clearBtn = document.getElementById(prefix + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            convertedBlob = null;
+            if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+            var row = document.getElementById(prefix + 'file');
+            if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
+            var dl = document.getElementById(prefix + 'download');
+            if (dl) dl.style.display = 'none';
+            var statOrig = document.getElementById(prefix + 'stat-orig');
+            var statComp = document.getElementById(prefix + 'stat-comp');
+            var statSaved = document.getElementById(prefix + 'stat-saved');
+            if (statOrig) statOrig.textContent = '-';
+            if (statComp) statComp.textContent = '-';
+            if (statSaved) statSaved.textContent = '-';
+            var nameInput = document.getElementById(prefix + 'name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 

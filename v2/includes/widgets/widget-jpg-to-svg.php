@@ -16,6 +16,8 @@ class Widget_Jpg_To_Svg extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'jpg_to_svg'; }
     public function get_title(): string { return 'JPG to SVG Converter'; }
     public function get_icon(): string { return 'eicon-image-bold'; }
@@ -33,10 +35,8 @@ class Widget_Jpg_To_Svg extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2svg-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2svg-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Detail Level</h4>
+        <div class="tc-input-group" style="margin-top:18px">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Detail Level</label>
                 <div class="tc-rsz-mode-cards" data-group="j2svg-detail">
                     <div class="tc-rsz-mode-card sel" data-val="high">
                         <div class="tc-rsz-mode-icon">
@@ -68,8 +68,8 @@ class Widget_Jpg_To_Svg extends TextCraft_Tool_Base {
                 </div>
             </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Color Mode</h4>
+            <div class="tc-input-group">
+                <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Color Mode</label>
                 <div class="tc-rsz-mode-cards" data-group="j2svg-color">
                     <div class="tc-rsz-mode-card sel" data-val="embed">
                         <div class="tc-rsz-mode-icon">
@@ -110,20 +110,29 @@ class Widget_Jpg_To_Svg extends TextCraft_Tool_Base {
                 </div>
             </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Max Paths <span class="tc-rsz-quality-badge" id="tc-j2svg-paths-val">500</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">10</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-j2svg-paths" min="10" max="2000" value="500" step="10">
-                    <span class="tc-rsz-slider-max">2000</span>
+            <div class="tc-input-group">
+                <div class="tc-range-wrap">
+                    <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2svg-paths">
+                        Max Paths: <span id="tc-j2svg-paths-val">500</span>
+                    </label>
+                    <input type="range" class="tc-range" id="tc-j2svg-paths" min="10" max="2000" value="500" step="10">
+                    <p class="tc-lvl-hint">Higher values keep more detail but increase file size.</p>
                 </div>
             </div>
 
-        </div>
+            <div class="tc-input-group">
+                <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2svg-name">Output file name</label>
+                <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2svg-name" placeholder="my-image">
+                <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
+            </div>
 
         <?php $this->render_progress_bar('tc-j2svg-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-j2svg-convert', 'Convert to SVG', 'tc-j2svg-download', 'Download SVG'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-j2svg-convert" type="button">Convert to SVG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-j2svg-download" type="button" style="display:none">Download SVG</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-j2svg-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (JPG)</span><span class="tc-stat-value" id="tc-j2svg-stat-orig">-</span></div>

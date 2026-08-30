@@ -318,8 +318,36 @@
         downloadBtn.addEventListener('click', function () {
             if (!resultSVG) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
             var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
-            var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.svg';
-            TCTP.downloadBlob(blob, name);
+            var nameInput = document.getElementById(prefix + 'name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.svg$/i, '') : (file ? file.name.replace(/\.jpe?g$/i, '') : 'image');
+            TCTP.downloadBlob(blob, base + '.svg');
+        });
+    }
+
+    // ── Clear all ─────────────────────────────────────────────
+
+    var clearBtn = document.getElementById(prefix + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            resultSVG = null;
+            converting = false;
+            if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+            var row = document.getElementById(prefix + 'file');
+            if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
+            var dl = document.getElementById(prefix + 'download');
+            if (dl) dl.style.display = 'none';
+            setStat(prefix + 'stat-orig', '-');
+            setStat(prefix + 'stat-comp', '-');
+            setStat(prefix + 'stat-fmt', '-');
+            var nameInput = document.getElementById(prefix + 'name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 
