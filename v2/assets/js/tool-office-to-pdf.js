@@ -19,6 +19,9 @@
     var file = null;
     var pdfBlob = null;
     var fileName = 'document';
+    var pageSize = 'auto';        // auto | a4 | letter
+    var orient = 'portrait';      // portrait | landscape | auto
+    var quality = 2;              // 1 | 2 | 3 (render scale)
 
     // Acceptable extensions per format
     var ACCEPT = {
@@ -27,28 +30,82 @@
         ppt: ['.pptx']
     };
 
-    // ── Format tabs ────────────────────────────────────────────
-
-    var fmtBtns = document.querySelectorAll('#tc-ofp-fmt-tabs .tc-ofp-fmt');
-    fmtBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            fmtBtns.forEach(function (b) { b.classList.remove('sel'); });
-            btn.classList.add('sel');
-            currentFmt = btn.getAttribute('data-fmt');
-            // update drop zone accept hint text + stat
-            var stat = document.getElementById('tc-ofp-stat-type');
-            if (stat) stat.textContent = labelFor(currentFmt);
-            var dropHint = document.querySelector('#tc-ofp-drop > b');
-            if (dropHint) dropHint.textContent = 'Drag & drop a ' + labelFor(currentFmt) + ' file here';
-            resetAll();
-        });
-    });
-
     function labelFor(fmt) {
         return fmt === 'word' ? 'Word (.docx)'
             : fmt === 'excel' ? 'Excel (.xlsx/.xls/.csv)'
             : 'PowerPoint (.pptx)';
     }
+
+    // ── Option hints ───────────────────────────────────────────
+
+    var FMT_HINTS = {
+        word: 'Word \u2014 .docx documents render with their original layout.',
+        excel: 'Excel \u2014 .xlsx, .xls and .csv spreadsheets render sheet by sheet.',
+        ppt: 'PowerPoint \u2014 .pptx slide decks render slide by slide.'
+    };
+    var SIZE_HINTS = {
+        auto: 'Automatic \u2014 A4 for documents, wider pages for wide slides.',
+        a4: 'A4 \u2014 210 \u00d7 297 mm output pages.',
+        letter: 'Letter \u2014 8.5 \u00d7 11 in output pages.'
+    };
+    var ORIENT_HINTS = {
+        portrait: 'Portrait \u2014 taller than wide.',
+        landscape: 'Landscape \u2014 wider than tall.',
+        auto: 'Automatic \u2014 portrait for documents, landscape for wide slides.'
+    };
+    var QUALITY_LABELS = { 1: 'Standard', 2: 'High', 3: 'Ultra' };
+
+    function updateHints() {
+        var fh = document.getElementById('tc-ofp-fmt-hint');
+        if (fh) fh.textContent = FMT_HINTS[currentFmt] || FMT_HINTS.word;
+        var sh = document.getElementById('tc-ofp-size-hint');
+        if (sh) sh.textContent = SIZE_HINTS[pageSize] || SIZE_HINTS.auto;
+        var oh = document.getElementById('tc-ofp-orient-hint');
+        if (oh) oh.textContent = ORIENT_HINTS[orient] || ORIENT_HINTS.portrait;
+        var qv = document.getElementById('tc-ofp-quality-val');
+        if (qv) qv.textContent = QUALITY_LABELS[quality] || 'High';
+    }
+
+    // ── Format cards ───────────────────────────────────────────
+
+    var fmtBtns = document.querySelectorAll('.tc-modes[data-group="ofp-fmt"] .tc-btn');
+    fmtBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            currentFmt = btn.getAttribute('data-val') || 'word';
+            var stat = document.getElementById('tc-ofp-stat-type');
+            if (stat) stat.textContent = labelFor(currentFmt);
+            var dropHint = document.querySelector('#tc-ofp-drop > b');
+            if (dropHint) dropHint.textContent = 'Drag & drop a ' + labelFor(currentFmt) + ' file here';
+            updateHints();
+            resetAll();
+        });
+    });
+
+    // ── Page size / orientation / quality / name wiring ─────────
+
+    document.querySelectorAll('.tc-modes[data-group="ofp-size"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            pageSize = btn.getAttribute('data-val') || 'auto';
+            updateHints();
+        });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="ofp-orient"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            orient = btn.getAttribute('data-val') || 'portrait';
+            updateHints();
+        });
+    });
+
+    var qualityInput = document.getElementById('tc-ofp-quality');
+    if (qualityInput) qualityInput.addEventListener('input', function () {
+        quality = parseInt(qualityInput.value, 10) || 2;
+        var qv = document.getElementById('tc-ofp-quality-val');
+        if (qv) qv.textContent = QUALITY_LABELS[quality] || 'High';
+    });
 
     // ── CDN script loader ──────────────────────────────────────
 
@@ -161,14 +218,25 @@
 
     // ── Capture container → PDF via html2pdf ───────────────────
 
+    function resolvePage(fmt) {
+        var isPpt = fmt === 'ppt';
+        var fmtOut = pageSize === 'letter' ? 'letter' : 'a4'; // auto → a4
+        var orientOut = orient === 'portrait' ? 'portrait'
+            : orient === 'landscape' ? 'landscape'
+            : (isPpt ? 'landscape' : 'portrait');
+        return { format: fmtOut, orientation: orientOut };
+    }
+
     function captureToPdf(container) {
         return new Promise(function (resolve, reject) {
+            var page = resolvePage(currentFmt);
+            var scale = quality === 1 ? 1.5 : quality === 3 ? 3 : 2;
             var opt = {
                 margin: [8, 8, 8, 8],
                 filename: (fileName || 'converted') + '.pdf',
-                image: { type: 'png', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: container.scrollWidth },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                image: { type: 'jpeg', quality: 0.9 },
+                html2canvas: { scale: scale, useCORS: true, logging: false, windowWidth: container.scrollWidth },
+                jsPDF: { unit: 'mm', format: page.format, orientation: page.orientation },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
             window.html2pdf().set(opt).from(container).output('blob').then(function (blob) {
@@ -287,7 +355,10 @@
             TCTP.toast('Convert to PDF first.', '\u26A0\uFE0F');
             return;
         }
-        TCTP.downloadBlob(pdfBlob, (fileName || 'converted') + '.pdf');
+        var outNameInput = document.getElementById('tc-ofp-name');
+        var outName = outNameInput ? outNameInput.value.trim() : '';
+        if (!outName) outName = fileName || 'converted';
+        TCTP.downloadBlob(pdfBlob, outName + '.pdf');
     });
 
     // ── Stats ──────────────────────────────────────────────────
@@ -308,14 +379,27 @@
         var dl = document.getElementById('tc-ofp-download');
         if (dl) dl.disabled = true;
         TCTP.hideFileRow('tc-ofp-file');
+        var nameInput = document.getElementById('tc-ofp-name');
+        if (nameInput) nameInput.value = '';
         var orig = document.getElementById('tc-preview-orig');
         if (orig) orig.innerHTML = '<div class="tc-preview-placeholder">Original preview will appear here</div>';
         var res = document.getElementById('tc-preview-result');
         if (res) res.innerHTML = '<div class="tc-preview-placeholder">Result preview will appear here</div>';
         var s = document.getElementById('tc-ofp-stat-size');
         if (s) s.textContent = '—';
+        var pages = document.getElementById('tc-ofp-stat-pages');
+        if (pages) pages.textContent = '—';
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        TCTP.switchToOriginalTab();
     }
 
+    var clearBtn = document.getElementById('tc-ofp-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        resetAll();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
+    updateHints();
     updateStats(null);
 
 })();
