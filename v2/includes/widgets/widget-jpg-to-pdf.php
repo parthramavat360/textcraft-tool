@@ -40,19 +40,19 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Size</label>
             <div class="tc-modes tc-modes--cards" data-group="j2pdf-size">
                 <button class="tc-btn tc-btn--ghost sel" data-val="a4" type="button">
-                    <span class="tc-card-title">A4</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">A4</span>
                     <span class="tc-card-desc">210 &times; 297 mm</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="letter" type="button">
-                    <span class="tc-card-title">Letter</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Letter</span>
                     <span class="tc-card-desc">8.5 &times; 11 in</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="legal" type="button">
-                    <span class="tc-card-title">Legal</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Legal</span>
                     <span class="tc-card-desc">8.5 &times; 14 in</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="auto" type="button">
-                    <span class="tc-card-title">Auto</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Auto</span>
                     <span class="tc-card-desc">Fit to image size</span>
                 </button>
             </div>
@@ -86,7 +86,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2pdf-fit" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Fit image to page</b>
                     <small>Scale each image to fit within the page margins.</small>
                 </span>
@@ -97,7 +97,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2pdf-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>

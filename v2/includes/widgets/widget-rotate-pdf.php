@@ -37,15 +37,15 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Rotate by</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-rotation">
                 <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">
-                    <span class="tc-card-title">90&deg; CW</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">90&deg; CW</span>
                     <span class="tc-card-desc">Clockwise &mdash; right</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="270" type="button">
-                    <span class="tc-card-title">90&deg; CCW</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">90&deg; CCW</span>
                     <span class="tc-card-desc">Counter-clockwise &mdash; left</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="180" type="button">
-                    <span class="tc-card-title">180&deg;</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">180&deg;</span>
                     <span class="tc-card-desc">Upside down</span>
                 </button>
             </div>
@@ -58,11 +58,11 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Apply to</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-scope">
                 <button class="tc-btn tc-btn--ghost sel" data-val="all" type="button">
-                    <span class="tc-card-title">All pages</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">All pages</span>
                     <span class="tc-card-desc">Rotate the whole document</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="pages" type="button">
-                    <span class="tc-card-title">Page numbers</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Page numbers</span>
                     <span class="tc-card-desc">Rotate only the pages you choose</span>
                 </button>
             </div>
@@ -81,7 +81,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-rp-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>

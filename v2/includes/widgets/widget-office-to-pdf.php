@@ -45,15 +45,15 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Document Type</label>
             <div class="tc-modes tc-modes--cards" data-group="ofp-fmt">
                 <button class="tc-btn tc-btn--ghost sel" data-val="word" type="button">
-                    <span class="tc-card-title">Word</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Word</span>
                     <span class="tc-card-desc">.docx document</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="excel" type="button">
-                    <span class="tc-card-title">Excel</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Excel</span>
                     <span class="tc-card-desc">.xlsx &middot; .xls &middot; .csv</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="ppt" type="button">
-                    <span class="tc-card-title">PowerPoint</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">PowerPoint</span>
                     <span class="tc-card-desc">.pptx slide deck</span>
                 </button>
             </div>

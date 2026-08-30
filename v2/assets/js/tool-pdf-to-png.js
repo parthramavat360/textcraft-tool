@@ -1,8 +1,8 @@
 /**
  * PDF to PNG — Tool JS
  *
- * Card-based DPI, background color, page range input.
- * Original + result preview via pdf.js canvas.
+ * Premium DPI cards, background color, page range (all / selected),
+ * output file name, clear all. Original + result preview via pdf.js canvas.
  * Download all as ZIP. Requires pdf.js + JSZip loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
@@ -13,7 +13,9 @@
     var file = null;
     var dpi = 150;
     var bgColor = '#ffffff';
+    var scope = 'all';
     var zipBlob = null;
+    var lastName = '';
 
     var drop = document.getElementById('tc-p2p-drop');
     if (!drop) return;
@@ -46,10 +48,6 @@
         return chain;
     }
 
-    function readFreshAB(f) {
-        return f.arrayBuffer().then(function (ab) { return ab.slice(0); });
-    }
-
     function renderPageToImage(arrayBuffer, pageNum, scale) {
         pageNum = pageNum || 1;
         scale = scale || 1.5;
@@ -74,6 +72,10 @@
     function setStat(id, val) {
         var el = document.getElementById(id);
         if (el) el.textContent = val;
+    }
+
+    function copyAB(f) {
+        return f.arrayBuffer().then(function (ab) { return ab.slice(0); });
     }
 
     function parsePageRange(input, max) {
@@ -108,6 +110,27 @@
         return result;
     }
 
+    var RANGE_HINTS = {
+        'all':   'All pages \u2014 every page in the PDF is exported.',
+        'pages': 'Selected pages \u2014 only the pages you enter are exported.'
+    };
+    var DPI_HINTS = {
+        '72':  '72 DPI \u2014 screen resolution, smallest files.',
+        '150': '150 DPI \u2014 a good balance of sharpness and file size.',
+        '300': '300 DPI \u2014 print quality, largest files.'
+    };
+
+    function updateHints() {
+        var dh = document.getElementById('tc-p2p-dpi-hint');
+        if (dh) dh.textContent = DPI_HINTS[dpi] || DPI_HINTS[150];
+        var rh = document.getElementById('tc-p2p-range-hint');
+        if (rh) rh.textContent = RANGE_HINTS[scope] || RANGE_HINTS['all'];
+        var opts = document.getElementById('tc-p2p-page-opts');
+        if (opts) opts.style.display = scope === 'pages' ? '' : 'none';
+    }
+
+    /* ── Drop zone ─────────────────────────────────────────── */
+
     TCTP.initDropZone('tc-p2p-drop', 'tc-p2p-drop-input', function (f) {
         if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
             TCTP.toast('Please select a PDF file.', '\u26A0\uFE0F');
@@ -123,13 +146,13 @@
         setStat('tc-p2p-stat-size', '-');
 
         ensureLibs().then(function () {
-            return readFreshAB(file);
+            return copyAB(file);
         }).then(function (ab) {
-            return renderPageToImage(ab, 1, 1.5);
+            return renderPageToImage(ab.slice(0), 1, 1.5);
         }).then(function (dataUrl) {
             TCTP.showOriginalPreview(dataUrl);
             TCTP.switchToOriginalTab();
-            return readFreshAB(file);
+            return copyAB(file);
         }).then(function (ab) {
             return window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise;
         }).then(function (pdf) {
@@ -137,24 +160,22 @@
         }).catch(function () {});
     }, '.pdf,application/pdf');
 
-    var removeBtn = document.querySelector('#tc-p2p-file .tc-x');
-    if (removeBtn) {
-        removeBtn.addEventListener('click', function () {
-            file = null;
-            zipBlob = null;
-            TCTP.hideFileRow('tc-p2p-file');
-            setStat('tc-p2p-stat-pages', '-');
-            setStat('tc-p2p-stat-done', '-');
-            setStat('tc-p2p-stat-size', '-');
-        });
-    }
+    /* ── Options wiring ────────────────────────────────────── */
 
-    var dpiCards = document.querySelectorAll('.tc-p2p-dpi-cards .tc-rsz-mode-card');
+    var dpiCards = document.querySelectorAll('.tc-modes[data-group="p2p-dpi"] .tc-btn');
     dpiCards.forEach(function (card) {
         card.addEventListener('click', function () {
-            dpiCards.forEach(function (c) { c.classList.remove('sel'); });
-            card.classList.add('sel');
+            TCTP.activateBtn(card);
             dpi = parseInt(card.getAttribute('data-val')) || 150;
+            updateHints();
+        });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="p2p-range"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            scope = btn.getAttribute('data-val') || 'all';
+            updateHints();
         });
     });
 
@@ -166,6 +187,40 @@
             bgVal.textContent = bgColor.toUpperCase();
         });
     }
+
+    var removeBtn = document.querySelector('#tc-p2p-file .tc-x');
+    if (removeBtn) removeBtn.addEventListener('click', clearAll);
+
+    /* ── Clear all ─────────────────────────────────────────── */
+
+    function clearAll() {
+        file = null;
+        zipBlob = null;
+        TCTP.hideFileRow('tc-p2p-file');
+        setStat('tc-p2p-stat-pages', '-');
+        setStat('tc-p2p-stat-done', '-');
+        setStat('tc-p2p-stat-size', '-');
+        var dlBtn = document.getElementById('tc-p2p-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+        var pagesIn = document.getElementById('tc-p2p-pages');
+        if (pagesIn) pagesIn.value = '';
+        var nameIn = document.getElementById('tc-p2p-name');
+        if (nameIn) nameIn.value = '';
+        var orig = document.getElementById('tc-preview-orig');
+        if (orig) orig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var res = document.getElementById('tc-preview-result');
+        if (res) res.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+        TCTP.switchToOriginalTab();
+    }
+
+    var clearBtn = document.getElementById('tc-p2p-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        clearAll();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
+    /* ── Convert ───────────────────────────────────────────── */
 
     var convertBtn = document.getElementById('tc-p2p-convert');
     if (convertBtn) {
@@ -179,18 +234,25 @@
                 await ensureLibs();
                 TCTP.setProgress('tc-p2p-progress', 10, 'Reading PDF...');
 
-                var ab = await readFreshAB(file);
-                var pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise;
+                var ab = await copyAB(file);
+                var pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(ab.slice(0)) }).promise;
                 var numPages = pdf.numPages;
                 var scale = dpi / 72;
-                var rangeInput = document.getElementById('tc-p2p-range');
-                var pagesToConvert = parsePageRange(rangeInput ? rangeInput.value : '', numPages);
+
+                var pagesToConvert;
+                if (scope === 'pages') {
+                    var pagesInput = document.getElementById('tc-p2p-pages');
+                    var val = pagesInput ? pagesInput.value.trim() : '';
+                    if (!val) { TCTP.toast('Please enter page numbers to convert.', '\u26A0\uFE0F'); return; }
+                    pagesToConvert = parsePageRange(val, numPages);
+                } else {
+                    pagesToConvert = parsePageRange('', numPages);
+                }
 
                 setStat('tc-p2p-stat-pages', numPages + ' pages');
                 setStat('tc-p2p-stat-done', '0');
 
                 var zip = new JSZip();
-                var converted = 0;
                 var totalPages = pagesToConvert.length;
                 var firstPageDataUrl = null;
 
@@ -218,8 +280,7 @@
 
                     if (idx === 0) firstPageDataUrl = imgData;
 
-                    converted++;
-                    setStat('tc-p2p-stat-done', converted + ' / ' + totalPages);
+                    setStat('tc-p2p-stat-done', (idx + 1) + ' / ' + totalPages);
                     canvas.width = 0;
                     canvas.height = 0;
                 }
@@ -229,12 +290,16 @@
 
                 TCTP.setProgress('tc-p2p-progress', 100, 'Done!');
 
+                var nameInput = document.getElementById('tc-p2p-name');
+                var custom = nameInput ? nameInput.value.trim() : '';
+                lastName = (custom || (file ? file.name.replace(/\.pdf$/i, '') : 'document')) + '-pages.zip';
+
                 var inputSize = file.size;
                 var outputSize = zipBlob.size;
                 setStat('tc-p2p-stat-size', TCTP.formatSize(outputSize));
 
                 TCTP.updateResultPanel(TCTP.formatSize(inputSize), TCTP.formatSize(outputSize), (inputSize > outputSize ? ((1 - outputSize / inputSize) * 100).toFixed(1) : '0') + '%', 'Done');
-                TCTP.toast('Exported ' + converted + ' pages as PNG!');
+                TCTP.toast('Exported ' + totalPages + ' pages as PNG!');
 
                 if (firstPageDataUrl) {
                     TCTP.showResultPreview(firstPageDataUrl);
@@ -250,13 +315,16 @@
         });
     }
 
+    /* ── Download ──────────────────────────────────────────── */
+
     var downloadBtn = document.getElementById('tc-p2p-download');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!zipBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.pdf$/i, '') : 'document') + '-pages.zip';
-            TCTP.downloadBlob(zipBlob, name);
+            TCTP.downloadBlob(zipBlob, lastName);
         });
     }
+
+    updateHints();
 
 })();

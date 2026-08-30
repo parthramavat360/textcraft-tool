@@ -38,11 +38,11 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Merge Mode</label>
             <div class="tc-modes tc-modes--cards" data-group="pm-mode">
                 <button class="tc-btn tc-btn--ghost sel" data-val="append" type="button">
-                    <span class="tc-card-title">Append</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Append</span>
                     <span class="tc-card-desc">All pages of each file, one after another</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="interleave" type="button">
-                    <span class="tc-card-title">Interleave</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Interleave</span>
                     <span class="tc-card-desc">Alternate pages across files</span>
                 </button>
             </div>
@@ -79,7 +79,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-pm-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>
@@ -90,7 +90,7 @@ class Widget_Pdf_Merger extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-pm-separator">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Blank page between files</b>
                     <small>Inserts an empty separator page after each merged document.</small>
                 </span>

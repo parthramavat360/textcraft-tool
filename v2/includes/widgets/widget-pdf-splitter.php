@@ -37,15 +37,15 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Split Mode</label>
             <div class="tc-modes tc-modes--cards" data-group="ps-mode">
                 <button class="tc-btn tc-btn--ghost sel" data-val="every" type="button">
-                    <span class="tc-card-title">Every N Pages</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Every N Pages</span>
                     <span class="tc-card-desc">Group pages in fixed-size chunks</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="range" type="button">
-                    <span class="tc-card-title">Page Range</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Range</span>
                     <span class="tc-card-desc">Extract specific pages you choose</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="individual" type="button">
-                    <span class="tc-card-title">Individual Pages</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Individual Pages</span>
                     <span class="tc-card-desc">One PDF per page</span>
                 </button>
             </div>
@@ -79,7 +79,7 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-ps-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>

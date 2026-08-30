@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define plugin constants.
  */
-define( 'TCTP_VERSION', '1.0.53' );
+define( 'TCTP_VERSION', '1.0.54' );
 define( 'TCTP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TCTP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TCTP_DATA_VERSION', 4 );

@@ -49,15 +49,15 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Compression Level</label>
             <div class="tc-modes tc-modes--cards" data-group="pdf-level">
                 <button class="tc-btn tc-btn--ghost" data-val="1" type="button">
-                    <span class="tc-card-title">Less</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Less</span>
                     <span class="tc-card-desc">Near-lossless, keeps text &amp; images crisp</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost sel" data-val="2" type="button">
-                    <span class="tc-card-title">Recommended</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Recommended</span>
                     <span class="tc-card-desc">Best balance of size &amp; quality</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="3" type="button">
-                    <span class="tc-card-title">Strong</span>
+                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Strong</span>
                     <span class="tc-card-desc">Maximum reduction, slightly softer images</span>
                 </button>
             </div>
@@ -80,7 +80,7 @@ class Widget_Pdf_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-pdf-strip-meta" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text">
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
                     <b>Remove metadata</b>
                     <small>Strips document title, author, subject, keywords &amp; creator and re-optimizes PDF streams.</small>
                 </span>
