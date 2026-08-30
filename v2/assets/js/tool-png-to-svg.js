@@ -13,6 +13,7 @@
 
     var convertBtn   = document.getElementById(prefix + 'convert');
     var downloadBtn  = document.getElementById(prefix + 'download');
+    var clearBtn     = document.getElementById(prefix + 'clear');
     var pathsSlider  = document.getElementById(prefix + 'paths');
     var pathsBadge   = document.getElementById(prefix + 'paths-val');
     var transChk     = document.getElementById(prefix + 'transparency');
@@ -181,6 +182,7 @@
                     convertedUrl = URL.createObjectURL(svgBlob);
                     TCTP.showResultPreview(convertedUrl);
                     TCTP.switchToResultTab();
+                    if (downloadBtn) downloadBtn.style.display = '';
 
                     TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
                     setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
@@ -293,6 +295,7 @@
                     convertedUrl = URL.createObjectURL(svgBlob);
                     TCTP.showResultPreview(convertedUrl);
                     TCTP.switchToResultTab();
+                    if (downloadBtn) downloadBtn.style.display = '';
 
                     TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
                     setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
@@ -322,8 +325,37 @@
         downloadBtn.addEventListener('click', function () {
             if (!resultSVG) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
             var blob = new Blob([resultSVG], { type: 'image/svg+xml' });
-            var name = (file ? file.name.replace(/\.png$/i, '') : 'image') + '.svg';
-            TCTP.downloadBlob(blob, name);
+            var nameInput = document.getElementById(prefix + 'name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.svg$/i, '') : (file ? file.name.replace(/\.png$/i, '') : 'image');
+            TCTP.downloadBlob(blob, base + '.svg');
+        });
+    }
+
+    // ── Clear all ─────────────────────────────────────────────
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            resultSVG = null;
+            converting = false;
+            if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+            var row = document.getElementById(prefix + 'file');
+            if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
+            if (downloadBtn) downloadBtn.style.display = 'none';
+            var sOrig = document.getElementById(prefix + 'stat-orig');
+            var sComp = document.getElementById(prefix + 'stat-comp');
+            var sFmt  = document.getElementById(prefix + 'stat-fmt');
+            if (sOrig) sOrig.textContent = '-';
+            if (sComp) sComp.textContent = '-';
+            if (sFmt)  sFmt.textContent = '-';
+            var nameInput = document.getElementById(prefix + 'name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 

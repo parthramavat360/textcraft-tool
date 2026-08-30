@@ -13,6 +13,7 @@
 
     var convertBtn    = document.getElementById(prefix + 'convert');
     var downloadBtn   = document.getElementById(prefix + 'download');
+    var clearBtn      = document.getElementById(prefix + 'clear');
     var qualitySlider = document.getElementById(prefix + 'quality');
     var qualityBadge  = document.getElementById(prefix + 'quality-badge');
     var bgcolorInput  = document.getElementById(prefix + 'bgcolor');
@@ -160,6 +161,7 @@
                 convertedUrl = URL.createObjectURL(blob);
                 TCTP.showResultPreview(convertedUrl);
                 TCTP.switchToResultTab();
+                if (downloadBtn) downloadBtn.style.display = '';
 
                 TCTP.setProgress(PROGRESS_ID, 100, 'Done!');
                 setTimeout(function () { TCTP.hideProgress(PROGRESS_ID); }, 600);
@@ -181,8 +183,36 @@
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!convertedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.png$/i, '') : 'image') + '.jpg';
-            TCTP.downloadBlob(convertedBlob, name);
+            var nameInput = document.getElementById(prefix + 'name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.jpe?g$/i, '') : (file ? file.name.replace(/\.png$/i, '') : 'image');
+            TCTP.downloadBlob(convertedBlob, base + '.jpg');
+        });
+    }
+
+    // ── Clear all ─────────────────────────────────────────────
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            convertedBlob = null;
+            if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+            var row = document.getElementById(prefix + 'file');
+            if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
+            if (downloadBtn) downloadBtn.style.display = 'none';
+            var sOrig = document.getElementById(prefix + 'stat-orig');
+            var sComp = document.getElementById(prefix + 'stat-comp');
+            var sSaved = document.getElementById(prefix + 'stat-saved');
+            if (sOrig) sOrig.textContent = '-';
+            if (sComp) sComp.textContent = '-';
+            if (sSaved) sSaved.textContent = '-';
+            var nameInput = document.getElementById(prefix + 'name');
+            if (nameInput) nameInput.value = '';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+            TCTP.switchToOriginalTab();
         });
     }
 

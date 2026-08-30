@@ -13,6 +13,7 @@
 
   var convertBtn  = document.getElementById(PREFIX + 'convert');
   var downloadBtn = document.getElementById(PREFIX + 'download');
+  var clearBtn    = document.getElementById(PREFIX + 'clear');
   var qualitySlider = document.getElementById(PREFIX + 'quality');
   var qualityBadge  = document.getElementById(PREFIX + 'quality-val');
   var iosToggle     = document.getElementById(PREFIX + 'ios');
@@ -37,7 +38,7 @@
       origEl.appendChild(img);
     }
     if(resultEl) resultEl.innerHTML = 'Converted HEIC will appear here';
-    TCTP.switchToPreviewTab && TCTP.switchToPreviewTab('original');
+    TCTP.switchToOriginalTab && TCTP.switchToOriginalTab();
   }
 
   function showResultPreview(blob){
@@ -83,8 +84,33 @@
   if(downloadBtn){
     downloadBtn.addEventListener('click', function(){
       if(!resultBlob){ TCTP.toast('Nothing to download yet.'); return; }
-      var name = (file ? file.name.replace(/\.jpe?g$/i, '') : 'image') + '.heic';
-      TCTP.downloadBlob(resultBlob, name);
+      var nameInput = document.getElementById(PREFIX + 'name');
+      var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.(heic|webp)$/i, '') : (file ? file.name.replace(/\.jpe?g$/i, '') : 'image');
+      TCTP.downloadBlob(resultBlob, base + '.heic');
+    });
+  }
+
+  if(clearBtn){
+    clearBtn.addEventListener('click', function(){
+      file = null;
+      resultBlob = null;
+      var row = document.getElementById(PREFIX + 'file');
+      if(row){ row.style.display = 'none'; row.classList.remove('visible'); }
+      if(downloadBtn) downloadBtn.style.display = 'none';
+      var sOrig = document.getElementById(PREFIX + 'stat-orig');
+      var sComp = document.getElementById(PREFIX + 'stat-comp');
+      var sSaved = document.getElementById(PREFIX + 'stat-saved');
+      if(sOrig) sOrig.textContent = '-';
+      if(sComp) sComp.textContent = '-';
+      if(sSaved) sSaved.textContent = '-';
+      var nameInput = document.getElementById(PREFIX + 'name');
+      if(nameInput) nameInput.value = '';
+      var origP = document.getElementById('tc-preview-orig');
+      if(origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+      var resP = document.getElementById('tc-preview-result');
+      if(resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+      TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+      TCTP.switchToOriginalTab && TCTP.switchToOriginalTab();
     });
   }
 
