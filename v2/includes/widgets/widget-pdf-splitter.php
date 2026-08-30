@@ -60,7 +60,7 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-ps-range-opts" style="display:none">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Range (e.g. 1-5, 8, 10-12)</label>
-            <input type="text" class="tc-input" id="tc-ps-range" placeholder="1-5, 8, 10-12">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ps-range" placeholder="1-5, 8, 10-12">
         </div>
 
         <div class="tc-input-group">

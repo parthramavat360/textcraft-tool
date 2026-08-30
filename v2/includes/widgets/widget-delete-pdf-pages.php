@@ -52,7 +52,7 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-dp-numbers-opts" style="display:none">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-pages">Page numbers (e.g. 1-3, 5, 8)</label>
-            <input type="text" class="tc-input" id="tc-dp-pages" placeholder="2-4, 6">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-dp-pages" placeholder="2-4, 6">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to act on.</p>
         </div>
 
@@ -87,7 +87,7 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-name">Output file name</label>
-            <input type="text" class="tc-input" id="tc-dp-name" placeholder="cleaned-document">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-dp-name" placeholder="cleaned-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

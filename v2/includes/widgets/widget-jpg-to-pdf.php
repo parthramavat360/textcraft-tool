@@ -106,7 +106,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2pdf-name">Output file name</label>
-            <input type="text" class="tc-input" id="tc-j2pdf-name" placeholder="my-images">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2pdf-name" placeholder="my-images">
             <p class="tc-lvl-hint">Leave empty to use the source image name (single) or "converted" (multiple).</p>
         </div>
 

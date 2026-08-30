@@ -101,7 +101,7 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ofp-name">Output file name</label>
-            <input type="text" class="tc-input" id="tc-ofp-name" placeholder="my-converted-document">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ofp-name" placeholder="my-converted-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

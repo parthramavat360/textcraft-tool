@@ -73,7 +73,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-rp-pages-opts" style="display:none">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-pages">Page numbers (e.g. 1, 3-5)</label>
-            <input type="text" class="tc-input" id="tc-rp-pages" placeholder="1, 3-5">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-rp-pages" placeholder="1, 3-5">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to rotate.</p>
         </div>
 
@@ -90,7 +90,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-name">Output file name</label>
-            <input type="text" class="tc-input" id="tc-rp-name" placeholder="rotated-document">
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-rp-name" placeholder="rotated-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
