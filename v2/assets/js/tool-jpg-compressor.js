@@ -18,6 +18,8 @@
     var maxDimSlider = document.getElementById('tc-jpg-maxdim');
     var maxDimVal = document.getElementById('tc-jpg-dim-val');
 
+    if (!document.getElementById('tc-jpg-quality')) return;
+
     function setStat(id, val) {
         var el = document.getElementById(id);
         if (el) el.textContent = val;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: SVG Compressor
- * Premium design with precision slider, toggle options.
+ * Premium redesign — precision slider, toggle options, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -15,6 +15,8 @@ defined('ABSPATH') || exit;
 class Widget_Svg_Compressor extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
+
+    protected bool $premium = true;
 
     public function get_name(): string { return 'svg_compressor'; }
     public function get_title(): string { return 'SVG Compressor'; }
@@ -33,55 +35,62 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-svg-drop', 'image/svg+xml,.svg', 'Drag & drop an SVG file here or click to browse'); ?>
         <?php $this->render_file_row('tc-svg-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Precision <span class="tc-rsz-quality-badge" id="tc-svg-precision-val">3</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">0</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-svg-precision" min="0" max="10" value="3">
-                    <span class="tc-rsz-slider-max">10</span>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-svg-precision">
+                    Precision: <span id="tc-svg-precision-val">3</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-svg-precision" min="0" max="10" value="3">
+                <p class="tc-lvl-hint">Lower precision trims more decimals for smaller files.</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Remove Metadata</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-svg-meta" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Strip editor metadata, titles, descriptions</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-svg-meta" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Remove Metadata</b>
+                    <small>Strip editor metadata, titles, descriptions.</small>
+                </span>
+            </label>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Remove Comments</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-svg-comments" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Remove all HTML/XML comments</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-svg-comments" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Remove Comments</b>
+                    <small>Remove all HTML/XML comments.</small>
+                </span>
+            </label>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Minify Path Data</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-svg-paths" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Round numbers and remove whitespace in d="" attributes</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-svg-paths" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Minify Path Data</b>
+                    <small>Round numbers and remove whitespace in d="" attributes.</small>
+                </span>
+            </label>
+        </div>
 
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-svg-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-svg-name" placeholder="my-graphic">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar('tc-svg-progress', 'Compressing...'); ?>
 
-        <?php $this->render_actions('tc-svg-compress', 'Compress SVG', 'tc-svg-download', 'Download'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-svg-compress" type="button">Compress SVG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-svg-download" type="button" style="display:none">Download</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-svg-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-svg-stat-orig">-</span></div>

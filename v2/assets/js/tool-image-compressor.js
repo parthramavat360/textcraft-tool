@@ -255,4 +255,30 @@
             });
         });
     }
+
+    // ── Clear all ──────────────────────────────────────────────
+
+    var clearBtn = document.getElementById('tc-comp-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            files = [];
+            compressedResults = [];
+            if (fileList) fileList.style.display = 'none';
+            if (filesContainer) filesContainer.innerHTML = '';
+            if (countEl) countEl.textContent = '0 files';
+            var prevOrig = document.getElementById('tc-comp-preview-orig');
+            if (prevOrig) prevOrig.innerHTML = '<p style="color:#64748b">Upload images to see preview</p>';
+            var prevRes = document.getElementById('tc-preview-result');
+            if (prevRes) prevRes.innerHTML = '<p style="color:#64748b;padding:12px 0">Compressed images will appear here after you click Compress.</p>';
+            var resEl = document.getElementById('tc-comp-result');
+            if (resEl) resEl.innerHTML = '<p style="color:#64748b;padding:12px 0">Compressed images will appear here after you click Compress.</p>';
+            var origStat = document.getElementById('tc-comp-stat-orig'); if (origStat) origStat.textContent = '-';
+            var outStat = document.getElementById('tc-comp-stat-out'); if (outStat) outStat.textContent = '-';
+            var savedStat = document.getElementById('tc-comp-stat-saved'); if (savedStat) savedStat.textContent = '-';
+            if (dlBtn) { dlBtn.style.display = 'none'; dlBtn.onclick = null; }
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<div class="tc-comp-result-preview" id="tc-comp-preview-orig" style="display:flex;align-items:center;justify-content:center;min-height:200px;background:#0d1321;border-radius:8px;overflow:hidden"><p style="color:#64748b">Upload images to see preview</p></div>';
+            TCTP.switchToOriginalTab();
+        });
+    }
 })();

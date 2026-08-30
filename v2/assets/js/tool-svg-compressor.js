@@ -1,3 +1,10 @@
+/**
+ * SVG Compressor — Tool JS
+ * Premium redesign. Precision slider, remove metadata/comments/minify paths,
+ * output file name, Clear all (also clears previews).
+ *
+ * @package TextCraft_Tools_Pro
+ */
 (function () {
     'use strict';
     var file = null;
@@ -13,6 +20,7 @@
         precisionSlider.addEventListener('input', function () { precisionVal.textContent = precisionSlider.value; });
     }
     function setStat(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+    function resetStats() { setStat('tc-svg-stat-orig', '-'); setStat('tc-svg-stat-comp', '-'); setStat('tc-svg-stat-saved', '-'); }
     TCTP.initDropZone('tc-svg-drop', 'tc-svg-drop-input', function (f) {
         if (!f.type.match(/image\/svg\+xml/) && !/\.svg$/i.test(f.name)) {
             TCTP.toast('Please select an SVG file.', '\u26A0\uFE0F'); return;
@@ -20,7 +28,7 @@
         file = f; optimizedSvg = null;
         TCTP.showFileRow('tc-svg-file', f);
         var dl = document.getElementById('tc-svg-download'); if (dl) dl.style.display = 'none';
-        setStat('tc-svg-stat-orig', '-'); setStat('tc-svg-stat-comp', '-'); setStat('tc-svg-stat-saved', '-');
+        resetStats();
         var reader = new FileReader();
         reader.onload = function (ev) {
             TCTP.showOriginalPreview(ev.target.result, 'image/svg+xml');
@@ -31,7 +39,8 @@
     var removeBtn = document.querySelector('#tc-svg-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
         file = null; optimizedSvg = null; TCTP.hideFileRow('tc-svg-file');
-        setStat('tc-svg-stat-orig', '-'); setStat('tc-svg-stat-comp', '-'); setStat('tc-svg-stat-saved', '-');
+        resetStats();
+        var dl = document.getElementById('tc-svg-download'); if (dl) dl.style.display = 'none';
     });
     function roundNumber(match) {
         var num = parseFloat(match);
@@ -102,7 +111,19 @@
     var downloadBtn = document.getElementById('tc-svg-download');
     if (downloadBtn) downloadBtn.addEventListener('click', function () {
         if (!optimizedSvg) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-        var name = (file ? file.name.replace(/\.svg$/i, '') : 'image') + '-compressed.svg';
-        TCTP.downloadText(optimizedSvg, name, 'image/svg+xml');
+        var nameInput = document.getElementById('tc-svg-name');
+        var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.svg$/i, '') : (file ? file.name.replace(/\.svg$/i, '') : 'image');
+        TCTP.downloadText(optimizedSvg, base + '-compressed.svg', 'image/svg+xml');
+    });
+    var clearBtn = document.getElementById('tc-svg-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        file = null; optimizedSvg = null;
+        TCTP.hideFileRow('tc-svg-file');
+        resetStats();
+        var dl = document.getElementById('tc-svg-download'); if (dl) dl.style.display = 'none';
+        var prevOrig = document.getElementById('tc-preview-orig'); if (prevOrig) prevOrig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var prevRes = document.getElementById('tc-preview-result'); if (prevRes) prevRes.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        TCTP.switchToOriginalTab();
+        var nameInput = document.getElementById('tc-svg-name'); if (nameInput) nameInput.value = '';
     });
 })();

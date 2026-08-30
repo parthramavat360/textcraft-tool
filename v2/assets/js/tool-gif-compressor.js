@@ -1,3 +1,10 @@
+/**
+ * GIF Compressor — Tool JS
+ * Premium redesign. Colors, resize, frame skip, loop, output file name,
+ * Clear all (also clears previews). omggif-based compression.
+ *
+ * @package TextCraft_Tools_Pro
+ */
 (function () {
     'use strict';
     var file = null;
@@ -14,6 +21,7 @@
         });
     }
     function setStat(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+    function resetStats() { setStat('tc-gif-stat-orig','-'); setStat('tc-gif-stat-comp','-'); setStat('tc-gif-stat-saved','-'); }
     var colorsSlider = document.getElementById('tc-gif-colors');
     var colorsVal = document.getElementById('tc-gif-colors-val');
     var scaleSlider = document.getElementById('tc-gif-scale');
@@ -30,11 +38,11 @@
         file=f;compressedBlob=null;
         TCTP.showFileRow('tc-gif-file',f);
         var dl=document.getElementById('tc-gif-download');if(dl)dl.style.display='none';
-        setStat('tc-gif-stat-orig','-');setStat('tc-gif-stat-comp','-');setStat('tc-gif-stat-saved','-');
+        resetStats();
         var reader=new FileReader();reader.onload=function(ev){TCTP.showOriginalPreview(ev.target.result);TCTP.switchToOriginalTab();};reader.readAsDataURL(f);
     },'image/gif,.gif');
     var removeBtn=document.querySelector('#tc-gif-file .tc-x');
-    if(removeBtn)removeBtn.addEventListener('click',function(){file=null;compressedBlob=null;TCTP.hideFileRow('tc-gif-file');setStat('tc-gif-stat-orig','-');setStat('tc-gif-stat-comp','-');setStat('tc-gif-stat-saved','-');});
+    if(removeBtn)removeBtn.addEventListener('click',function(){file=null;compressedBlob=null;TCTP.hideFileRow('tc-gif-file');resetStats();var dl=document.getElementById('tc-gif-download');if(dl)dl.style.display='none';});
     function decodeGif(buffer){
         try{var bytes=new Uint8Array(buffer);var reader=new omggif.GifReader(bytes);var num=reader.numFrames();if(num<1)return null;
         var tp=reader.width*reader.height*4;var frames=[];
@@ -127,6 +135,19 @@
     var downloadBtn=document.getElementById('tc-gif-download');
     if(downloadBtn){downloadBtn.addEventListener('click',function(){
         if(!compressedBlob){TCTP.toast('Nothing to download yet.','\u26A0\uFE0F');return;}
-        var name=(file?file.name.replace(/\.gif$/i,''):'animation')+'-compressed.gif';TCTP.downloadBlob(compressedBlob,name);
+        var nameInput=document.getElementById('tc-gif-name');
+        var base=(nameInput&&nameInput.value.trim())?nameInput.value.trim().replace(/\.gif$/i,''):(file?file.name.replace(/\.gif$/i,''):'animation');
+        TCTP.downloadBlob(compressedBlob,base+'-compressed.gif');
+    });}
+    var clearBtn=document.getElementById('tc-gif-clear');
+    if(clearBtn){clearBtn.addEventListener('click',function(){
+        file=null;compressedBlob=null;
+        TCTP.hideFileRow('tc-gif-file');
+        resetStats();
+        var dl=document.getElementById('tc-gif-download');if(dl)dl.style.display='none';
+        var prevOrig=document.getElementById('tc-preview-orig');if(prevOrig)prevOrig.innerHTML='<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var prevRes=document.getElementById('tc-preview-result');if(prevRes)prevRes.innerHTML='<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        TCTP.switchToOriginalTab();
+        var nameInput=document.getElementById('tc-gif-name');if(nameInput)nameInput.value='';
     });}
 })();

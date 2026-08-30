@@ -266,6 +266,8 @@
 
             TCTP.showResultPreview(url);
             TCTP.switchToResultTab();
+            var dl = document.getElementById('tc-kb-download');
+            if (dl) dl.style.display = '';
             enableIfReady();
             updateStats();
             TCTP.toast('Done! Reduced to ' + outKb.toFixed(1) + ' KB.', '\u2705');
@@ -280,7 +282,8 @@
             TCTP.toast('Reduction not run yet.', '\u26A0\uFE0F');
             return;
         }
-        var base = (sourceName || 'image').replace(/\.[^.]+$/, '');
+        var nameInput = document.getElementById('tc-kb-name');
+        var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.[^.]+$/, '') : (sourceName || 'image').replace(/\.[^.]+$/, '');
         TCTP.downloadBlob(resultBlob, base + '-' + targetKb + 'kb.' + outExt);
     });
 
@@ -324,4 +327,20 @@
 
     enableIfReady();
     updateStats();
+
+    // ── Clear all ──────────────────────────────────────────────
+
+    var clearBtn = document.getElementById('tc-kb-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        resetAll();
+        var prevRes = document.getElementById('tc-preview-result');
+        if (prevRes) prevRes.innerHTML = '<span style="color:var(--muted);font-size:13px">Reduced preview will appear here</span>';
+        var prevOrig = document.getElementById('tc-preview-orig');
+        if (prevOrig) prevOrig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var dl = document.getElementById('tc-kb-download');
+        if (dl) { dl.style.display = 'none'; }
+        var nameInput = document.getElementById('tc-kb-name');
+        if (nameInput) nameInput.value = '';
+        TCTP.switchToOriginalTab();
+    });
 })();

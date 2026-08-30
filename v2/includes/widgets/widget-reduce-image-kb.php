@@ -1,8 +1,8 @@
 <?php
 /**
  * Widget: Reduce Image Size to KB
- * Compress an image to an exact target file size (e.g. 20, 50, 100, 200KB)
- * by automatically adjusting the quality. 100% client-side.
+ * Premium redesign — target size, output format, max width, output name, clear all.
+ * 100% client-side.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -24,6 +24,8 @@ class Widget_Reduce_Image_Kb extends TextCraft_Tool_Base {
         ['Reduced', 'tc-kb-stat-out'],
     ];
 
+    protected bool $premium = true;
+
     public function get_name(): string { return 'reduce_image_kb'; }
     public function get_title(): string { return 'Reduce Image Size to KB'; }
     public function get_icon(): string { return 'eicon-shrink'; }
@@ -42,56 +44,59 @@ class Widget_Reduce_Image_Kb extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone( 'tc-kb-drop', 'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp', 'Drag & drop an image here (JPG, PNG, WebP)' ); ?>
         <?php $this->render_file_row( 'tc-kb-file' ); ?>
 
-        <div class="tc-kb-options">
-
-            <!-- Target size -->
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Target Size</h4>
-                <div class="tc-kb-targets" id="tc-kb-target-tabs">
-                    <button class="tc-kb-target sel" type="button" data-kb="50">50 KB</button>
-                    <button class="tc-kb-target" type="button" data-kb="100">100 KB</button>
-                    <button class="tc-kb-target" type="button" data-kb="200">200 KB</button>
-                    <button class="tc-kb-target" type="button" data-kb="500">500 KB</button>
-                    <button class="tc-kb-target tc-kb-custom" type="button" data-kb="0">Custom</button>
-                </div>
-                <div class="tc-kb-custom-row" id="tc-kb-custom-row" style="display:none">
-                    <input type="number" class="tc-kb-custom-input" id="tc-kb-custom" min="1" max="10000" value="150" placeholder="e.g. 150">
-                    <span class="tc-kb-unit">KB</span>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Target Size</label>
+            <div class="tc-modes tc-modes--cards" data-group="kb-target" id="tc-kb-target-tabs">
+                <button class="tc-btn tc-btn--ghost tc-kb-target sel" data-kb="50" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">50 KB</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-target" data-kb="100" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">100 KB</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-target" data-kb="200" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">200 KB</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-target" data-kb="500" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">500 KB</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-target tc-kb-custom" data-kb="0" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Custom</span></button>
             </div>
-
-            <!-- Output format -->
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Output Format</h4>
-                <div class="tc-kb-fmts" id="tc-kb-fmt-tabs">
-                    <button class="tc-kb-fmt sel" type="button" data-mime="image/jpeg" data-ext="jpg">JPG</button>
-                    <button class="tc-kb-fmt" type="button" data-mime="image/webp" data-ext="webp">WebP</button>
-                    <button class="tc-kb-fmt" type="button" data-mime="image/png" data-ext="png">PNG</button>
-                </div>
-                <p class="tc-kb-outnote">Compressing to a target works best as <b>JPG</b> or <b>WebP</b>. PNG has a hard lower size floor and may not always reach small targets.</p>
+            <div class="tc-kb-custom-row" id="tc-kb-custom-row" style="display:none;margin-top:10px">
+                <input type="number" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-kb-custom" min="1" max="10000" value="150" placeholder="e.g. 150">
+                <span class="tc-kb-unit">KB</span>
             </div>
+        </div>
 
-            <!-- Max width -->
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Max Width (optional) <span class="tc-rsz-quality-badge" id="tc-kb-maxw-val">Off</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">No limit</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-kb-maxw" min="0" max="8192" value="0" step="64">
-                    <span class="tc-rsz-slider-max">8192px</span>
-                </div>
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Output Format</label>
+            <div class="tc-modes tc-modes--cards" data-group="kb-fmt" id="tc-kb-fmt-tabs">
+                <button class="tc-btn tc-btn--ghost tc-kb-fmt sel" data-mime="image/jpeg" data-ext="jpg" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">JPG</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-fmt" data-mime="image/webp" data-ext="webp" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">WebP</span></button>
+                <button class="tc-btn tc-btn--ghost tc-kb-fmt" data-mime="image/png" data-ext="png" type="button"><span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">PNG</span></button>
             </div>
+            <p class="tc-lvl-hint">Compressing to a target works best as <b>JPG</b> or <b>WebP</b>. PNG has a hard lower size floor and may not always reach small targets.</p>
+        </div>
 
+        <div class="tc-input-group">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-kb-maxw">
+                    Max Width: <span id="tc-kb-maxw-val">Off</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-kb-maxw" min="0" max="8192" value="0" step="64">
+                <p class="tc-lvl-hint">Scale wide images down to this width (0 = no limit).</p>
+            </div>
+        </div>
+
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-kb-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-kb-name" placeholder="my-image">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar( 'tc-kb-progress', 'Reducing image size...' ); ?>
 
-        <?php $this->render_actions( 'tc-kb-reduce', 'Reduce Size', 'tc-kb-download', 'Download' ); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-kb-reduce" type="button">Reduce Size</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-kb-download" type="button" style="display:none" disabled>Download</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-kb-clear" type="button">Clear all</button>
+        </div>
 
         <?php
     }
 
     protected function render_result_content( array $settings ): void {
-        // Result is shown in the Preview tabs (Original / Reduced). No extra box needed.
         ?>
         <?php
     }

@@ -1,6 +1,7 @@
 <?php
 /**
  * Widget: GIF Compressor
+ * Premium redesign — colors, resize, frame skip, loop, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -14,6 +15,8 @@ defined('ABSPATH') || exit;
 class Widget_Gif_Compressor extends TextCraft_Tool_Base {
 
     protected bool $show_preview = true;
+
+    protected bool $premium = true;
 
     public function get_name(): string { return 'gif_compressor'; }
     public function get_title(): string { return 'GIF Compressor'; }
@@ -32,51 +35,60 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-gif-drop', 'image/gif,.gif', 'Drag & drop a GIF image here or click to browse'); ?>
         <?php $this->render_file_row('tc-gif-file'); ?>
 
-        <div class="tc-rsz-options">
-
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Colors <span class="tc-rsz-quality-badge" id="tc-gif-colors-val">64</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">16</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-gif-colors" min="4" max="256" value="64" step="4">
-                    <span class="tc-rsz-slider-max">256</span>
-                </div>
+        <div class="tc-input-group" style="margin-top:18px">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-colors">
+                    Colors: <span id="tc-gif-colors-val">64</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-gif-colors" min="4" max="256" value="64" step="4">
+                <p class="tc-lvl-hint">Fewer colors makes the GIF much smaller but reduces quality.</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Resize <span class="tc-rsz-quality-badge" id="tc-gif-scale-val">100%</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">25%</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-gif-scale" min="25" max="100" value="100" step="5">
-                    <span class="tc-rsz-slider-max">100%</span>
-                </div>
+        <div class="tc-input-group">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-scale">
+                    Resize: <span id="tc-gif-scale-val">100%</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-gif-scale" min="25" max="100" value="100" step="5">
+                <p class="tc-lvl-hint">Reduce the frame dimensions to shrink file size.</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Frame Skip <span class="tc-rsz-quality-badge" id="tc-gif-skip-val">None</span></h4>
-                <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">None</span>
-                    <input type="range" class="tc-rsz-slider" id="tc-gif-skip" min="0" max="5" value="0">
-                    <span class="tc-rsz-slider-max">Heavy</span>
-                </div>
+        <div class="tc-input-group">
+            <div class="tc-range-wrap">
+                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-skip">
+                    Frame Skip: <span id="tc-gif-skip-val">None</span>
+                </label>
+                <input type="range" class="tc-range" id="tc-gif-skip" min="0" max="5" value="0">
+                <p class="tc-lvl-hint">Drop frames to reduce file size (may make animation choppier).</p>
             </div>
+        </div>
 
-            <div class="tc-rsz-section">
-                <h4 class="tc-rsz-heading">Loop</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <label class="tc-rsz-toggle">
-                        <input type="checkbox" class="tc-rsz-toggle-input" id="tc-gif-loop" checked>
-                        <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                    </label>
-                    <span class="tc-rsz-slider-min" style="font-size:12px;opacity:0.6">Loop animation forever</span>
-                </div>
-            </div>
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-gif-loop" checked>
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                    <b>Loop</b>
+                    <small>Play the animation on repeat.</small>
+                </span>
+            </label>
+        </div>
 
+        <div class="tc-input-group">
+            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-name">Output file name</label>
+            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-gif-name" placeholder="my-animation">
+            <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
         <?php $this->render_progress_bar('tc-gif-progress', 'Compressing...'); ?>
 
-        <?php $this->render_actions('tc-gif-compress', 'Compress GIF', 'tc-gif-download', 'Download'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-gif-compress" type="button">Compress GIF</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-gif-download" type="button" style="display:none">Download</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-gif-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-gif-stat-orig">-</span></div>
