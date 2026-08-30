@@ -1,9 +1,14 @@
 /**
  * PDF Merger — Tool JS
  *
- * Multi-file drop zone, file list with reorder (up/down buttons),
- * merge button, download. Stats: count, total size.
- * Requires pdf-lib loaded dynamically.
+ * Multi-file drop zone, premium file list with reorder (up/down) + remove,
+ * merge button, download. Premium options:
+ *   - Merge Mode: Append / Interleave
+ *   - Page Size: Keep original / A4 / Letter
+ *   - Orientation: Keep / Portrait / Landscape
+ *   - Optimize output size toggle
+ *   - Blank page between files toggle
+ * Requires pdf-lib + pdf.js loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -13,6 +18,11 @@
 
     var files = [];
     var mergedBlob = null;
+    var mergeMode = 'append';
+    var pageSize = 'auto';
+    var orientation = 'keep';
+    var optimize = false;
+    var separator = false;
 
     var drop = document.getElementById('tc-pm-drop');
     if (!drop) return;
@@ -31,6 +41,13 @@
     async function ensurePdfLib() {
         if (!window.PDFLib) {
             await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
+        }
+    }
+
+    async function ensurePdfJs() {
+        if (!window.pdfjsLib) {
+            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         }
     }
 
@@ -53,6 +70,38 @@
             });
         });
     }
+
+    /* ------------------------------------------------------------------ */
+    /*  Hints                                                              */
+    /* ------------------------------------------------------------------ */
+
+    var MODE_HINTS = {
+        append: 'Append \u2014 all pages of each file, one after another.',
+        interleave: 'Interleave \u2014 alternate pages across your files.'
+    };
+    var SIZE_HINTS = {
+        auto: 'Keep original \u2014 every page keeps its current dimensions.',
+        a4: 'A4 \u2014 every page is sized to 210 \u00d7 297 mm.',
+        letter: 'Letter \u2014 every page is sized to 8.5 \u00d7 11 inches.'
+    };
+    var ORIENT_HINTS = {
+        keep: 'Keep \u2014 pages stay in their original orientation.',
+        portrait: 'Portrait \u2014 taller than wide.',
+        landscape: 'Landscape \u2014 wider than tall.'
+    };
+
+    function updateHints() {
+        var mh = document.getElementById('tc-pm-mode-hint');
+        if (mh && MODE_HINTS[mergeMode]) mh.textContent = MODE_HINTS[mergeMode];
+        var sh = document.getElementById('tc-pm-size-hint');
+        if (sh && SIZE_HINTS[pageSize]) sh.textContent = SIZE_HINTS[pageSize];
+        var oh = document.getElementById('tc-pm-orient-hint');
+        if (oh && ORIENT_HINTS[orientation]) oh.textContent = ORIENT_HINTS[orientation];
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  File list                                                          */
+    /* ------------------------------------------------------------------ */
 
     function renderFileList() {
         var list = document.getElementById('tc-pm-list');
@@ -115,6 +164,7 @@
             removeBtn.title = 'Remove';
             removeBtn.addEventListener('click', function () {
                 files.splice(idx, 1);
+                if (!files.length) mergedBlob = null;
                 renderFileList();
             });
 
@@ -137,32 +187,93 @@
         if (countEl) countEl.textContent = files.length;
         if (sizeEl) sizeEl.textContent = files.length ? TCTP.formatSize(totalSize) : '-';
 
+        var mergedEl = document.getElementById('tc-pm-stat-merged');
+        if (mergedEl) mergedEl.textContent = '-';
+
+        var dlBtn = document.getElementById('tc-pm-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+
         if (!files.length) {
-            var listEl = document.getElementById('tc-pm-list');
-            if (listEl) listEl.style.display = 'none';
+            list.style.display = 'none';
         } else {
-            var listEl2 = document.getElementById('tc-pm-list');
-            if (listEl2) listEl2.style.display = '';
+            list.style.display = '';
         }
     }
 
-    TCTP.initDropZone('tc-pm-drop', 'tc-pm-drop-input', function (f) {
-        if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
-            TCTP.toast('Please select PDF files only.', '\u26A0\uFE0F');
-            return;
+    /* ------------------------------------------------------------------ */
+    /*  Reset                                                              */
+    /* ------------------------------------------------------------------ */
+
+    function resetTool() {
+        files = [];
+        mergedBlob = null;
+        renderFileList();
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        var orig = document.getElementById('tc-preview-orig');
+        var result = document.getElementById('tc-preview-result');
+        if (orig) orig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        if (result) result.innerHTML = '<span style="color:var(--muted);font-size:13px">Merged preview will appear here</span>';
+        TCTP.switchToOriginalTab();
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Option wiring                                                      */
+    /* ------------------------------------------------------------------ */
+
+    document.querySelectorAll('.tc-modes[data-group="pm-mode"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            mergeMode = btn.getAttribute('data-val') || 'append';
+            updateHints();
+        });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="pm-size"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            pageSize = btn.getAttribute('data-val') || 'auto';
+            updateHints();
+        });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="pm-orient"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            orientation = btn.getAttribute('data-val') || 'keep';
+            updateHints();
+        });
+    });
+
+    var optimizeInput = document.getElementById('tc-pm-optimize');
+    if (optimizeInput) optimizeInput.addEventListener('change', function () {
+        optimize = optimizeInput.checked;
+    });
+
+    var separatorInput = document.getElementById('tc-pm-separator');
+    if (separatorInput) separatorInput.addEventListener('change', function () {
+        separator = separatorInput.checked;
+    });
+
+    var inputEl = document.getElementById('tc-pm-drop-input');
+    if (inputEl) inputEl.multiple = true;
+
+    function addFiles(fileList) {
+        var added = [];
+        for (var i = 0; i < fileList.length; i++) {
+            var f = fileList[i];
+            if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
+                TCTP.toast('Please select PDF files only.', '\u26A0\uFE0F');
+                continue;
+            }
+            files.push(f);
+            added.push(f);
         }
-        files.push(f);
-        var dl = document.getElementById('tc-pm-download');
-        if (dl) dl.style.display = 'none';
+        if (!added.length) return;
         renderFileList();
 
-        if (files.length === 1) {
-            Promise.all([
-                loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
-                loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js')
-            ]).then(function () {
-                window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-                return f.arrayBuffer();
+        if (files.length === added.length) {
+            Promise.all([ensurePdfLib(), ensurePdfJs()]).then(function () {
+                return added[0].arrayBuffer();
             }).then(function (ab) {
                 return renderPageToImage(ab, 1);
             }).then(function (dataUrl) {
@@ -170,7 +281,55 @@
                 TCTP.switchToOriginalTab();
             }).catch(function () {});
         }
-    }, '.pdf,application/pdf');
+    }
+
+    if (drop.addEventListener) {
+        drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('hot'); });
+        drop.addEventListener('dragleave', function () { drop.classList.remove('hot'); });
+        drop.addEventListener('drop', function (e) {
+            e.preventDefault();
+            drop.classList.remove('hot');
+            if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+        });
+        drop.addEventListener('click', function () { if (inputEl) inputEl.click(); });
+    }
+    if (inputEl && inputEl.addEventListener) {
+        inputEl.addEventListener('change', function () {
+            addFiles(inputEl.files);
+            inputEl.value = '';
+        });
+    }
+
+    var clearBtn = document.getElementById('tc-pm-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        resetTool();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
+    updateHints();
+
+    /* ------------------------------------------------------------------ */
+    /*  Page normalization                                                 */
+    /* ------------------------------------------------------------------ */
+
+    function applyNorm(page) {
+        var s = page.getSize();
+        var w = s.width;
+        var h = s.height;
+
+        if (pageSize === 'a4') { w = 595.28; h = 841.89; }
+        else if (pageSize === 'letter') { w = 612; h = 792; }
+
+        if (orientation === 'portrait' && w > h) { var t = w; w = h; h = t; }
+        if (orientation === 'landscape' && w < h) { var t2 = w; w = h; h = t2; }
+
+        page.setSize(w, h);
+        page.setRotation(window.PDFLib.degrees(0));
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Merge button                                                       */
+    /* ------------------------------------------------------------------ */
 
     var mergeBtn = document.getElementById('tc-pm-merge');
     if (mergeBtn) mergeBtn.addEventListener('click', async function () {
@@ -184,35 +343,67 @@
 
         try {
             await ensurePdfLib();
-            if (!window.pdfjsLib) {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-                window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            TCTP.setProgress('tc-pm-progress', 20, 'Reading PDFs...');
+
+            var srcs = [];
+            for (var fi = 0; fi < files.length; fi++) {
+                var ab = await files[fi].arrayBuffer();
+                srcs.push(await window.PDFLib.PDFDocument.load(new Uint8Array(ab.slice(0))));
             }
-            TCTP.setProgress('tc-pm-progress', 30, 'Merging PDFs...');
 
             var mergedPdf = await window.PDFLib.PDFDocument.create();
-            for (var i = 0; i < files.length; i++) {
-                TCTP.setProgress('tc-pm-progress', 30 + Math.round((i / files.length) * 50), 'Merging ' + (i + 1) + '/' + files.length + '...');
-                var ab = await files[i].arrayBuffer();
-                var srcPdf = await window.PDFLib.PDFDocument.load(ab);
-                var copiedPages = await mergedPdf.copyPages(srcPdf, srcPdf.getPageIndices());
-                copiedPages.forEach(function (page) { mergedPdf.addPage(page); });
+            var totalIn = 0;
+            files.forEach(function (f) { totalIn += f.size; });
+
+            if (mergeMode === 'interleave') {
+                TCTP.setProgress('tc-pm-progress', 40, 'Interleaving pages...');
+                var maxPages = 0;
+                srcs.forEach(function (s) { if (s.getPageCount() > maxPages) maxPages = s.getPageCount(); });
+                var added = 0;
+                for (var p = 0; p < maxPages; p++) {
+                    for (var si = 0; si < srcs.length; si++) {
+                        if (p < srcs[si].getPageCount()) {
+                            var one = await mergedPdf.copyPages(srcs[si], [p]);
+                            applyNorm(one[0]);
+                            mergedPdf.addPage(one[0]);
+                            added++;
+                            TCTP.setProgress('tc-pm-progress', 40 + Math.round((added / (maxPages * srcs.length)) * 40), 'Interleaving...');
+                        }
+                    }
+                }
+            } else {
+                for (var i = 0; i < srcs.length; i++) {
+                    TCTP.setProgress('tc-pm-progress', 40 + Math.round((i / srcs.length) * 40), 'Merging file ' + (i + 1) + '/' + srcs.length + '...');
+                    var pages = await mergedPdf.copyPages(srcs[i], srcs[i].getPageIndices());
+                    pages.forEach(function (pg) { applyNorm(pg); mergedPdf.addPage(pg); });
+                    if (separator && i < srcs.length - 1) {
+                        mergedPdf.addPage([595.28, 841.89]);
+                    }
+                }
             }
 
             TCTP.setProgress('tc-pm-progress', 85, 'Saving...');
-            var bytes = await mergedPdf.save({ useObjectStreams: false, updateMetadata: false });
+            var saveOpts = optimize
+                ? { useObjectStreams: true, updateMetadata: false }
+                : { useObjectStreams: false, updateMetadata: true };
+            var bytes = await mergedPdf.save(saveOpts);
             mergedBlob = new Blob([bytes], { type: 'application/pdf' });
 
             TCTP.setProgress('tc-pm-progress', 100, 'Done!');
+            TCTP.hideProgress('tc-pm-progress');
+
+            var mergedSize = mergedBlob.size;
             var mergedEl = document.getElementById('tc-pm-stat-merged');
-            if (mergedEl) mergedEl.textContent = TCTP.formatSize(mergedBlob.size);
-            if (downloadBtn) downloadBtn.style.display = '';
+            if (mergedEl) mergedEl.textContent = TCTP.formatSize(mergedSize);
+
+            var dlBtn = document.getElementById('tc-pm-download');
+            if (dlBtn) dlBtn.style.display = '';
+
+            var saved = totalIn > mergedSize ? ((1 - mergedSize / totalIn) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedSize), saved + '%', 'Done');
             TCTP.toast('Merged ' + files.length + ' PDFs!');
-            var totalIn = 0;
-            files.forEach(function (f) { totalIn += f.size; });
-            var saved = totalIn > mergedBlob.size ? ((1 - mergedBlob.size / totalIn) * 100).toFixed(1) : '0';
-            TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(mergedBlob.size), saved + '%', 'Done');
             TCTP.switchToResultTab();
+
             try {
                 var mergedAb = await mergedBlob.arrayBuffer();
                 var compDataUrl = await renderPageToImage(mergedAb, 1);
