@@ -1,8 +1,8 @@
 /**
  * Delete PDF Pages — Tool JS
  *
- * Drop zone, page grid thumbnails, click to select pages for deletion,
- * delete button, download remaining pages. Progress bar.
+ * Drop zone, page thumbnails (click to select), page-number input mode,
+ * delete/keep action, optimize toggle, output file name, clear all.
  * Requires pdf.js + pdf-lib loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
@@ -17,6 +17,9 @@
     var totalPages = 0;
     var lastBlob = null;
     var lastName = '';
+    var method = 'click';        // click | numbers
+    var action = 'delete';       // delete | keep
+    var optimize = false;
 
     var drop = document.getElementById('tc-dp-drop');
     if (!drop) return;
@@ -62,6 +65,34 @@
         });
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  Hints                                                              */
+    /* ------------------------------------------------------------------ */
+
+    var METHOD_HINTS = {
+        click: 'Click thumbnails \u2014 tap each page preview to toggle its selection.',
+        numbers: 'Enter numbers \u2014 type pages/ranges like 1-3, 5, 8 to act on them.'
+    };
+    var ACTION_HINTS = {
+        delete: 'Delete selected \u2014 removes the chosen pages and keeps the rest.',
+        keep: 'Keep only selected \u2014 removes everything except the chosen pages.'
+    };
+
+    function updateHints() {
+        var mh = document.getElementById('tc-dp-method-hint');
+        if (mh) mh.textContent = METHOD_HINTS[method] || METHOD_HINTS.click;
+        var ah = document.getElementById('tc-dp-action-hint');
+        if (ah) ah.textContent = ACTION_HINTS[action] || ACTION_HINTS.delete;
+    }
+
+    function updateMethodOpts() {
+        var numOpts = document.getElementById('tc-dp-numbers-opts');
+        if (numOpts) numOpts.style.display = method === 'numbers' ? '' : 'none';
+        var gridWrap = document.getElementById('tc-dp-grid-wrap');
+        if (gridWrap && method === 'numbers') gridWrap.style.display = 'none';
+        updateHints();
+    }
+
     function updateStats() {
         var selCount = Object.keys(selectedPages).length;
         var selEl = document.getElementById('tc-dp-stat-selected');
@@ -77,7 +108,7 @@
         grid.innerHTML = '';
         selectedPages = {};
         totalPages = 0;
-        if (wrap) wrap.style.display = '';
+        if (wrap) wrap.style.display = (method === 'numbers') ? 'none' : '';
 
         window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise.then(function (pdf) {
             pdfDoc = pdf;
@@ -157,6 +188,50 @@
         });
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  Page number parsing                                                */
+    /* ------------------------------------------------------------------ */
+
+    function parseRange(str, max) {
+        var pages = [];
+        var parts = str.split(',');
+        parts.forEach(function (part) {
+            part = part.trim();
+            if (!part) return;
+            if (part.indexOf('-') !== -1) {
+                var range = part.split('-');
+                var start = parseInt(range[0], 10);
+                var end = parseInt(range[1], 10);
+                if (isNaN(start)) return;
+                if (isNaN(end)) end = start;
+                for (var i = start; i <= Math.min(end, max); i++) {
+                    if (i >= 1) pages.push(i);
+                }
+            } else {
+                var n = parseInt(part, 10);
+                if (!isNaN(n) && n >= 1 && n <= max) pages.push(n);
+            }
+        });
+        return pages;
+    }
+
+    function resolveSelected() {
+        var result = {};
+        if (method === 'numbers') {
+            var input = document.getElementById('tc-dp-pages');
+            var val = input ? input.value.trim() : '';
+            if (!val) return result;
+            parseRange(val, totalPages).forEach(function (p) { result[p] = true; });
+        } else {
+            return selectedPages;
+        }
+        return result;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Drop zone                                                          */
+    /* ------------------------------------------------------------------ */
+
     TCTP.initDropZone('tc-dp-drop', 'tc-dp-drop-input', function (f) {
         if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
             TCTP.toast('Please select a PDF file.', '\u26A0\uFE0F');
@@ -174,6 +249,8 @@
         if (dlBtn) dlBtn.style.display = 'none';
         var remainingEl = document.getElementById('tc-dp-stat-remaining');
         if (remainingEl) remainingEl.textContent = '-';
+        var pagesInput = document.getElementById('tc-dp-pages');
+        if (pagesInput) pagesInput.value = '';
 
         TCTP.showProgress('tc-dp-progress');
         TCTP.setProgress('tc-dp-progress', 5, 'Loading libraries...');
@@ -195,27 +272,95 @@
         });
     }, '.pdf,application/pdf');
 
+    /* ------------------------------------------------------------------ */
+    /*  Option wiring                                                      */
+    /* ------------------------------------------------------------------ */
+
+    document.querySelectorAll('.tc-modes[data-group="dp-method"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            method = btn.getAttribute('data-val') || 'click';
+            selectedPages = {};
+            if (file) {
+                var grid = document.getElementById('tc-dp-grid');
+                if (grid) grid.querySelectorAll('.tc-dp-item').forEach(function (it) { it.classList.remove('selected'); });
+            }
+            updateMethodOpts();
+            updateStats();
+        });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="dp-action"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            action = btn.getAttribute('data-val') || 'delete';
+            updateHints();
+        });
+    });
+
+    var optimizeInput = document.getElementById('tc-dp-optimize');
+    if (optimizeInput) optimizeInput.addEventListener('change', function () {
+        optimize = optimizeInput.checked;
+    });
+
     var removeBtn = document.querySelector('#tc-dp-file .tc-x');
     if (removeBtn) removeBtn.addEventListener('click', function () {
+        clearAll();
+    });
+
+    function clearAll() {
         file = null;
         pdfDoc = null;
         selectedPages = {};
         totalPages = 0;
+        lastBlob = null;
         TCTP.hideFileRow('tc-dp-file');
         var wrap = document.getElementById('tc-dp-grid-wrap');
         if (wrap) wrap.style.display = 'none';
         var grid = document.getElementById('tc-dp-grid');
         if (grid) grid.innerHTML = '';
+        var dlBtn = document.getElementById('tc-dp-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+        var pagesInput = document.getElementById('tc-dp-pages');
+        if (pagesInput) pagesInput.value = '';
+        var nameInput = document.getElementById('tc-dp-name');
+        if (nameInput) nameInput.value = '';
+        var t = document.getElementById('tc-dp-stat-total');
+        if (t) t.textContent = '-';
+        var s = document.getElementById('tc-dp-stat-selected');
+        if (s) s.textContent = '0';
+        var r = document.getElementById('tc-dp-stat-remaining');
+        if (r) r.textContent = '-';
+        var orig = document.getElementById('tc-preview-orig');
+        if (orig) orig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var res = document.getElementById('tc-preview-result');
+        if (res) res.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+        TCTP.switchToOriginalTab();
+    }
+
+    var clearBtn = document.getElementById('tc-dp-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        clearAll();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
     });
+
+    /* ------------------------------------------------------------------ */
+    /*  Delete / process                                                   */
+    /* ------------------------------------------------------------------ */
 
     var deleteBtn = document.getElementById('tc-dp-delete');
     if (deleteBtn) deleteBtn.addEventListener('click', async function () {
-        var toDelete = Object.keys(selectedPages).map(Number);
+        if (!file) { TCTP.toast('Please add a PDF file first.', '\u26A0\uFE0F'); return; }
+
+        var sel = resolveSelected();
+        var toDelete = Object.keys(sel).map(Number);
         if (toDelete.length === 0) {
-            TCTP.toast('Please click on page thumbnails to select pages for deletion.', '\u26A0\uFE0F');
+            TCTP.toast(method === 'numbers'
+                ? 'Please enter page numbers to act on.' : 'Please click on page thumbnails to select pages.', '\u26A0\uFE0F');
             return;
         }
-        if (toDelete.length >= totalPages) {
+        if (toDelete.length >= totalPages && action === 'delete') {
             TCTP.toast('Cannot delete all pages.', '\u26A0\uFE0F');
             return;
         }
@@ -233,7 +378,23 @@
 
             var keepPages = [];
             for (var i = 0; i < totalPages; i++) {
-                if (!selectedPages[i + 1]) keepPages.push(i);
+                var pageNo = i + 1;
+                var isSelected = !!sel[pageNo];
+                if (action === 'delete') {
+                    if (!isSelected) keepPages.push(i);
+                } else {
+                    if (isSelected) keepPages.push(i);
+                }
+            }
+            if (keepPages.length === 0 && action === 'delete') {
+                TCTP.toast('Cannot delete all pages.', '\u26A0\uFE0F');
+                TCTP.hideProgress('tc-dp-progress');
+                return;
+            }
+            if (keepPages.length === 0 && action === 'keep') {
+                TCTP.toast('Nothing to keep.', '\u26A0\uFE0F');
+                TCTP.hideProgress('tc-dp-progress');
+                return;
             }
 
             TCTP.setProgress('tc-dp-progress', 50, 'Copying pages...');
@@ -241,27 +402,35 @@
             copiedPages.forEach(function (page) { newPdf.addPage(page); });
 
             TCTP.setProgress('tc-dp-progress', 75, 'Saving...');
-            var newBytes = await newPdf.save({ useObjectStreams: false, updateMetadata: false });
+            var saveOpts = optimize
+                ? { useObjectStreams: true, updateMetadata: false }
+                : { useObjectStreams: false, updateMetadata: true };
+            var newBytes = await newPdf.save(saveOpts);
             var blob = new Blob([newBytes], { type: 'application/pdf' });
 
-            TCTP.setProgress('tc-dp-progress', 100, 'Done!');
-            var name = (file ? file.name.replace(/\.pdf$/i, '') : 'document') + '-removed-pages.pdf';
+            var nameInputEl = document.getElementById('tc-dp-name');
+            var custom = nameInputEl ? nameInputEl.value.trim() : '';
+            var name = (custom || (file ? file.name.replace(/\.pdf$/i, '') : 'document')) + '.pdf';
             lastBlob = blob;
             lastName = name;
             var remainingEl = document.getElementById('tc-dp-stat-remaining');
             if (remainingEl) remainingEl.textContent = keepPages.length + ' pages';
             var downloadBtn = document.getElementById('tc-dp-download');
             if (downloadBtn) downloadBtn.style.display = '';
-            TCTP.downloadBlob(blob, name);
-            TCTP.toast(keepPages.length + ' pages remaining. Downloaded!');
-            var saved = file.size > blob.size ? ((1 - blob.size / file.size) * 100).toFixed(1) : '0';
-            TCTP.updateResultPanel(TCTP.formatSize(file.size), TCTP.formatSize(blob.size), saved + '%', 'Done');
+
+            TCTP.setProgress('tc-dp-progress', 100, 'Done!');
+            var totalIn = file.size;
+            var saved = totalIn > blob.size ? ((1 - blob.size / totalIn) * 100).toFixed(1) : '0';
+            TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(blob.size), saved + '%', 'Done');
+            TCTP.toast(keepPages.length + ' pages remaining.');
             TCTP.switchToResultTab();
             try {
                 var resultAb = await blob.arrayBuffer();
                 var compDataUrl = await renderPageToImage(resultAb, 1);
                 TCTP.showResultPreview(compDataUrl);
             } catch (_) {}
+            TCTP.downloadBlob(blob, name);
+            TCTP.hideProgress('tc-dp-progress');
         } catch (err) {
             TCTP.toast('Failed: ' + err.message, '\u274C');
             TCTP.hideProgress('tc-dp-progress');
@@ -273,5 +442,8 @@
         if (!lastBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
         TCTP.downloadBlob(lastBlob, lastName);
     });
+
+    updateMethodOpts();
+    updateStats();
 
 })();
