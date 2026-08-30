@@ -144,7 +144,7 @@ abstract class TextCraft_Tool_Base extends Widget_Base {
             [
                 'label'     => esc_html__('Accent Color', 'textcrafttoolspro'),
                 'type'      => Controls_Manager::COLOR,
-                'default'   => '#2563eb',
+                'default'   => '#0b1220',
                 'selectors' => [
                     '{{WRAPPER}}' => '--tc-accent: {{VALUE}};',
                 ],

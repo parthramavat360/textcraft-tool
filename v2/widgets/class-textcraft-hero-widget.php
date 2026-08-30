@@ -49,7 +49,7 @@ class TextCraft_Hero_Widget extends \Elementor\Widget_Base {
             [
                 'label'   => __( 'Eyebrow Text', 'textcrafttoolspro' ),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => '74 tools · nothing to install',
+                'default' => '207 tools · nothing to install',
             ]
         );
 
@@ -113,7 +113,7 @@ class TextCraft_Hero_Widget extends \Elementor\Widget_Base {
                 'type'        => \Elementor\Controls_Manager::REPEATER,
                 'fields'      => $stats_repeater->get_controls(),
                 'default'     => [
-                    [ 'stat_value' => '74', 'stat_label' => 'Free tools' ],
+                    [ 'stat_value' => '207', 'stat_label' => 'Free tools' ],
                     [ 'stat_value' => '0', 'stat_label' => 'Accounts required' ],
                     [ 'stat_value' => '<1s', 'stat_label' => 'Median run time' ],
                     [ 'stat_value' => '100%', 'stat_label' => 'Local-first where possible' ],

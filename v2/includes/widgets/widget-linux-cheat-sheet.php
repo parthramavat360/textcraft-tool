@@ -18,7 +18,7 @@ class Widget_Linux_Cheat_Sheet extends TextCraft_Tool_Base {
         <div class="tctp-result" id="linux-result" style="display:block">
             <div id="linux-content">
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Navigation & Files</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Navigation & Files</h3>
                     <pre class="tctp-code-block"><code># Navigation
 pwd                         # print working directory
 ls                          # list files
@@ -45,7 +45,7 @@ tail -f /var/log/syslog     # follow file in real time</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Search & Find</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Search & Find</h3>
                     <pre class="tctp-code-block"><code># Find files
 find / -name "*.log" -type f           # find by name
 find . -size +100M                     # find large files
@@ -66,7 +66,7 @@ whereis nginx                          # find binary, source, manual</code></pre
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Permissions & Ownership</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Permissions & Ownership</h3>
                     <pre class="tctp-code-block"><code># View permissions
 ls -la
 stat file.txt
@@ -83,7 +83,7 @@ chown -R www-data:www-data /var/www/</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Process Management</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Process Management</h3>
                     <pre class="tctp-code-block"><code># List processes
 ps aux                      # all processes
 ps aux | grep nginx         # filter by name
@@ -109,7 +109,7 @@ du -sh /path/               # directory size</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Networking</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Networking</h3>
                     <pre class="tctp-code-block"><code># Network info
 ip addr                     # show IP addresses
 ip route                    # show routing table
@@ -135,7 +135,7 @@ nslookup example.com</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Disk & Archive</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Disk & Archive</h3>
                     <pre class="tctp-code-block"><code># Disk usage
 df -h                       # filesystem usage
 du -sh /path/               # directory size
@@ -151,7 +151,7 @@ unzip archive.zip                # extract zip</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Text Processing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Text Processing</h3>
                     <pre class="tctp-code-block"><code># Sort / Unique
 sort file.txt               # sort lines
 sort -u file.txt            # sort + remove duplicates
@@ -174,7 +174,7 @@ command 2>&1                # redirect stderr to stdout</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">System & Service</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">System & Service</h3>
                     <pre class="tctp-code-block"><code># System info
 uname -a                    # kernel info
 cat /etc/os-release         # OS info

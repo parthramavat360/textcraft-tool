@@ -18,7 +18,7 @@
     var codeOutput = document.getElementById('tc-grid-code');
     var itemsList = document.getElementById('tc-grid-items-list');
 
-    var itemColors = ['#2563eb', '#dc2626', '#16a34a', '#ea580c', '#7c3aed', '#0891b2', '#be185d', '#65a30d', '#d97706', '#4f46e5'];
+    var itemColors = ['#0b1220', '#dc2626', '#16a34a', '#ea580c', '#7c3aed', '#0891b2', '#be185d', '#65a30d', '#d97706', '#4f46e5'];
     var items = [];
     var itemIdCounter = 0;
 

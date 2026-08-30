@@ -165,7 +165,7 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'kicker_color', [
 			'label'     => __( 'Kicker Text', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#2563eb',
+			'default'   => '#0b1220',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-kicker' => 'color: {{VALUE}}',
 			],
@@ -374,7 +374,7 @@ class TextCraft_Benefits_Section_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'icon_color', [
 			'label'     => __( 'Icon Color', 'textcrafttoolspro' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#2563eb',
+			'default'   => '#0b1220',
 			'selectors' => [
 				'{{WRAPPER}} .tcs-ben-ic' => 'color: {{VALUE}}',
 			],

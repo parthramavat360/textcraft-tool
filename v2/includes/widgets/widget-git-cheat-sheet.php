@@ -18,7 +18,7 @@ class Widget_Git_Cheat_Sheet extends TextCraft_Tool_Base {
         <div class="tctp-result" id="git-result" style="display:block">
             <div id="git-content">
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Setup & Config</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Setup & Config</h3>
                     <pre class="tctp-code-block"><code># Set your name and email
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
@@ -38,7 +38,7 @@ git clone --depth 1 https://github.com/user/repo.git  # shallow clone</code></pr
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Staging & Committing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Staging & Committing</h3>
                     <pre class="tctp-code-block"><code># Check status
 git status
 
@@ -58,7 +58,7 @@ git restore --staged file.txt  # unstage (newer syntax)</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Branching</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Branching</h3>
                     <pre class="tctp-code-block"><code># List branches
 git branch                  # local branches
 git branch -a               # all branches (local + remote)
@@ -80,7 +80,7 @@ git branch -m old-name new-name</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Merging & Rebasing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Merging & Rebasing</h3>
                     <pre class="tctp-code-block"><code># Merge
 git checkout main
 git merge feature-branch    # merge feature into main
@@ -104,7 +104,7 @@ git cherry-pick abc1234     # apply commit abc1234</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Stashing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Stashing</h3>
                     <pre class="tctp-code-block"><code># Stash changes
 git stash                   # stash all changes
 git stash push -m "message"  # stash with message
@@ -127,7 +127,7 @@ git stash clear</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Remote & Push/Pull</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Remote & Push/Pull</h3>
                     <pre class="tctp-code-block"><code># Remote management
 git remote add origin https://github.com/user/repo.git
 git remote -v               # list remotes
@@ -148,7 +148,7 @@ git fetch origin            # fetch specific remote</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Viewing History</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Viewing History</h3>
                     <pre class="tctp-code-block"><code># Log
 git log                     # full log
 git log --oneline           # compact log
@@ -171,7 +171,7 @@ git blame file.txt          # who changed each line</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Undoing Changes</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Undoing Changes</h3>
                     <pre class="tctp-code-block"><code># Unstaged changes
 git restore file.txt        # discard changes
 
@@ -195,7 +195,7 @@ git checkout abc1234</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Tags</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Tags</h3>
                     <pre class="tctp-code-block"><code># List tags
 git tag
 

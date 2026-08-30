@@ -2,7 +2,7 @@
  * PDF Splitter — Tool JS
  *
  * Drop zone, split mode select (every N pages, extract range, individual pages),
- * range input, split button, download ZIP.
+ * output file naming, optimize-size toggle, range input, split button, download ZIP.
  * Requires pdf.js, pdf-lib, JSZip loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
@@ -13,6 +13,8 @@
 
     var file = null;
     var splitMode = 'every';
+    var nameStyle = 'pages';
+    var optimize = false;
     var totalPages = 0;
     var lastZip = null;
     var lastName = '';
@@ -69,11 +71,35 @@
         });
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  Hints                                                              */
+    /* ------------------------------------------------------------------ */
+
+    var MODE_HINTS = {
+        every: 'Every N Pages \u2014 group pages in fixed-size chunks.',
+        range: 'Page Range \u2014 extract only the pages you choose.',
+        individual: 'Individual Pages \u2014 one PDF per page.'
+    };
+
+    var NAME_HINTS = {
+        pages: 'Pages \u2014 names reflect the page ranges (e.g. pages-1-5.pdf).',
+        sequential: 'Sequential \u2014 files are named part-1.pdf, part-2.pdf, and so on.',
+        original: 'Original name \u2014 files keep your source filename as a prefix.'
+    };
+
+    function updateHints() {
+        var mh = document.getElementById('tc-ps-mode-hint');
+        if (mh && MODE_HINTS[splitMode]) mh.textContent = MODE_HINTS[splitMode];
+        var nh = document.getElementById('tc-ps-name-hint');
+        if (nh && NAME_HINTS[nameStyle]) nh.textContent = NAME_HINTS[nameStyle];
+    }
+
     function updateModeOpts() {
         var everyOpts = document.getElementById('tc-ps-every-opts');
         var rangeOpts = document.getElementById('tc-ps-range-opts');
         if (everyOpts) everyOpts.style.display = splitMode === 'every' ? '' : 'none';
         if (rangeOpts) rangeOpts.style.display = splitMode === 'range' ? '' : 'none';
+        updateHints();
     }
 
     document.querySelectorAll('.tc-modes[data-group="ps-mode"] .tc-btn').forEach(function (btn) {
@@ -82,6 +108,19 @@
             splitMode = btn.getAttribute('data-val') || 'every';
             updateModeOpts();
         });
+    });
+
+    document.querySelectorAll('.tc-modes[data-group="ps-name"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            nameStyle = btn.getAttribute('data-val') || 'pages';
+            updateHints();
+        });
+    });
+
+    var optInput = document.getElementById('tc-ps-optimize');
+    if (optInput) optInput.addEventListener('change', function () {
+        optimize = optInput.checked;
     });
 
     var everyRange = document.getElementById('tc-ps-every');
@@ -173,6 +212,23 @@
         return pages;
     }
 
+    /* ------------------------------------------------------------------ */
+    /*  Output file naming                                                  */
+    /* ------------------------------------------------------------------ */
+
+    var fileCounter = 0;
+
+    function makeChunkName(base, style, pagesDefault, singlePage) {
+        fileCounter++;
+        if (style === 'sequential') return 'part-' + fileCounter + '.pdf';
+        if (style === 'original') return (base || 'pdf') + '-' + fileCounter + '.pdf';
+        return pagesDefault;
+    }
+
+    function baseName(name) {
+        return (name || 'pdf').replace(/\.pdf$/i, '');
+    }
+
     var splitBtn = document.getElementById('tc-ps-split');
     if (splitBtn) splitBtn.addEventListener('click', async function () {
         if (!file) { TCTP.toast('Please select a PDF file first.', '\u26A0\uFE0F'); return; }
@@ -194,7 +250,9 @@
             totalPages = pdf.numPages;
             setStat('tc-ps-stat-total', totalPages + ' pages');
 
+            var base = baseName(file.name);
             var chunks = [];
+            fileCounter = 0;
 
             if (splitMode === 'every') {
                 var perChunk = everyRange ? (parseInt(everyRange.value) || 1) : 1;
@@ -202,28 +260,32 @@
                     var end = Math.min(i + perChunk - 1, totalPages);
                     var indices = [];
                     for (var j = i; j <= end; j++) indices.push(j - 1);
-                    chunks.push({ name: 'pages-' + i + '-' + end + '.pdf', indices: indices });
+                    chunks.push({ name: makeChunkName(base, nameStyle, 'pages-' + i + '-' + end + '.pdf'), indices: indices });
                 }
             } else if (splitMode === 'range') {
                 if (!rangeVal) { TCTP.toast('Please enter a page range.', '\u26A0\uFE0F'); TCTP.hideProgress('tc-ps-progress'); setStat('tc-ps-stat-status', 'Ready'); return; }
                 var pageNumbers = parseRange(rangeVal, totalPages);
                 if (!pageNumbers.length) { TCTP.toast('No valid pages in range.', '\u26A0\uFE0F'); TCTP.hideProgress('tc-ps-progress'); setStat('tc-ps-stat-status', 'Ready'); return; }
                 var idxs = pageNumbers.map(function (p) { return p - 1; });
-                chunks.push({ name: 'extracted-pages.pdf', indices: idxs });
+                chunks.push({ name: makeChunkName(base, nameStyle, 'extracted-pages.pdf'), indices: idxs });
             } else {
                 for (var k = 1; k <= totalPages; k++) {
-                    chunks.push({ name: 'page-' + k + '.pdf', indices: [k - 1] });
+                    chunks.push({ name: makeChunkName(base, nameStyle, 'page-' + k + '.pdf', k), indices: [k - 1] });
                 }
             }
 
             var zip = new JSZip();
             var firstChunkBytes = null;
+            var saveOpts = optimize
+                ? { useObjectStreams: true, updateMetadata: false }
+                : { useObjectStreams: false, updateMetadata: true };
+
             for (var c = 0; c < chunks.length; c++) {
-                TCTP.setProgress('tc-ps-progress', 25 + Math.round((c / chunks.length) * 60), 'Splitting chunk ' + (c + 1) + '/' + chunks.length + '...');
+                TCTP.setProgress('tc-ps-progress', 25 + Math.round((c / chunks.length) * 60), 'Splitting file ' + (c + 1) + '/' + chunks.length + '...');
                 var newPdf = await window.PDFLib.PDFDocument.create();
                 var copiedPages = await newPdf.copyPages(srcPdf, chunks[c].indices);
                 copiedPages.forEach(function (page) { newPdf.addPage(page); });
-                var bytes = await newPdf.save({ useObjectStreams: false, updateMetadata: false });
+                var bytes = await newPdf.save(saveOpts);
                 zip.file(chunks[c].name, bytes);
                 if (c === 0) firstChunkBytes = bytes;
             }
@@ -260,5 +322,7 @@
         if (!lastZip) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
         TCTP.downloadBlob(lastZip, lastName || 'split.zip');
     });
+
+    updateModeOpts();
 
 })();

@@ -34,9 +34,9 @@ class Widget_Color_Converter extends TextCraft_Tool_Base {
             <div class="tc-cc-preview" id="tc-cc-preview"></div>
             <div class="tc-input-group">
                 <label class="tc-label">Enter color</label>
-                <input type="text" class="tc-input tc-cc-input" id="tc-cc-input" placeholder="#2563eb, rgb(37,99,235), hsl(217,83%,53%)" value="#2563eb">
+                <input type="text" class="tc-input tc-cc-input" id="tc-cc-input" placeholder="#0b1220, rgb(37,99,235), hsl(217,83%,53%)" value="#0b1220">
             </div>
-            <input type="color" class="tc-cc-picker" id="tc-cc-picker" value="#2563eb">
+            <input type="color" class="tc-cc-picker" id="tc-cc-picker" value="#0b1220">
         </div>
 
         <div class="tc-cc-formats" id="tc-cc-formats">

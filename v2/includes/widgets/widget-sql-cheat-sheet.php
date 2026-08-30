@@ -18,7 +18,7 @@ class Widget_Sql_Cheat_Sheet extends TextCraft_Tool_Base {
         <div class="tctp-result" id="sql-result" style="display:block">
             <div id="sql-content">
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">SELECT Queries</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">SELECT Queries</h3>
                     <pre class="tctp-code-block"><code>-- Basic SELECT
 SELECT column1, column2 FROM table_name;
 
@@ -48,7 +48,7 @@ SELECT * FROM users WHERE email IS NOT NULL;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Aggregate Functions</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Aggregate Functions</h3>
                     <pre class="tctp-code-block"><code>-- COUNT
 SELECT COUNT(*) FROM users;
 
@@ -75,7 +75,7 @@ ORDER BY avg_salary DESC;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">JOINs</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">JOINs</h3>
                     <pre class="tctp-code-block"><code>-- INNER JOIN (matching rows only)
 SELECT users.name, orders.total
 FROM users
@@ -109,7 +109,7 @@ INNER JOIN products p ON o.product_id = p.id;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">INSERT / UPDATE / DELETE</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">INSERT / UPDATE / DELETE</h3>
                     <pre class="tctp-code-block"><code>-- INSERT single row
 INSERT INTO users (name, email, age)
 VALUES ('John', 'john@example.com', 30);
@@ -134,7 +134,7 @@ TRUNCATE TABLE temp_data;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Subqueries & CTEs</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Subqueries & CTEs</h3>
                     <pre class="tctp-code-block"><code>-- Subquery in WHERE
 SELECT * FROM users
 WHERE id IN (SELECT user_id FROM orders WHERE total > 100);
@@ -163,7 +163,7 @@ SELECT * FROM org_chart;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Indexes & Performance</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Indexes & Performance</h3>
                     <pre class="tctp-code-block"><code>-- Create index
 CREATE INDEX idx_users_email ON users(email);
 
@@ -184,7 +184,7 @@ ANALYZE TABLE users;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">DDL (CREATE / ALTER / DROP)</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">DDL (CREATE / ALTER / DROP)</h3>
                     <pre class="tctp-code-block"><code>-- Create table
 CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -204,7 +204,7 @@ DROP TABLE IF EXISTS temp_users;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Window Functions</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Window Functions</h3>
                     <pre class="tctp-code-block"><code>-- ROW_NUMBER
 SELECT name, salary,
   ROW_NUMBER() OVER (ORDER BY salary DESC) as rank

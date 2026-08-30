@@ -18,7 +18,7 @@ class Widget_Tailwind_Css_Cheat_Sheet extends TextCraft_Tool_Base {
         <div class="tctp-result" id="tailwind-result" style="display:block">
             <div id="tailwind-content">
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Layout</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Layout</h3>
                     <pre class="tctp-code-block"><code>/* Display */
 hidden          display: none;
 block           display: block;
@@ -49,7 +49,7 @@ container mx-auto     max-width + center</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Flexbox</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Flexbox</h3>
                     <pre class="tctp-code-block"><code>/* Flex container */
 flex              display: flex;
 inline-flex       display: inline-flex;
@@ -86,7 +86,7 @@ gap-8             gap: 2rem;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Grid</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Grid</h3>
                     <pre class="tctp-code-block"><code>/* Grid container */
 grid              display: grid;
 grid-cols-2       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -105,7 +105,7 @@ grid-rows-3        grid-template-rows: repeat(3, minmax(0, 1fr));</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Spacing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Spacing</h3>
                     <pre class="tctp-code-block"><code>/* Margin */
 m-0        margin: 0;
 m-1        margin: 0.25rem;
@@ -130,7 +130,7 @@ py-4       padding-top: 1rem; padding-bottom: 1rem;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Sizing</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Sizing</h3>
                     <pre class="tctp-code-block"><code>/* Width */
 w-0          width: 0;
 w-1          width: 0.25rem;
@@ -160,7 +160,7 @@ max-w-xl     max-width: 36rem;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Typography</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Typography</h3>
                     <pre class="tctp-code-block"><code>/* Font size */
 text-xs       font-size: 0.75rem;
 text-sm       font-size: 0.875rem;
@@ -203,7 +203,7 @@ leading-loose    line-height: 2;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Background & Colors</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Background & Colors</h3>
                     <pre class="tctp-code-block"><code>/* Background color */
 bg-black        background-color: #000;
 bg-white        background-color: #fff;
@@ -227,7 +227,7 @@ ring-blue-500     box-shadow: 0 0 0 2px #3b82f6;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Borders & Rounded</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Borders & Rounded</h3>
                     <pre class="tctp-code-block"><code>/* Border width */
 border           border-width: 1px;
 border-0         border-width: 0;
@@ -251,7 +251,7 @@ shadow-xl        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Transitions & Animation</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Transitions & Animation</h3>
                     <pre class="tctp-code-block"><code>/* Transition */
 transition-all        transition: all 150ms ease;
 transition-colors    transition: background-color, border-color, color;
@@ -283,7 +283,7 @@ cursor-not-allowed cursor: not-allowed;</code></pre>
                 </div>
 
                 <div class="tctp-cheat-section" data-searchable>
-                    <h3 style="color:#2563eb;margin:20px 0 10px;font-size:16px">Responsive & Responsive Prefixes</h3>
+                    <h3 style="color:#0b1220;margin:20px 0 10px;font-size:16px">Responsive & Responsive Prefixes</h3>
                     <pre class="tctp-code-block"><code>/* Breakpoints */
 sm:    @media (min-width: 640px)
 md:    @media (min-width: 768px)

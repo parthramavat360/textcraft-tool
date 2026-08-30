@@ -22,7 +22,7 @@
 <tr><td>Unordered List</td><td><code>- item\\n- item</code></td><td>• item</td></tr>
 <tr><td>Ordered List</td><td><code>1. item\\n2. item</code></td><td>1. item</td></tr>
 <tr><td>Task List</td><td><code>- [x] done\\n- [ ] todo</code></td><td>☑ done ☐ todo</td></tr>
-<tr><td>Blockquote</td><td><code>> quote</code></td><td style="border-left:3px solid #2563eb;padding-left:8px;color:#94a3b8;font-style:italic">quote</td></tr>
+<tr><td>Blockquote</td><td><code>> quote</code></td><td style="border-left:3px solid #0b1220;padding-left:8px;color:#94a3b8;font-style:italic">quote</td></tr>
 <tr><td>Horizontal Rule</td><td><code>---</code></td><td><hr style="border:1px solid #1e3050;margin:4px 0"></td></tr>
 <tr><td>Table</td><td><code>| H1 | H2 |\\n|---|---|\\n| a | b |</code></td><td><table style="border-collapse:collapse;font-size:12px"><tr><td style="border:1px solid #1e3050;padding:2px 6px;font-weight:700">H1</td><td style="border:1px solid #1e3050;padding:2px 6px;font-weight:700">H2</td></tr><tr><td style="border:1px solid #1e3050;padding:2px 6px">a</td><td style="border:1px solid #1e3050;padding:2px 6px">b</td></tr></table></td></tr>
 <tr><td>Footnote</td><td><code>Text[^1]</code></td><td>Text<sup>1</sup></td></tr>

@@ -40,7 +40,7 @@ class TextCraft_Tool_Workspace_Widget extends \Elementor\Widget_Base {
         $this->add_control( 'accent_color', [
             'label'     => __( 'Accent Color', 'textcrafttoolspro' ),
             'type'      => \Elementor\Controls_Manager::COLOR,
-            'default'   => '#2563eb',
+            'default'   => '#0b1220',
             'selectors' => [
                 '{{SELECTOR}} .tctp-ws .tctp-btn-accent'   => 'background: {{VALUE}}',
                 '{{SELECTOR}} .tctp-ws .tctp-drop:hover'   => 'border-color: {{VALUE}}',

@@ -35,8 +35,8 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Pick a Color</h4>
                 <div class="tc-color-picker-area">
-                    <div class="tc-color-preview-big" id="tc-color-preview-big" style="background:#2563eb"></div>
-                    <input type="color" id="tc-color-main" value="#2563eb" class="tc-color-main-input">
+                    <div class="tc-color-preview-big" id="tc-color-preview-big" style="background:#0b1220"></div>
+                    <input type="color" id="tc-color-main" value="#0b1220" class="tc-color-main-input">
                 </div>
             </div>
 
@@ -47,7 +47,7 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
                         <div class="tc-input-group">
                             <label class="tc-label">HEX</label>
                             <div class="tc-color-val-input">
-                                <input type="text" class="tc-input" id="tc-color-hex" value="#2563eb" readonly>
+                                <input type="text" class="tc-input" id="tc-color-hex" value="#0b1220" readonly>
                                 <button class="tc-color-copy" data-target="tc-color-hex" type="button">Copy</button>
                             </div>
                         </div>
@@ -128,7 +128,7 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
                 </div>
                 <div class="tc-panel-body">
                     <div class="tc-stats">
-                        <div><span>HEX</span><b id="tc-stat-orig">#2563eb</b></div>
+                        <div><span>HEX</span><b id="tc-stat-orig">#0b1220</b></div>
                         <div><span>Mode</span><b id="tc-stat-comp">Complementary</b></div>
                         <div class="saved"><span>Colors</span><b id="tc-stat-saved">2</b></div>
                     </div>
@@ -141,7 +141,7 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
                     </div>
                     <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">
                         <div id="tc-color-preview-panel" style="display:flex;align-items:center;justify-content:center;min-height:200px;background:#0d1321;border-radius:8px;overflow:hidden">
-                            <div id="tc-color-preview-circle" style="width:160px;height:160px;border-radius:50%;background:#2563eb;border:4px solid rgba(255,255,255,0.2)"></div>
+                            <div id="tc-color-preview-circle" style="width:160px;height:160px;border-radius:50%;background:#0b1220;border:4px solid rgba(255,255,255,0.2)"></div>
                         </div>
                     </div>
                     <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">

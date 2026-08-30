@@ -33,7 +33,7 @@
     var presets = {
         soft:       { x: 0, y: 4, blur: 12, spread: 0, opacity: 25, color: '#000000', style: 'outset' },
         hard:       { x: 4, y: 4, blur: 0, spread: 0, opacity: 30, color: '#000000', style: 'outset' },
-        glow:       { x: 0, y: 0, blur: 20, spread: 0, opacity: 50, color: '#2563eb', style: 'outset' },
+        glow:       { x: 0, y: 0, blur: 20, spread: 0, opacity: 50, color: '#0b1220', style: 'outset' },
         neumorphism: { x: 6, y: 6, blur: 12, spread: 0, opacity: 15, color: '#000000', style: 'outset' },
         floating:   { x: 0, y: 8, blur: 24, spread: 0, opacity: 20, color: '#000000', style: 'outset' },
         inset:      { x: 0, y: 2, blur: 4, spread: 0, opacity: 25, color: '#000000', style: 'inset' }

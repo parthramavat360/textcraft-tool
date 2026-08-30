@@ -24,8 +24,8 @@ class Widget_Color_Palette_Generator extends TextCraft_Tool_Base {
             <div class="tc-input-group">
                 <label class="tc-label">Base Color</label>
                 <div style="display:flex;gap:8px;align-items:center">
-                    <input type="color" id="pal-base" value="#2563eb" style="width:48px;height:40px;border:none;border-radius:8px;cursor:pointer;background:transparent">
-                    <input type="text" class="tc-input" id="pal-hex" value="#2563eb" style="flex:1">
+                    <input type="color" id="pal-base" value="#0b1220" style="width:48px;height:40px;border:none;border-radius:8px;cursor:pointer;background:transparent">
+                    <input type="text" class="tc-input" id="pal-hex" value="#0b1220" style="flex:1">
                 </div>
             </div>
             <div class="tc-input-group">

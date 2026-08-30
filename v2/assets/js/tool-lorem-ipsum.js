@@ -175,7 +175,7 @@
           para.style.fontSize = '14px';
           if (useNumbers) {
             var num = document.createElement('span');
-            num.style.color = 'var(--accent, #2563eb)';
+            num.style.color = 'var(--accent, #0b1220)';
             num.style.fontWeight = '700';
             num.style.marginRight = '6px';
             num.textContent = '¶ ' + (idx + 1);

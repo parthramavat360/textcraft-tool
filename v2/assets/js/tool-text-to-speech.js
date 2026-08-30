@@ -55,7 +55,7 @@
 
     function showStatus(msg, icon) {
         resultEl.style.display = '';
-        statusEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:14px;background:#0f172a;border-radius:12px;border:1px solid rgba(148,163,184,0.12);color:#e2e8f0;font-size:14px"><i class="fa-solid ' + icon + '" style="color:#2563eb;font-size:18px"></i>' + msg + '</div>';
+        statusEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:14px;background:#0f172a;border-radius:12px;border:1px solid rgba(148,163,184,0.12);color:#e2e8f0;font-size:14px"><i class="fa-solid ' + icon + '" style="color:#0b1220;font-size:18px"></i>' + msg + '</div>';
     }
 
     function hideStatus() {

@@ -49,6 +49,9 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
                     <span class="tc-card-desc">One PDF per page</span>
                 </button>
             </div>
+            <p class="tc-lvl-hint" id="tc-ps-mode-hint">
+                Every N Pages &mdash; group pages in fixed-size chunks.
+            </p>
         </div>
 
         <div class="tc-input-group" id="tc-ps-every-opts">
@@ -58,6 +61,29 @@ class Widget_Pdf_Splitter extends TextCraft_Tool_Base {
         <div class="tc-input-group" id="tc-ps-range-opts" style="display:none">
             <label class="tc-label">Page Range (e.g. 1-5, 8, 10-12)</label>
             <input type="text" class="tc-input" id="tc-ps-range" placeholder="1-5, 8, 10-12">
+        </div>
+
+        <div class="tc-input-group">
+            <label class="tc-label">Output File Naming</label>
+            <div class="tc-modes" data-group="ps-name">
+                <button class="tc-btn sel" data-val="pages" type="button">Pages</button>
+                <button class="tc-btn" data-val="sequential" type="button">Sequential</button>
+                <button class="tc-btn" data-val="original" type="button">Original name</button>
+            </div>
+            <p class="tc-lvl-hint" id="tc-ps-name-hint">
+                Pages &mdash; names reflect the page ranges (e.g. pages-1-5.pdf).
+            </p>
+        </div>
+
+        <div class="tc-input-group">
+            <label class="tc-premium-opt">
+                <input type="checkbox" class="tc-switch-input" id="tc-ps-optimize">
+                <span class="tc-switch" aria-hidden="true"></span>
+                <span class="tc-opt-text">
+                    <b>Optimize output size</b>
+                    <small>Re-encodes output streams for smaller files (strips some metadata).</small>
+                </span>
+            </label>
         </div>
 
         <?php $this->render_progress_bar('tc-ps-progress', 'Splitting...'); ?>

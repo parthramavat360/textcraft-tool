@@ -100,10 +100,10 @@
             '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#22c55e">' + unchanged + '</div><div style="color:#94a3b8;font-size:12px">Unchanged</div></div>' +
             '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#22c55e">' + added + '</div><div style="color:#94a3b8;font-size:12px">Lines Added</div></div>' +
             '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#ef4444">' + removed + '</div><div style="color:#94a3b8;font-size:12px">Lines Removed</div></div>' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#2563eb">' + pct + '%</div><div style="color:#94a3b8;font-size:12px">Similarity</div></div>' +
+            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#0b1220">' + pct + '%</div><div style="color:#94a3b8;font-size:12px">Similarity</div></div>' +
             '</div>' +
             '<div style="background:#0f172a;padding:16px;border-radius:12px;border:1px solid rgba(148,163,184,0.12)">' +
-            '<div style="background:#1e293b;height:8px;border-radius:4px;overflow:hidden"><div style="background:linear-gradient(90deg,#22c55e,#2563eb);height:100%;width:' + pct + '%;transition:width 0.3s"></div></div>' +
+            '<div style="background:#1e293b;height:8px;border-radius:4px;overflow:hidden"><div style="background:linear-gradient(90deg,#22c55e,#0b1220);height:100%;width:' + pct + '%;transition:width 0.3s"></div></div>' +
             '<div style="margin-top:8px;color:#94a3b8;font-size:12px">Original: ' + a.split('\n').length + ' lines | Modified: ' + b.split('\n').length + ' lines</div></div>';
     }
 

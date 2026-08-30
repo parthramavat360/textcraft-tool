@@ -107,7 +107,7 @@
             '</div>' +
             '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:' + level.color + '">' + fkg + '</div><div style="color:#94a3b8;font-size:11px">F-K Grade Level</div><div style="color:' + level.color + ';font-size:11px">' + level.label + '</div></div>' +
-            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#2563eb">' + gf + '</div><div style="color:#94a3b8;font-size:11px">Gunning Fog</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#0b1220">' + gf + '</div><div style="color:#94a3b8;font-size:11px">Gunning Fog</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#8b5cf6">' + cl + '</div><div style="color:#94a3b8;font-size:11px">Coleman-Liau</div></div>' +
             '</div>';
 
@@ -117,7 +117,7 @@
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + sentences + '</div><div style="color:#94a3b8;font-size:11px">Sentences</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + paragraphs + '</div><div style="color:#94a3b8;font-size:11px">Paragraphs</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + chars + '</div><div style="color:#94a3b8;font-size:11px">Characters</div></div>' +
-            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#2563eb">' + readingTime + ' min</div><div style="color:#94a3b8;font-size:11px">Reading Time</div></div>' +
+            '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#0b1220">' + readingTime + ' min</div><div style="color:#94a3b8;font-size:11px">Reading Time</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#8b5cf6">' + speakingTime + ' min</div><div style="color:#94a3b8;font-size:11px">Speaking Time</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + (words / Math.max(1, sentences)).toFixed(1) + '</div><div style="color:#94a3b8;font-size:11px">Words/Sentence</div></div>' +
             '<div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:22px;font-weight:700;color:#e2e8f0">' + (syllables / words).toFixed(1) + '</div><div style="color:#94a3b8;font-size:11px">Syllables/Word</div></div>' +
@@ -134,7 +134,7 @@
         if (tipsArr.length === 0) tipsArr.push('Your text has good readability! Keep up the clear writing.');
 
         tipsEl.innerHTML = '<ul style="list-style:none;padding:0;margin:0">' + tipsArr.map(function (t) {
-            return '<li style="padding:12px 16px;margin-bottom:8px;background:#0f172a;border-radius:10px;border:1px solid rgba(148,163,184,0.12);color:#cbd5e1;font-size:13px;line-height:1.6"><i class="fa-solid fa-lightbulb" style="color:#2563eb;margin-right:8px"></i>' + escHtml(t) + '</li>';
+            return '<li style="padding:12px 16px;margin-bottom:8px;background:#0f172a;border-radius:10px;border:1px solid rgba(148,163,184,0.12);color:#cbd5e1;font-size:13px;line-height:1.6"><i class="fa-solid fa-lightbulb" style="color:#0b1220;margin-right:8px"></i>' + escHtml(t) + '</li>';
         }).join('') + '</ul>';
 
         resultEl.style.display = '';

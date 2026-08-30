@@ -16,7 +16,7 @@
     var gapInput = document.getElementById('tc-fb-gap');
     var gapVal = document.getElementById('tc-fb-gap-val');
 
-    var itemColors = ['#2563eb', '#dc2626', '#16a34a', '#ea580c', '#7c3aed', '#0891b2', '#be185d', '#65a30d'];
+    var itemColors = ['#0b1220', '#dc2626', '#16a34a', '#ea580c', '#7c3aed', '#0891b2', '#be185d', '#65a30d'];
     var items = [];
     var itemIdCounter = 0;
 

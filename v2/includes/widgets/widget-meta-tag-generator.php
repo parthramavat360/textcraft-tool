@@ -116,7 +116,7 @@ class Widget_Meta_Tag_Generator extends TextCraft_Tool_Base {
                     </div>
                     <div class="tc-input-group">
                         <label class="tc-label">Theme Color</label>
-                        <input type="color" class="tc-input" id="tc-mtg-theme-color" value="#2563eb">
+                        <input type="color" class="tc-input" id="tc-mtg-theme-color" value="#0b1220">
                     </div>
                 </div>
             </div>

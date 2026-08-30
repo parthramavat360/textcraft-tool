@@ -2,7 +2,8 @@
  * PDF Compressor - Tool JS
  *
  * Client-side PDF compression using pdf.js + pdf-lib.
- * Visual re-raster at reduced quality/resolution + lossless metadata strip.
+ * Premium options: Compression Mode (Auto / Lossless / Maximum),
+ * Image Quality fine-tune slider, Remove Metadata toggle.
  * No file-size limit — adaptive parameters scale with input size.
  *
  * @package TextCraft_Tools_Pro
@@ -15,6 +16,9 @@
     var compressedBlob = null;
     var originalUrl = null;
     var level = 2;
+    var mode = 'auto';              // auto | lossless | maximum
+    var qualityOverride = null;     // set when the user moves the quality slider (0-100)
+    var stripMeta = true;
 
     /* ------------------------------------------------------------------ */
     /*  Library loader                                                     */
@@ -55,35 +59,44 @@
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
     /**
-     * Compute JPEG quality based on file size and compression level.
-     * Scale is ALWAYS 1.0 — text is vector in PDFs and reducing scale makes it blurry.
-     * Compression savings come from: eliminating embedded fonts (1-5 MB each)
-     * and JPEG-encoding images (which are often stored uncompressed in PDFs).
+     * Compute JPEG quality based on file size, compression level and any
+     * manual quality override.
+     *
+     * - A manual override from the Image Quality slider always wins.
+     * - Otherwise the Compression Level preset is used, softened for very
+     *   large files.
      *
      * Level 1 = Less (near-lossless), 2 = Recommended, 3 = Strong.
      */
-    function getParams(fileSize, lvl) {
-        var baseQual = { 1: 0.95, 2: 0.88, 3: 0.78 };
-        var q = baseQual[lvl] || 0.88;
-
-        if (fileSize > 50 * 1048576)      { q *= 0.92; }
-        else if (fileSize > 20 * 1048576) { q *= 0.95; }
-
-        return { scale: 1.0, quality: clamp(q, 0.55, 0.95) };
+    function getParams(fileSize, lvl, qOverride) {
+        var q;
+        if (qOverride != null) {
+            q = qOverride / 100;
+        } else {
+            var baseQual = { 1: 0.95, 2: 0.88, 3: 0.78 };
+            q = baseQual[lvl] || 0.88;
+            if (fileSize > 50 * 1048576)      { q *= 0.92; }
+            else if (fileSize > 20 * 1048576) { q *= 0.95; }
+        }
+        return { scale: 1.0, quality: clamp(q, 0.5, 1.0) };
     }
 
     /* ------------------------------------------------------------------ */
-    /*  Lossless pass — strip metadata + object streams                    */
+    /*  Lossless pass — optionally strip metadata + re-optimize streams    */
     /* ------------------------------------------------------------------ */
 
     async function compressLossless(arrayBuffer) {
         var pdfDoc = await window.PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-        pdfDoc.setTitle('');
-        pdfDoc.setAuthor('');
-        pdfDoc.setSubject('');
-        pdfDoc.setKeywords([]);
-        pdfDoc.setProducer('TextCraft PDF Compressor');
-        pdfDoc.setCreator('TextCraft PDF Compressor');
+        if (stripMeta) {
+            pdfDoc.setTitle('');
+            pdfDoc.setAuthor('');
+            pdfDoc.setSubject('');
+            pdfDoc.setKeywords([]);
+            pdfDoc.setProducer('TextCraft PDF Compressor');
+            pdfDoc.setCreator('TextCraft PDF Compressor');
+        } else {
+            pdfDoc.setProducer('TextCraft PDF Compressor');
+        }
         return await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
     }
 
@@ -91,9 +104,9 @@
     /*  Visual pass — re-raster every page as JPEG, rebuild PDF            */
     /* ------------------------------------------------------------------ */
 
-    async function compressVisual(arrayBuffer, lvl, onProgress) {
+    async function compressVisual(arrayBuffer, lvl, qOverride, onProgress) {
         var fileSize = arrayBuffer.byteLength;
-        var params = getParams(fileSize, lvl);
+        var params = getParams(fileSize, lvl, qOverride);
 
         var pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer, disableAutoFetch: true }).promise;
         var numPages = pdf.numPages;
@@ -105,7 +118,9 @@
             var page = await pdf.getPage(i);
             var unscaled = page.getViewport({ scale: 1 });
 
-            var renderScale = 2.0;
+            // Render at 2x then JPEG-encode at the chosen quality. Higher
+            // quality keeps images sharper; the 2x supersample prevents aliasing.
+            var renderScale = params.quality < 0.6 ? 1.5 : 2.0;
             var vp = page.getViewport({ scale: renderScale });
 
             var canvas = document.createElement('canvas');
@@ -202,9 +217,22 @@
         3: 'Strong \u2014 maximum file-size reduction with slightly softer images.'
     };
 
-    function updateLevelHint(lvl) {
-        var hint = document.getElementById('tc-pdf-level-hint');
-        if (hint && LEVEL_HINTS[lvl]) hint.textContent = LEVEL_HINTS[lvl];
+    var MODE_HINTS = {
+        auto: 'Auto runs both methods and keeps the smallest result.',
+        lossless: 'Lossless strips metadata and re-optimizes streams without any visual change \u2014 text stays crisp.',
+        maximum: 'Maximum re-encodes every page as an image for the smallest possible file \u2014 softer text and images.'
+    };
+
+    function updateHints() {
+        var lh = document.getElementById('tc-pdf-level-hint');
+        if (lh && LEVEL_HINTS[level]) lh.textContent = LEVEL_HINTS[level];
+        var mh = document.getElementById('tc-pdf-mode-hint');
+        if (mh && MODE_HINTS[mode]) mh.textContent = MODE_HINTS[mode];
+    }
+
+    function syncQualityVisibility() {
+        var wrap = document.getElementById('tc-pdf-quality-wrap');
+        if (wrap) wrap.style.display = (mode === 'lossless') ? 'none' : '';
     }
 
     function resetTool() {
@@ -260,10 +288,48 @@
         btn.addEventListener('click', function () {
             TCTP.activateBtn(btn);
             level = parseInt(btn.getAttribute('data-val')) || 2;
-            updateLevelHint(level);
+            updateHints();
         });
     });
-    updateLevelHint(level);
+
+    /* ------------------------------------------------------------------ */
+    /*  Mode buttons                                                       */
+    /* ------------------------------------------------------------------ */
+
+    document.querySelectorAll('.tc-modes[data-group="pdf-mode"] .tc-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            TCTP.activateBtn(btn);
+            mode = btn.getAttribute('data-val') || 'auto';
+            syncQualityVisibility();
+            updateHints();
+        });
+    });
+
+    /* ------------------------------------------------------------------ */
+    /*  Quality slider                                                     */
+    /* ------------------------------------------------------------------ */
+
+    var qualityInput = document.getElementById('tc-pdf-quality');
+    if (qualityInput) {
+        qualityInput.addEventListener('input', function () {
+            qualityOverride = parseFloat(qualityInput.value) || 88;
+            var val = document.getElementById('tc-pdf-quality-val');
+            if (val) val.textContent = Math.round(qualityOverride) + '%';
+        });
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Remove metadata toggle                                             */
+    /* ------------------------------------------------------------------ */
+
+    var metaInput = document.getElementById('tc-pdf-strip-meta');
+    if (metaInput) {
+        metaInput.addEventListener('change', function () {
+            stripMeta = metaInput.checked;
+        });
+    }
+
+    updateHints();
 
     /* ------------------------------------------------------------------ */
     /*  Compress button                                                    */
@@ -282,27 +348,33 @@
             var abLen = ab.byteLength;
             var abU8 = new Uint8Array(ab);
 
-            TCTP.setProgress('tc-pdf-progress', 15, 'Compressing lossless...');
-            var lossless = null;
-            try {
-                lossless = await compressLossless(ab.slice(0));
-            } catch (_) { /* ignore */ }
+            var candidates = [];
 
-            TCTP.setProgress('tc-pdf-progress', 25, 'Compressing visual...');
-            var visual = null;
-            try {
-                visual = await compressVisual(ab.slice(0), level, function (pageIdx, total) {
-                    var frac = pageIdx / total;
-                    var pct = Math.round(25 + frac * 60);
-                    TCTP.setProgress('tc-pdf-progress', pct,
-                        'Rasterizing page ' + pageIdx + '/' + total + '...');
-                });
-            } catch (err) {
-                TCTP.toast('Visual compression error: ' + err.message, '\u26A0\uFE0F');
+            // Auto & Lossless both run the lossless/optimization pass.
+            if (mode !== 'maximum') {
+                TCTP.setProgress('tc-pdf-progress', 15, 'Optimizing streams\u2026');
+                try {
+                    candidates.push(await compressLossless(ab.slice(0)));
+                } catch (_) { /* ignore */ }
             }
 
-            TCTP.setProgress('tc-pdf-progress', 90, 'Comparing results...');
-            var best = pickBest(abU8.buffer, [lossless, visual]);
+            // Auto & Maximum both run the visual re-raster pass.
+            if (mode !== 'lossless') {
+                TCTP.setProgress('tc-pdf-progress', 25, 'Compressing visual\u2026');
+                try {
+                    candidates.push(await compressVisual(ab.slice(0), level, qualityOverride, function (pageIdx, total) {
+                        var frac = pageIdx / total;
+                        var pct = Math.round(25 + frac * 60);
+                        TCTP.setProgress('tc-pdf-progress', pct,
+                            'Rasterizing page ' + pageIdx + '/' + total + '...');
+                    }));
+                } catch (err) {
+                    TCTP.toast('Visual compression error: ' + err.message, '\u26A0\uFE0F');
+                }
+            }
+
+            TCTP.setProgress('tc-pdf-progress', 90, 'Finalizing result\u2026');
+            var best = pickBest(abU8.buffer, candidates);
             compressedBlob = new Blob([best], { type: 'application/pdf' });
             var saved = Math.max(0, ((1 - best.byteLength / abLen) * 100)).toFixed(1);
 

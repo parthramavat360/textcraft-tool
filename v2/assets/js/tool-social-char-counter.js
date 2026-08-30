@@ -90,7 +90,7 @@
         const rem = Math.max(0, plat.limit - stats.chars);
         const pctVal = Math.min(100, Math.round((stats.chars / plat.limit) * 100));
         const over = stats.chars > plat.limit;
-        const barColor = over ? '#ef4444' : pctVal > 90 ? '#f59e0b' : '#2563eb';
+        const barColor = over ? '#ef4444' : pctVal > 90 ? '#f59e0b' : '#0b1220';
         return `
           <div class="tc-sc-platform-row ${key === platform ? 'active' : ''}">
             <div class="tc-sc-platform-info">
