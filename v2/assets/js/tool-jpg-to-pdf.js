@@ -1,9 +1,9 @@
 /**
  * JPG to PDF — Tool JS
  *
- * Multi-file JPG drop → single PDF. Card-based page size selection,
- * margin slider, fit/landscape toggles. Original + result preview
- * rendered via pdf.js canvas → data URL.
+ * Multi-file JPG drop → single PDF. Premium page-size cards, orientation,
+ * margins slider, fit/optimize switches, output file name, clear all.
+ * Original + result preview rendered via image/pdf.js canvas.
  * Requires pdf.js + pdf-lib loaded dynamically.
  *
  * @package TextCraft_Tools_Pro
@@ -14,6 +14,7 @@
 
     var files = [];
     var resultBlob = null;
+    var lastName = '';
 
     var drop = document.getElementById('tc-j2pdf-drop');
     if (!drop) return;
@@ -43,6 +44,11 @@
         return loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js');
     }
 
+    function setStat(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
     // ── Page size maps ────────────────────────────────────────
 
     var PAGE_SIZES = {
@@ -51,6 +57,25 @@
         'legal':  { w: 612,    h: 1008   },
         'auto':   null
     };
+
+    var SIZE_HINTS = {
+        'a4':     'A4 \u2014 standard international page size, 210 \u00D7 297 mm.',
+        'letter': 'Letter \u2014 North American page size, 8.5 \u00D7 11 in.',
+        'legal':  'Legal \u2014 longer North American page size, 8.5 \u00D7 14 in.',
+        'auto':   'Auto \u2014 each page is sized to fit its image dimensions.'
+    };
+    var ORIENT_HINTS = {
+        'portrait':  'Portrait \u2014 pages taller than they are wide.',
+        'landscape': 'Landscape \u2014 pages wider than they are tall.'
+    };
+
+    function updateHints() {
+        var sh = document.getElementById('tc-j2pdf-size-hint');
+        var sizeKey = getSelectedPageSize();
+        if (sh) sh.textContent = SIZE_HINTS[sizeKey] || SIZE_HINTS['a4'];
+        var oh = document.getElementById('tc-j2pdf-orient-hint');
+        if (oh) oh.textContent = ORIENT_HINTS[getOrientation()] || ORIENT_HINTS['portrait'];
+    }
 
     // ── Drop zone (multi-file) ────────────────────────────────
 
@@ -80,22 +105,18 @@
     }
 
     drop.addEventListener('click', function () { inputEl.click(); });
-
     drop.addEventListener('dragover', function (e) {
         e.preventDefault();
         drop.classList.add('hot');
     });
-
     drop.addEventListener('dragleave', function () {
         drop.classList.remove('hot');
     });
-
     drop.addEventListener('drop', function (e) {
         e.preventDefault();
         drop.classList.remove('hot');
         if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
     });
-
     inputEl.addEventListener('change', function () {
         if (inputEl.files.length) handleFiles(inputEl.files);
         inputEl.value = '';
@@ -120,20 +141,8 @@
         row.classList.add('visible');
     }
 
-    function removeFile() {
-        files = [];
-        resultBlob = null;
-        var row = document.getElementById('tc-j2pdf-file');
-        if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
-        var dlBtn = document.getElementById('tc-j2pdf-download');
-        if (dlBtn) dlBtn.style.display = 'none';
-        var origEl = document.getElementById('tc-preview-orig');
-        if (origEl) origEl.innerHTML = '';
-        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
-    }
-
     var removeBtn = document.querySelector('#tc-j2pdf-file .tc-x');
-    if (removeBtn) removeBtn.addEventListener('click', removeFile);
+    if (removeBtn) removeBtn.addEventListener('click', clearAll);
 
     // ── Original preview (first image) ────────────────────────
 
@@ -149,17 +158,32 @@
 
     // ── Page size cards ───────────────────────────────────────
 
-    var sizeCards = document.querySelectorAll('.tc-j2pdf-sizes .tc-rsz-mode-card');
+    var sizeCards = document.querySelectorAll('.tc-modes[data-group="j2pdf-size"] .tc-btn');
     sizeCards.forEach(function (card) {
         card.addEventListener('click', function () {
-            sizeCards.forEach(function (c) { c.classList.remove('sel'); });
-            card.classList.add('sel');
+            TCTP.activateBtn(card);
+            updateHints();
         });
     });
 
     function getSelectedPageSize() {
-        var sel = document.querySelector('.tc-j2pdf-sizes .tc-rsz-mode-card.sel');
+        var sel = document.querySelector('.tc-modes[data-group="j2pdf-size"] .tc-btn.sel');
         return sel ? sel.getAttribute('data-val') : 'a4';
+    }
+
+    // ── Orientation segmented ─────────────────────────────────
+
+    var orientCards = document.querySelectorAll('.tc-modes[data-group="j2pdf-orient"] .tc-btn');
+    orientCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            TCTP.activateBtn(card);
+            updateHints();
+        });
+    });
+
+    function getOrientation() {
+        var sel = document.querySelector('.tc-modes[data-group="j2pdf-orient"] .tc-btn.sel');
+        return sel ? sel.getAttribute('data-val') : 'portrait';
     }
 
     // ── Margins slider ────────────────────────────────────────
@@ -171,6 +195,35 @@
             marginVal.textContent = marginRange.value + ' px';
         });
     }
+
+    // ── Clear all ─────────────────────────────────────────────
+
+    function clearAll() {
+        files = [];
+        resultBlob = null;
+        var row = document.getElementById('tc-j2pdf-file');
+        if (row) { row.style.display = 'none'; row.classList.remove('visible'); }
+        var dlBtn = document.getElementById('tc-j2pdf-download');
+        if (dlBtn) dlBtn.style.display = 'none';
+        var nameInput = document.getElementById('tc-j2pdf-name');
+        if (nameInput) nameInput.value = '';
+        var orig = document.getElementById('tc-preview-orig');
+        if (orig) orig.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+        var res = document.getElementById('tc-preview-result');
+        if (res) res.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+        setStat('tc-j2pdf-stat-count', '0');
+        setStat('tc-j2pdf-stat-orig', '-');
+        setStat('tc-j2pdf-stat-comp', '-');
+        setStat('tc-j2pdf-stat-pages', '-');
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Ready');
+        TCTP.switchToOriginalTab();
+    }
+
+    var clearBtn = document.getElementById('tc-j2pdf-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        clearAll();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
 
     // ── Convert to PDF ────────────────────────────────────────
 
@@ -191,10 +244,11 @@
 
             var sizeKey = getSelectedPageSize();
             var margins = marginRange ? parseInt(marginRange.value, 10) : 20;
-            var fitToPage = document.getElementById('tc-j2pdf-fit');
-            var landscape = document.getElementById('tc-j2pdf-landscape');
-            var doFit = fitToPage ? fitToPage.checked : true;
-            var isLandscape = landscape ? landscape.checked : false;
+            var isLandscape = getOrientation() === 'landscape';
+            var fitInput = document.getElementById('tc-j2pdf-fit');
+            var optimizeInput = document.getElementById('tc-j2pdf-optimize');
+            var doFit = fitInput ? fitInput.checked : true;
+            var doOptimize = optimizeInput ? optimizeInput.checked : false;
 
             var pdfDoc = await window.PDFLib.PDFDocument.create();
             var total = files.length;
@@ -262,7 +316,10 @@
             }
 
             TCTP.setProgress('tc-j2pdf-progress', 92, 'Saving PDF...');
-            var newBytes = await pdfDoc.save({ useObjectStreams: false, updateMetadata: false });
+            var saveOpts = doOptimize
+                ? { useObjectStreams: true, updateMetadata: false }
+                : { useObjectStreams: false, updateMetadata: false };
+            var newBytes = await pdfDoc.save(saveOpts);
             resultBlob = new Blob([newBytes], { type: 'application/pdf' });
 
             TCTP.setProgress('tc-j2pdf-progress', 100, 'Done!');
@@ -271,12 +328,20 @@
             files.forEach(function (f) { totalIn += f.size; });
             var saved = totalIn > resultBlob.size ? ((1 - resultBlob.size / totalIn) * 100).toFixed(1) : '0';
 
-            var origEl = document.getElementById('tc-j2pdf-stat-orig');
-            var compEl = document.getElementById('tc-j2pdf-stat-comp');
-            var pagesEl = document.getElementById('tc-j2pdf-stat-pages');
-            if (origEl) origEl.textContent = TCTP.formatSize(totalIn);
-            if (compEl) compEl.textContent = TCTP.formatSize(resultBlob.size);
-            if (pagesEl) pagesEl.textContent = total + (total === 1 ? ' page' : ' pages');
+            setStat('tc-j2pdf-stat-count', total);
+            setStat('tc-j2pdf-stat-orig', TCTP.formatSize(totalIn));
+            setStat('tc-j2pdf-stat-comp', TCTP.formatSize(resultBlob.size));
+            setStat('tc-j2pdf-stat-pages', total + (total === 1 ? ' page' : ' pages'));
+
+            var nameInput = document.getElementById('tc-j2pdf-name');
+            var custom = nameInput ? nameInput.value.trim() : '';
+            if (custom) {
+                lastName = custom.replace(/\.pdf$/i, '') + '.pdf';
+            } else if (files.length === 1) {
+                lastName = files[0].name.replace(/\.[^.]+$/, '') + '.pdf';
+            } else {
+                lastName = 'converted.pdf';
+            }
 
             TCTP.updateResultPanel(TCTP.formatSize(totalIn), TCTP.formatSize(resultBlob.size), saved + '%', 'Done');
             TCTP.toast('PDF created with ' + total + ' page(s)!');
@@ -287,14 +352,15 @@
             // Result preview: render page 1 via pdf.js
             try {
                 var resultAb = await resultBlob.arrayBuffer();
-                var pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(resultAb) }).promise;
-                var page = await pdf.getPage(1);
-                var vp = page.getViewport({ scale: 1.5 });
+                var pbytes = new Uint8Array(resultAb.slice(0));
+                var pdf = await window.pdfjsLib.getDocument({ data: pbytes }).promise;
+                var page1 = await pdf.getPage(1);
+                var vp = page1.getViewport({ scale: 1.5 });
                 var canvas = document.createElement('canvas');
                 canvas.width = vp.width;
                 canvas.height = vp.height;
                 var ctx = canvas.getContext('2d');
-                await page.render({ canvasContext: ctx, viewport: vp }).promise;
+                await page1.render({ canvasContext: ctx, viewport: vp }).promise;
                 var dataUrl = canvas.toDataURL('image/png');
                 canvas.width = 0;
                 canvas.height = 0;
@@ -304,6 +370,7 @@
             }
 
             TCTP.switchToResultTab();
+            TCTP.hideProgress('tc-j2pdf-progress');
 
         } catch (err) {
             TCTP.toast('Conversion failed: ' + err.message, '\u274C');
@@ -320,11 +387,10 @@
                 TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F');
                 return;
             }
-            var name = files.length === 1
-                ? files[0].name.replace(/\.[^.]+$/, '') + '.pdf'
-                : 'converted.pdf';
-            TCTP.downloadBlob(resultBlob, name);
+            TCTP.downloadBlob(resultBlob, lastName);
         });
     }
+
+    updateHints();
 
 })();
