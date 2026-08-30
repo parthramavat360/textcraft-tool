@@ -175,7 +175,8 @@
         ensurePdfJs().then(function () {
             return file.arrayBuffer();
         }).then(function (ab) {
-            return window.pdfjsLib.getDocument({ data: new Uint8Array(ab) }).promise.then(function (pdf) {
+            var bytes = new Uint8Array(ab.slice(0));
+            return window.pdfjsLib.getDocument({ data: bytes }).promise.then(function (pdf) {
                 totalPages = pdf.numPages;
                 setStat('tc-rp-stat-total', totalPages + ' pages');
                 return renderPageToImage(ab.slice(0), 1);
