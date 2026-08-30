@@ -3,6 +3,7 @@
  *
  * Quality slider, downscale toggle. Original + result preview.
  * Canvas.toBlob('image/webp') for compression.
+ * Premium: output file name + Clear all (also clears previews).
  *
  * @package TextCraft_Tools_Pro
  */
@@ -11,7 +12,7 @@
 
     var file = null;
     var compressedBlob = null;
-    var quality = 90;
+    var quality = 85;
     var maxDim = 1200;
 
     var drop = document.getElementById('tc-wp-drop');
@@ -20,6 +21,12 @@
     function setStat(id, val) {
         var el = document.getElementById(id);
         if (el) el.textContent = val;
+    }
+
+    function resetStats() {
+        setStat('tc-wp-stat-orig', '-');
+        setStat('tc-wp-stat-comp', '-');
+        setStat('tc-wp-stat-saved', '-');
     }
 
     // ── Drop zone ──
@@ -34,9 +41,7 @@
         TCTP.showFileRow('tc-wp-file', f);
         var dlBtn = document.getElementById('tc-wp-download');
         if (dlBtn) dlBtn.style.display = 'none';
-        setStat('tc-wp-stat-orig', '-');
-        setStat('tc-wp-stat-comp', '-');
-        setStat('tc-wp-stat-saved', '-');
+        resetStats();
 
         var reader = new FileReader();
         reader.onload = function (ev) {
@@ -52,9 +57,9 @@
             file = null;
             compressedBlob = null;
             TCTP.hideFileRow('tc-wp-file');
-            setStat('tc-wp-stat-orig', '-');
-            setStat('tc-wp-stat-comp', '-');
-            setStat('tc-wp-stat-saved', '-');
+            resetStats();
+            var dlBtn = document.getElementById('tc-wp-download');
+            if (dlBtn) dlBtn.style.display = 'none';
         });
     }
 
@@ -64,7 +69,7 @@
     var qualityVal = document.getElementById('tc-wp-quality-val');
     if (qualitySlider && qualityVal) {
         qualitySlider.addEventListener('input', function () {
-            quality = parseInt(qualitySlider.value) || 90;
+            quality = parseInt(qualitySlider.value) || 85;
             qualityVal.textContent = quality + '%';
         });
     }
@@ -72,20 +77,13 @@
     // ── Downscale toggle ──
 
     var resizeToggle = document.getElementById('tc-wp-resize');
-    var resizeVal = document.getElementById('tc-wp-resize-val');
     var sliderSection = document.getElementById('tc-wp-slider-section');
     var maxDimSlider = document.getElementById('tc-wp-maxdim');
     var maxDimVal = document.getElementById('tc-wp-dim-val');
 
-    if (resizeToggle && resizeVal) {
+    if (resizeToggle && sliderSection) {
         resizeToggle.addEventListener('change', function () {
-            if (resizeToggle.checked) {
-                resizeVal.textContent = 'On';
-                if (sliderSection) sliderSection.style.display = '';
-            } else {
-                resizeVal.textContent = 'Off';
-                if (sliderSection) sliderSection.style.display = 'none';
-            }
+            sliderSection.style.display = resizeToggle.checked ? '' : 'none';
         });
     }
 
@@ -174,8 +172,30 @@
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!compressedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.webp$/i, '') : 'image') + '-compressed.webp';
-            TCTP.downloadBlob(compressedBlob, name);
+            var nameInput = document.getElementById('tc-wp-name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.webp$/i, '') : (file ? file.name.replace(/\.webp$/i, '') : 'image');
+            TCTP.downloadBlob(compressedBlob, base + '.webp');
+        });
+    }
+
+    // ── Clear all ──
+
+    var clearBtn = document.getElementById('tc-wp-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            compressedBlob = null;
+            TCTP.hideFileRow('tc-wp-file');
+            resetStats();
+            var dlBtn = document.getElementById('tc-wp-download');
+            if (dlBtn) dlBtn.style.display = 'none';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.switchToOriginalTab();
+            var nameInput = document.getElementById('tc-wp-name');
+            if (nameInput) nameInput.value = '';
         });
     }
 

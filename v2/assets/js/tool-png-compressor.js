@@ -4,6 +4,7 @@
  * Quality slider controls UPNG quantization (cnum = max colors).
  * 100% = lossless (cnum=0), lower = fewer colors = smaller file.
  * Downscale toggle with slider. Original + result preview.
+ * Premium: output file name + Clear all (also clears previews).
  *
  * @package TextCraft_Tools_Pro
  */
@@ -12,7 +13,7 @@
 
     var file = null;
     var compressedBlob = null;
-    var quality = 92;
+    var quality = 90;
     var maxDim = 1200;
 
     var drop = document.getElementById('tc-png-drop');
@@ -32,6 +33,12 @@
     function setStat(id, val) {
         var el = document.getElementById(id);
         if (el) el.textContent = val;
+    }
+
+    function resetStats() {
+        setStat('tc-png-stat-orig', '-');
+        setStat('tc-png-stat-comp', '-');
+        setStat('tc-png-stat-saved', '-');
     }
 
     function qualityToColors(q) {
@@ -57,9 +64,7 @@
         TCTP.showFileRow('tc-png-file', f);
         var dlBtn = document.getElementById('tc-png-download');
         if (dlBtn) dlBtn.style.display = 'none';
-        setStat('tc-png-stat-orig', '-');
-        setStat('tc-png-stat-comp', '-');
-        setStat('tc-png-stat-saved', '-');
+        resetStats();
 
         var reader = new FileReader();
         reader.onload = function (ev) {
@@ -75,9 +80,9 @@
             file = null;
             compressedBlob = null;
             TCTP.hideFileRow('tc-png-file');
-            setStat('tc-png-stat-orig', '-');
-            setStat('tc-png-stat-comp', '-');
-            setStat('tc-png-stat-saved', '-');
+            resetStats();
+            var dlBtn = document.getElementById('tc-png-download');
+            if (dlBtn) dlBtn.style.display = 'none';
         });
     }
 
@@ -87,7 +92,7 @@
     var qualityVal = document.getElementById('tc-png-quality-val');
     if (qualitySlider && qualityVal) {
         qualitySlider.addEventListener('input', function () {
-            quality = parseInt(qualitySlider.value) || 92;
+            quality = parseInt(qualitySlider.value) || 90;
             qualityVal.textContent = quality + '%';
         });
     }
@@ -95,20 +100,13 @@
     // ── Downscale toggle ──
 
     var resizeToggle = document.getElementById('tc-png-resize');
-    var resizeVal = document.getElementById('tc-png-resize-val');
     var sliderSection = document.getElementById('tc-png-slider-section');
     var maxDimSlider = document.getElementById('tc-png-maxdim');
     var maxDimVal = document.getElementById('tc-png-dim-val');
 
-    if (resizeToggle && resizeVal) {
+    if (resizeToggle && sliderSection) {
         resizeToggle.addEventListener('change', function () {
-            if (resizeToggle.checked) {
-                resizeVal.textContent = 'On';
-                if (sliderSection) sliderSection.style.display = '';
-            } else {
-                resizeVal.textContent = 'Off';
-                if (sliderSection) sliderSection.style.display = 'none';
-            }
+            sliderSection.style.display = resizeToggle.checked ? '' : 'none';
         });
     }
 
@@ -244,8 +242,30 @@
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function () {
             if (!compressedBlob) { TCTP.toast('Nothing to download yet.', '\u26A0\uFE0F'); return; }
-            var name = (file ? file.name.replace(/\.png$/i, '') : 'image') + '-compressed.png';
-            TCTP.downloadBlob(compressedBlob, name);
+            var nameInput = document.getElementById('tc-png-name');
+            var base = (nameInput && nameInput.value.trim()) ? nameInput.value.trim().replace(/\.png$/i, '') : (file ? file.name.replace(/\.png$/i, '') : 'image');
+            TCTP.downloadBlob(compressedBlob, base + '.png');
+        });
+    }
+
+    // ── Clear all ──
+
+    var clearBtn = document.getElementById('tc-png-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            file = null;
+            compressedBlob = null;
+            TCTP.hideFileRow('tc-png-file');
+            resetStats();
+            var dlBtn = document.getElementById('tc-png-download');
+            if (dlBtn) dlBtn.style.display = 'none';
+            var origP = document.getElementById('tc-preview-orig');
+            if (origP) origP.innerHTML = '<span style="color:var(--muted);font-size:13px">Original preview will appear here</span>';
+            var resP = document.getElementById('tc-preview-result');
+            if (resP) resP.innerHTML = '<span style="color:var(--muted);font-size:13px">Result preview will appear here</span>';
+            TCTP.switchToOriginalTab();
+            var nameInput = document.getElementById('tc-png-name');
+            if (nameInput) nameInput.value = '';
         });
     }
 
