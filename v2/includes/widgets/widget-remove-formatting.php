@@ -26,6 +26,7 @@ class Widget_Remove_Formatting extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Strip HTML tags, inline styles, scripts, comments, Unicode bold/italic styling, and decode entities. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -80,13 +81,18 @@ class Widget_Remove_Formatting extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-rf-bar', 'Cleaning...'); ?>
 
-        <?php $this->render_actions('tc-rf-clean', 'Clean Formatting', 'tc-rf-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-rf-clean" type="button">Clean Formatting</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-rf-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-rf-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-rf-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-rf-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Tags Removed</span><span class="tc-stat-value" id="tc-rf-tags">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Saved</span><span class="tc-stat-value" id="tc-rf-saved">0%</span></div>
+        </div>
         </div>
         <?php
     }

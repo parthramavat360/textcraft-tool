@@ -38,9 +38,9 @@ class Widget_Png_To_Heic extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Quality <span class="tc-rsz-quality-badge" id="tc-p2h-quality-val">85</span>%</h4>
                 <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">1</span>
+                    <span class="tc-rsz-slider-min" style="font-family:'Space Grotesk',system-ui,sans-serif">1</span>
                     <input type="range" class="tc-rsz-slider" id="tc-p2h-quality" min="1" max="100" value="85">
-                    <span class="tc-rsz-slider-max">100</span>
+                    <span class="tc-rsz-slider-max" style="font-family:'Space Grotesk',system-ui,sans-serif">100</span>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@ class Widget_Png_To_Heic extends TextCraft_Tool_Base {
                     <label class="tc-rsz-toggle">
                         <input type="checkbox" class="tc-rsz-toggle-input" id="tc-p2h-ios" checked>
                         <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                        <span class="tc-rsz-toggle-text"><b>Auto-downscale large images on iOS (4096px max)</b></span>
+                        <span class="tc-rsz-toggle-text"><b style="font-family:'Space Grotesk',system-ui,sans-serif">Auto-downscale large images on iOS (4096px max)</b></span>
                     </label>
                 </div>
             </div>
@@ -70,7 +70,11 @@ class Widget_Png_To_Heic extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-p2h-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-p2h-convert', 'Convert to HEIC', 'tc-p2h-download', 'Download HEIC'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-p2h-convert" type="button">Convert to HEIC</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-p2h-download" type="button">Download HEIC</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-p2h-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (PNG)</span><span class="tc-stat-value" id="tc-p2h-stat-orig">-</span></div>

@@ -1,5 +1,5 @@
-/* ==========================================================================
-   Tool Page — Hero, Content (prose + sidebar)
+﻿/* ==========================================================================
+   Tool Page â€” Hero, Content (prose + sidebar)
    Colors: --ink:#0b1220 --body:#4a5568 --muted:#8792a6 --paper:#fff
    --surface:#f6f8fb --line:#e4e9f0 --accent:#0b1220 --ok:#16a34a
    ========================================================================== */
@@ -44,7 +44,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 12.5px;
     font-weight: 600;
     color: #4a5568;
@@ -79,7 +79,7 @@
 }
 
 .tctp-th .lede {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 17.5px;
     color: #4a5568;
     max-width: 60ch;
@@ -88,7 +88,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Tool Content — Prose + Sidebar
+   Tool Content â€” Prose + Sidebar
    -------------------------------------------------------------------------- */
 .tctp-tc {
     max-width: 1200px;
@@ -118,7 +118,7 @@
 }
 
 .tctp-prose p {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     color: #4a5568;
     margin: 0 0 14px;
     font-size: 16px;
@@ -265,7 +265,7 @@
 
 .tctp-faq summary::-webkit-details-marker { display: none; }
 .tctp-faq summary::after { content: '+'; color: #8792a6; font-weight: 500; }
-.tctp-faq details[open] summary::after { content: '–'; }
+.tctp-faq details[open] summary::after { content: 'â€“'; }
 
 .tctp-faq p {
     padding: 0 18px 16px;
@@ -293,7 +293,7 @@
 }
 
 .tctp-box h4 {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -308,7 +308,7 @@
     padding: 8px 10px;
     margin-left: -10px;
     border-radius: 9px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 14px;
     color: #4a5568;
     text-decoration: none;
@@ -348,7 +348,7 @@
     justify-content: center;
     height: 42px;
     border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-weight: 600;
     font-size: 14.5px;
     background: #fff;
@@ -362,7 +362,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Responsive — 1000px
+   Responsive â€” 1000px
    -------------------------------------------------------------------------- */
 @media (max-width: 1000px) {
     .tctp-tc-inner {
@@ -376,7 +376,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Responsive — 760px
+   Responsive â€” 760px
    -------------------------------------------------------------------------- */
 @media (max-width: 760px) {
     .tctp-steps,

@@ -152,6 +152,36 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var modeCards = document.querySelectorAll('.tc-sw-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var linesCb = document.getElementById(PREFIX + 'lines');
+            var caseCb = document.getElementById(PREFIX + 'case');
+            var blanksCb = document.getElementById(PREFIX + 'remove-blanks');
+            if (linesCb) linesCb.checked = true;
+            if (caseCb) caseCb.checked = false;
+            if (blanksCb) blanksCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            ['chars', 'words', 'lines-count', 'unique'].forEach(function (k) {
+                setStat(PREFIX + k, '0');
+            });
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

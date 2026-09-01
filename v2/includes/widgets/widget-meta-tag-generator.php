@@ -116,7 +116,18 @@ class Widget_Meta_Tag_Generator extends TextCraft_Tool_Base {
                     </div>
                     <div class="tc-input-group">
                         <label class="tc-label">Theme Color</label>
-                        <input type="color" class="tc-input" id="tc-mtg-theme-color" value="#0b1220">
+                        <div class="tc-premium-color-picker" data-picker="tc-mtg-theme-color">
+                            <label class="tc-pcp-swatch" for="tc-mtg-theme-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-mtg-theme-color"></span></label>
+                            <span class="tc-pcp-hex"></span>
+                            <input type="color" class="tc-pcp-input" id="tc-mtg-theme-color" value="#0b1220">
+                            <div class="tc-pcp-swatches" data-palette="tc-mtg-theme-color">
+                                <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                                <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                                <button class="tc-pcp-csw" data-val="#ff0000" type="button"></button>
+                                <button class="tc-pcp-csw" data-val="#0ea5e9" type="button"></button>
+                                <button class="tc-pcp-csw" data-val="#22c55e" type="button"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: PDF to JPG Converter
- * Premium redesign — DPI cards, quality slider, page range, output name, clear all.
+ * Premium redesign â€” DPI cards, quality slider, page range, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -35,19 +35,19 @@ class Widget_Pdf_To_Jpg extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-p2j-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
         <?php $this->render_file_row('tc-p2j-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Resolution (DPI)</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Resolution (DPI)</label>
             <div class="tc-modes tc-modes--cards" data-group="p2j-dpi">
                 <button class="tc-btn tc-btn--ghost" data-val="72" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">72 DPI</span>
+                    <span class="tc-card-title" >72 DPI</span>
                     <span class="tc-card-desc">Screen &mdash; small file</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost sel" data-val="150" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">150 DPI</span>
+                    <span class="tc-card-title" >150 DPI</span>
                     <span class="tc-card-desc">Standard &mdash; balanced</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="300" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">300 DPI</span>
+                    <span class="tc-card-title" >300 DPI</span>
                     <span class="tc-card-desc">Print &mdash; highest quality</span>
                 </button>
             </div>
@@ -58,16 +58,20 @@ class Widget_Pdf_To_Jpg extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-p2j-quality-wrap">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2j-quality">
+                <label class="tc-range-label"  for="tc-p2j-quality">
                     JPG Quality: <span id="tc-p2j-quality-val">92%</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-p2j-quality" min="10" max="100" value="92">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >10</span>
+                    <input type="range" class="tc-range" id="tc-p2j-quality" min="10" max="100" value="92" >
+                    <span class="tc-rsz-slider-max" >100</span>
+                </div>
                 <p class="tc-lvl-hint">Higher quality keeps images crisp but creates larger files.</p>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Range</label>
+            <label class="tc-label" >Page Range</label>
             <div class="tc-modes" data-group="p2j-range">
                 <button class="tc-btn sel" data-val="all" type="button">All pages</button>
                 <button class="tc-btn" data-val="pages" type="button">Selected pages</button>
@@ -78,14 +82,14 @@ class Widget_Pdf_To_Jpg extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-p2j-page-opts" style="display:none">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2j-pages">Page numbers (e.g. 1-3, 5, 8)</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-p2j-pages" placeholder="1-5, 8, 11-13">
+            <label class="tc-label"  for="tc-p2j-pages">Page numbers (e.g. 1-3, 5, 8)</label>
+            <input type="text" class="tc-input"  id="tc-p2j-pages" placeholder="1-5, 8, 11-13">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to convert.</p>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2j-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-p2j-name" placeholder="my-pages">
+            <label class="tc-label"  for="tc-p2j-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-p2j-name" placeholder="my-pages">
             <p class="tc-lvl-hint">Base name for the downloaded ZIP (leave empty to use your source file name).</p>
         </div>
 

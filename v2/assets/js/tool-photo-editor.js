@@ -97,6 +97,11 @@
     }
   }
 
+  function liveEdit() {
+    renderPreview();
+    TCTP.switchToResultTab();
+  }
+
   /* Slider events */
   Object.keys(sliders).forEach(key => {
     if (!sliders[key]) return;
@@ -107,7 +112,7 @@
         filters[key] = parseInt(this.value, 10);
       }
       updateLabels();
-      renderPreview();
+      liveEdit();
     });
   });
 
@@ -141,13 +146,21 @@
         Object.keys(sliders).forEach(k => { if (sliders[k]) sliders[k].value = filters[k]; });
         updateLabels();
       }
-      renderPreview();
+      // Reflect active state on the card buttons
+      const toggleable = ['flip-h', 'flip-v', 'grayscale', 'sepia', 'invert'];
+      if (toggleable.indexOf(val) >= 0) {
+        const activeMap = { 'flip-h': flipH, 'flip-v': flipV, 'grayscale': extraFilters.includes('grayscale(1)'), 'sepia': extraFilters.includes('sepia(1)'), 'invert': extraFilters.includes('invert(1)') };
+        if (activeMap[val]) card.classList.add('sel'); else card.classList.remove('sel');
+      } else if (val === 'reset') {
+        document.querySelectorAll('.tc-pe-transform-modes .tc-rsz-mode-card.sel').forEach(c => c.classList.remove('sel'));
+      }
+      liveEdit();
     });
   });
 
   /* File upload */
   TCTP.initDropZone('tc-pe-drop', 'tc-pe-drop-input', function(file) {
-    TCTP.showFileRow('tc-pe-file', file.name, TCTP.formatSize(file.size));
+    TCTP.showFileRow('tc-pe-file', file);
     const reader = new FileReader();
     reader.onload = function(e) {
       const img = new Image();
@@ -164,9 +177,75 @@
     fileRow.querySelector('.tc-x').addEventListener('click', function() {
       uploadedImg = null;
       TCTP.hideFileRow('tc-pe-file');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (previewWrap) previewWrap.style.display = 'none';
+      var po = document.getElementById('tc-preview-orig');
+      if (po) po.innerHTML = 'Original preview will appear here';
+      TCTP.switchToOriginalTab();
     });
   }
+
+  /* Text overlay controls — apply live */
+  const textColor = document.getElementById('tc-pe-text-color');
+  if (textColor) textColor.addEventListener('input', liveEdit);
+  const textSize = document.getElementById('tc-pe-text-size');
+  if (textSize) textSize.addEventListener('input', liveEdit);
+  const textPos = document.getElementById('tc-pe-text-pos');
+  if (textPos) textPos.addEventListener('change', liveEdit);
+
+  /* Premium Position dropdown */
+  const posPick = document.getElementById('tc-pe-pos-pick');
+  const posTrigger = document.getElementById('tc-pe-pos-trigger');
+  const posMenu = document.getElementById('tc-pe-pos-menu');
+  const posPrev = document.getElementById('tc-pe-pos-prev');
+  const posOpts = posMenu ? posMenu.querySelectorAll('.tc-pe-pos-opt') : [];
+  const POS_LABEL = { top: 'Top', center: 'Center', bottom: 'Bottom' };
+  function posSync() {
+    if (!textPos || !posPrev) return;
+    const v = textPos.value;
+    posPrev.textContent = POS_LABEL[v] || v;
+    posOpts.forEach(o => {
+      const on = o.getAttribute('data-val') === v;
+      o.classList.toggle('sel', on);
+      o.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  function posSet(v) {
+    if (!textPos) return;
+    textPos.value = v;
+    textPos.dispatchEvent(new Event('change', { bubbles: true }));
+    posSync();
+  }
+  function posClose() {
+    if (posMenu) posMenu.classList.remove('open');
+    if (posTrigger) posTrigger.setAttribute('aria-expanded', 'false');
+    if (posPick) posPick.classList.remove('open');
+  }
+  if (posTrigger && posMenu) {
+    posTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const open = posMenu.classList.toggle('open');
+      posTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      posPick.classList.toggle('open', open);
+    });
+    posTrigger.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); posTrigger.click(); }
+    });
+    posOpts.forEach(o => {
+      o.addEventListener('click', function() {
+        posSet(o.getAttribute('data-val'));
+        posClose();
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (posPick && !posPick.contains(e.target)) posClose();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') posClose();
+    });
+    if (textPos) textPos.addEventListener('change', posSync);
+  }
+  posSync();
 
   /* Apply / Export */
   if (applyBtn) {

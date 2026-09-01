@@ -157,6 +157,38 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var modeCards = document.querySelectorAll('.tc-pt-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var decodeCb = document.getElementById(PREFIX + 'decode');
+            var unicodeCb = document.getElementById(PREFIX + 'unicode');
+            var blankCb = document.getElementById(PREFIX + 'blanklines');
+            var dedupCb = document.getElementById(PREFIX + 'dedup');
+            if (decodeCb) decodeCb.checked = true;
+            if (unicodeCb) unicodeCb.checked = false;
+            if (blankCb) blankCb.checked = false;
+            if (dedupCb) dedupCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            ['chars', 'words', 'tags', 'saved'].forEach(function (k) {
+                setStat(PREFIX + k, k === 'tags' ? '0' : (k === 'saved' ? '0%' : '0'));
+            });
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

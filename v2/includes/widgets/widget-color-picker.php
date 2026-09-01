@@ -112,8 +112,8 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
 
     protected function render_result_content(array $settings): void {
         ?>
-        <div id="tc-color-result">
-            <p style="color:#64748b;padding:12px 0">Pick a color to see harmony colors</p>
+                        <div id="tc-color-result">
+            <p class="tc-color-result-empty">Pick a color to see harmony colors</p>
         </div>
         <?php
     }
@@ -140,8 +140,8 @@ class Widget_Color_Picker extends TextCraft_Tool_Base {
                         </div>
                     </div>
                     <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">
-                        <div id="tc-color-preview-panel" style="display:flex;align-items:center;justify-content:center;min-height:200px;background:#0d1321;border-radius:8px;overflow:hidden">
-                            <div id="tc-color-preview-circle" style="width:160px;height:160px;border-radius:50%;background:#0b1220;border:4px solid rgba(255,255,255,0.2)"></div>
+                        <div class="tc-color-preview-panel" id="tc-color-preview-panel">
+                            <div class="tc-color-preview-circle" id="tc-color-preview-circle" style="background:#0b1220"></div>
                         </div>
                     </div>
                     <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">

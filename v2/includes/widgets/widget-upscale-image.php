@@ -33,7 +33,7 @@ class Widget_Upscale_Image extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-up-drop', 'image/*', 'Drag & drop or click to upload an image'); ?>
         <?php $this->render_file_row('tc-up-file'); ?>
 
-        <div class="tc-rsz-options" style="margin-top:16px">
+        <div class="tc-rsz-options tc-imgopt tc-imgopt-mt">
 
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Upscale Factor</h4>

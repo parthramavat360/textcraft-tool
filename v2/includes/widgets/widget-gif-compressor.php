@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: GIF Compressor
- * Premium redesign — colors, resize, frame skip, loop, output name, clear all.
+ * Premium redesign â€” colors, resize, frame skip, loop, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -35,9 +35,9 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-gif-drop', 'image/gif,.gif', 'Drag & drop a GIF image here or click to browse'); ?>
         <?php $this->render_file_row('tc-gif-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-colors">
+                <label class="tc-range-label"  for="tc-gif-colors">
                     Colors: <span id="tc-gif-colors-val">64</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-gif-colors" min="4" max="256" value="64" step="4">
@@ -47,7 +47,7 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-scale">
+                <label class="tc-range-label"  for="tc-gif-scale">
                     Resize: <span id="tc-gif-scale-val">100%</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-gif-scale" min="25" max="100" value="100" step="5">
@@ -57,7 +57,7 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-skip">
+                <label class="tc-range-label"  for="tc-gif-skip">
                     Frame Skip: <span id="tc-gif-skip-val">None</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-gif-skip" min="0" max="5" value="0">
@@ -69,7 +69,7 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-gif-loop" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Loop</b>
                     <small>Play the animation on repeat.</small>
                 </span>
@@ -77,8 +77,8 @@ class Widget_Gif_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-gif-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-gif-name" placeholder="my-animation">
+            <label class="tc-label"  for="tc-gif-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-gif-name" placeholder="my-animation">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

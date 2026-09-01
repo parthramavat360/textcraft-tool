@@ -44,7 +44,7 @@ class Widget_Passport_Photo extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone( 'tc-ppt-drop', 'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp', 'Upload your photo here' ); ?>
         <?php $this->render_file_row( 'tc-ppt-file' ); ?>
 
-        <div class="tc-ppt-options">
+        <div class="tc-ppt-options tc-imgprem">
 
             <!-- Preset size -->
             <div class="tc-rsz-section">
@@ -77,6 +77,11 @@ class Widget_Passport_Photo extends TextCraft_Tool_Base {
                         <div class="tc-ppt-crop-stage" id="tc-ppt-crop-stage">
                             <div class="tc-ppt-frame" id="tc-ppt-display-frame">
                                 <img id="tc-ppt-crop-img" alt="" hidden>
+                                <div class="tc-ppt-guides" id="tc-ppt-guides" hidden>
+                                    <span class="tc-ppt-guide-v"></span>
+                                    <span class="tc-ppt-guide-h tc-ppt-guide-head"></span>
+                                    <span class="tc-ppt-guide-h tc-ppt-guide-eye"></span>
+                                </div>
                             </div>
                             <div class="tc-ppt-dim-overlay" id="tc-ppt-dim"></div>
                         </div>
@@ -86,11 +91,13 @@ class Widget_Passport_Photo extends TextCraft_Tool_Base {
                             <span>Zoom</span>
                             <input type="range" id="tc-ppt-zoom" min="100" max="400" value="160">
                         </label>
-                        <label class="tc-ppt-ctrl">
-                            <span>Face up / down</span>
-                            <input type="range" id="tc-ppt-face" min="0" max="100" value="38">
+                        <span class="tc-ppt-value tc-ppt-zoom-value" id="tc-ppt-zoom-value">160%</span>
+                        <label class="tc-ppt-guide-toggle">
+                            <input type="checkbox" id="tc-ppt-guides-on">
+                            <span class="tc-ppt-guide-switch" aria-hidden="true"></span>
+                            <span class="tc-ppt-guide-text">Show face guidelines</span>
                         </label>
-                        <span class="tc-ppt-hint">Drag inside the frame to position the face.</span>
+                        <span class="tc-ppt-hint">Drag inside the frame to move the face up, down, left or right.</span>
                     </div>
                 </div>
             </div>
@@ -98,20 +105,69 @@ class Widget_Passport_Photo extends TextCraft_Tool_Base {
             <!-- Background -->
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Background Colour</h4>
-                <div class="tc-ppt-bg-row">
-                    <button class="tc-ppt-bg sel" type="button" data-color="#ffffff" title="White"><i style="background:#ffffff"></i><span>White</span></button>
-                    <button class="tc-ppt-bg" type="button" data-color="#1f4e9b" title="Blue"><i style="background:#1f4e9b"></i><span>Blue</span></button>
-                    <button class="tc-ppt-bg" type="button" data-color="#b71c1c" title="Red"><i style="background:#b71c1c"></i><span>Red</span></button>
-                    <button class="tc-ppt-bg" type="button" data-color="#e8e8e8" title="Grey"><i style="background:#e8e8e8"></i><span>Grey</span></button>
-                    <button class="tc-ppt-bg tc-ppt-bg-custom" type="button" title="Custom"><i style="background:conic-gradient(#ff5f6d,#ffc371,#47a025,#4facfe,#ff5f6d)"></i><span>Custom</span></button>
+                <div class="tc-ppt-label-color-row">
+                    <span>Colour</span>
+                    <div class="tc-premium-color-picker" data-picker="tc-ppt-color">
+                        <label class="tc-pcp-swatch" for="tc-ppt-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-ppt-color"></span></label>
+                        <span class="tc-pcp-hex"></span>
+                        <input type="color" class="tc-pcp-input" id="tc-ppt-color" value="#ffffff">
+                        <div class="tc-pcp-swatches" data-palette="tc-ppt-color">
+                            <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#1f4e9b" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#b71c1c" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#e8e8e8" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                        </div>
+                    </div>
                 </div>
-                <input type="color" class="tc-ppt-color" id="tc-ppt-color" value="#ffffff" hidden>
+            </div>
+
+            <!-- Bottom label -->
+            <div class="tc-rsz-section">
+                <h4 class="tc-rsz-heading">Bottom Label</h4>
+                <p class="tc-ppt-outnote">Printed on each photo and the print sheet (e.g. your name / DOB).</p>
+                <label class="tc-ppt-label-row">
+                    <span>Label text</span>
+                    <input type="text" class="tc-input tc-pe-text-input" id="tc-ppt-label-text" placeholder="e.g. JOHN A. DOE" maxlength="40" autocomplete="off">
+                </label>
+                <div class="tc-ppt-label-color-row">
+                    <span>Colour</span>
+                    <div class="tc-premium-color-picker" data-picker="tc-ppt-label-color">
+                        <label class="tc-pcp-swatch" for="tc-ppt-label-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-ppt-label-color"></span></label>
+                        <span class="tc-pcp-hex"></span>
+                        <input type="color" class="tc-pcp-input" id="tc-ppt-label-color" value="#0b1220">
+                        <div class="tc-pcp-swatches" data-palette="tc-ppt-label-color">
+                            <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#1f4e9b" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#b71c1c" type="button"></button>
+                            <button class="tc-pcp-csw" data-val="#111111" type="button"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Output -->
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Print Sheet</h4>
                 <p class="tc-ppt-outnote">Exports a 6 × 4 inch sheet (300 DPI) with your photos tiled and trim marks — perfect for photo stores or home printing.</p>
+                <div class="tc-ppt-count-row">
+                    <span>Photos per sheet</span>
+                    <div class="tc-ppt-count-pills" id="tc-ppt-count-pills">
+                        <button class="tc-ppt-count sel" type="button" data-count="0">Auto</button>
+                        <button class="tc-ppt-count" type="button" data-count="4">4</button>
+                        <button class="tc-ppt-count" type="button" data-count="6">6</button>
+                        <button class="tc-ppt-count" type="button" data-count="8">8</button>
+                    </div>
+                </div>
+                <div class="tc-ppt-count-row tc-ppt-res-row">
+                    <span>Resolution</span>
+                    <div class="tc-ppt-count-pills" id="tc-ppt-res-pills">
+                        <button class="tc-ppt-count sel" type="button" data-scale="1">1×</button>
+                        <button class="tc-ppt-count" type="button" data-scale="2">2× HD</button>
+                        <button class="tc-ppt-count" type="button" data-scale="4">4× 4K</button>
+                    </div>
+                </div>
                 <div class="tc-ppt-output-row">
                     <button class="tc-ppt-fmt sel" type="button" data-fmt="image/jpeg" data-ext="jpg">JPG</button>
                     <button class="tc-ppt-fmt" type="button" data-fmt="image/png" data-ext="png">PNG</button>

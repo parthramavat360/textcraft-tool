@@ -33,15 +33,15 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-dp-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
         <?php $this->render_file_row('tc-dp-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Select pages by</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Select pages by</label>
             <div class="tc-modes tc-modes--cards" data-group="dp-method">
                 <button class="tc-btn tc-btn--ghost sel" data-val="click" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Click thumbnails</span>
+                    <span class="tc-card-title" >Click thumbnails</span>
                     <span class="tc-card-desc">Tap page previews to toggle</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="numbers" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Enter numbers</span>
+                    <span class="tc-card-title" >Enter numbers</span>
                     <span class="tc-card-desc">Type ranges like 1-3, 5, 8</span>
                 </button>
             </div>
@@ -51,20 +51,20 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-dp-numbers-opts" style="display:none">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-pages">Page numbers (e.g. 1-3, 5, 8)</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-dp-pages" placeholder="2-4, 6">
+            <label class="tc-label"  for="tc-dp-pages">Page numbers (e.g. 1-3, 5, 8)</label>
+            <input type="text" class="tc-input"  id="tc-dp-pages" placeholder="2-4, 6">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to act on.</p>
         </div>
 
         <div id="tc-dp-grid-wrap" style="display:none">
-            <div class="tc-input-group" style="margin-bottom:4px">
-                <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Thumbnails</label>
+            <div class="tc-input-group" id="tc-dpdf-thumbs">
+                <label class="tc-label">Page Thumbnails</label>
             </div>
             <div class="tc-page-grid" id="tc-dp-grid"></div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Action</label>
+            <label class="tc-label" >Action</label>
             <div class="tc-modes" data-group="dp-action">
                 <button class="tc-btn sel" data-val="delete" type="button">Delete selected</button>
                 <button class="tc-btn" data-val="keep" type="button">Keep only selected</button>
@@ -78,7 +78,7 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-dp-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>
@@ -86,8 +86,8 @@ class Widget_Delete_Pdf_Pages extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-dp-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-dp-name" placeholder="cleaned-document">
+            <label class="tc-label"  for="tc-dp-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-dp-name" placeholder="cleaned-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

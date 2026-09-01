@@ -33,19 +33,19 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-rp-drop', '.pdf,application/pdf', 'Drag & drop a PDF here or click to browse'); ?>
         <?php $this->render_file_row('tc-rp-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Rotate by</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Rotate by</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-rotation">
                 <button class="tc-btn tc-btn--ghost sel" data-val="90" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">90&deg; CW</span>
+                    <span class="tc-card-title" >90&deg; CW</span>
                     <span class="tc-card-desc">Clockwise &mdash; right</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="270" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">90&deg; CCW</span>
+                    <span class="tc-card-title" >90&deg; CCW</span>
                     <span class="tc-card-desc">Counter-clockwise &mdash; left</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="180" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">180&deg;</span>
+                    <span class="tc-card-title" >180&deg;</span>
                     <span class="tc-card-desc">Upside down</span>
                 </button>
             </div>
@@ -55,14 +55,14 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Apply to</label>
+            <label class="tc-label" >Apply to</label>
             <div class="tc-modes tc-modes--cards" data-group="rp-scope">
                 <button class="tc-btn tc-btn--ghost sel" data-val="all" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">All pages</span>
+                    <span class="tc-card-title" >All pages</span>
                     <span class="tc-card-desc">Rotate the whole document</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="pages" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Page numbers</span>
+                    <span class="tc-card-title" >Page numbers</span>
                     <span class="tc-card-desc">Rotate only the pages you choose</span>
                 </button>
             </div>
@@ -72,8 +72,8 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group" id="tc-rp-pages-opts" style="display:none">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-pages">Page numbers (e.g. 1, 3-5)</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-rp-pages" placeholder="1, 3-5">
+            <label class="tc-label"  for="tc-rp-pages">Page numbers (e.g. 1, 3-5)</label>
+            <input type="text" class="tc-input"  id="tc-rp-pages" placeholder="1, 3-5">
             <p class="tc-lvl-hint">Comma-separated page numbers and ranges to rotate.</p>
         </div>
 
@@ -81,7 +81,7 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-rp-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>
@@ -89,8 +89,8 @@ class Widget_Rotate_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rp-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-rp-name" placeholder="rotated-document">
+            <label class="tc-label"  for="tc-rp-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-rp-name" placeholder="rotated-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

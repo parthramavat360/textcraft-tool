@@ -68,6 +68,8 @@
             rotatedBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-rot-file');
+            if (document.getElementById('tc-preview-orig')) document.getElementById('tc-preview-orig').innerHTML = '';
+            if (document.getElementById('tc-preview-result')) document.getElementById('tc-preview-result').innerHTML = '';
             if (previewSection) previewSection.style.display = 'none';
         });
     }

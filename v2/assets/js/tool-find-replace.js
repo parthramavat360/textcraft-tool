@@ -147,6 +147,40 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            replacedText = '';
+            if (findInput) findInput.value = '';
+            if (replaceInput) replaceInput.value = '';
+
+            var modeCards = document.querySelectorAll('.tc-fr-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var caseCb = document.getElementById(PREFIX + 'case');
+            var allCb = document.getElementById(PREFIX + 'all');
+            var trimCb = document.getElementById(PREFIX + 'trim');
+            var dedupCb = document.getElementById(PREFIX + 'dedup');
+            if (caseCb) caseCb.checked = false;
+            if (allCb) allCb.checked = true;
+            if (trimCb) trimCb.checked = false;
+            if (dedupCb) dedupCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            updateStats('');
+            setStat(PREFIX + 'matches', '0');
+            setStat(PREFIX + 'replaced', '0');
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

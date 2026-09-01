@@ -26,6 +26,7 @@ class Widget_Plain_Text extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Convert HTML and rich text to clean plain text. Strip tags, decode entities, normalize Unicode, and clean whitespace. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -80,13 +81,18 @@ class Widget_Plain_Text extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-pt-bar', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-pt-convert', 'Convert to Plain Text', 'tc-pt-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-pt-convert" type="button">Convert to Plain Text</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-pt-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-pt-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-pt-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-pt-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Tags Removed</span><span class="tc-stat-value" id="tc-pt-tags">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Saved</span><span class="tc-stat-value" id="tc-pt-saved">0%</span></div>
+        </div>
         </div>
         <?php
     }

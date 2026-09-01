@@ -41,19 +41,19 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
             Convert Word (.docx), Excel (.xlsx, .xls, .csv), and PowerPoint (.pptx) files to PDF &mdash; rendered locally in your browser and exported as a single PDF. Fully private, nothing is ever uploaded.
         </div>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Document Type</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Document Type</label>
             <div class="tc-modes tc-modes--cards" data-group="ofp-fmt">
                 <button class="tc-btn tc-btn--ghost sel" data-val="word" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Word</span>
+                    <span class="tc-card-title" >Word</span>
                     <span class="tc-card-desc">.docx document</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="excel" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Excel</span>
+                    <span class="tc-card-title" >Excel</span>
                     <span class="tc-card-desc">.xlsx &middot; .xls &middot; .csv</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="ppt" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">PowerPoint</span>
+                    <span class="tc-card-title" >PowerPoint</span>
                     <span class="tc-card-desc">.pptx slide deck</span>
                 </button>
             </div>
@@ -66,7 +66,7 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
         <?php $this->render_file_row( 'tc-ofp-file' ); ?>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Size</label>
+            <label class="tc-label" >Page Size</label>
             <div class="tc-modes" data-group="ofp-size">
                 <button class="tc-btn sel" data-val="auto" type="button">Automatic</button>
                 <button class="tc-btn" data-val="a4" type="button">A4</button>
@@ -78,7 +78,7 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Orientation</label>
+            <label class="tc-label" >Page Orientation</label>
             <div class="tc-modes" data-group="ofp-orient">
                 <button class="tc-btn sel" data-val="portrait" type="button">Portrait</button>
                 <button class="tc-btn" data-val="landscape" type="button">Landscape</button>
@@ -91,17 +91,21 @@ class Widget_Office_To_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ofp-quality">
+                <label class="tc-range-label"  for="tc-ofp-quality">
                     Render Quality: <span id="tc-ofp-quality-val">High</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-ofp-quality" min="1" max="3" step="1" value="2">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >1</span>
+                    <input type="range" class="tc-range" id="tc-ofp-quality" min="1" max="3" step="1" value="2" >
+                    <span class="tc-rsz-slider-max" >3</span>
+                </div>
                 <p class="tc-lvl-hint">Higher quality produces crisper text and images but larger PDF files.</p>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ofp-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ofp-name" placeholder="my-converted-document">
+            <label class="tc-label"  for="tc-ofp-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-ofp-name" placeholder="my-converted-document">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

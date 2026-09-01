@@ -36,8 +36,8 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-ocr-drop', 'image/*', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-ocr-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">OCR Language</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >OCR Language</label>
             <div class="tc-modes" data-group="ocr-lang">
                 <button class="tc-btn tc-btn--ghost sel" data-val="eng" type="button">English</button>
                 <button class="tc-btn tc-btn--ghost" data-val="spa" type="button">Spanish</button>
@@ -58,7 +58,7 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-ocr-preprocess" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Image Preprocessing</b>
                     <small>Auto-enhance contrast &amp; sharpen for better accuracy.</small>
                 </span>
@@ -69,7 +69,7 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-ocr-cleanup" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Text Cleanup</b>
                     <small>Fix broken words, join sentences, clean whitespace.</small>
                 </span>
@@ -77,7 +77,7 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Output Format</label>
+            <label class="tc-label" >Output Format</label>
             <div class="tc-modes" data-group="ocr-output">
                 <button class="tc-btn tc-btn--ghost sel" data-val="text" type="button">Plain Text</button>
                 <button class="tc-btn tc-btn--ghost" data-val="hocr" type="button">hOCR (Structured)</button>
@@ -85,8 +85,8 @@ class Widget_Image_To_Text extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ocr-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ocr-name" placeholder="my-text">
+            <label class="tc-label"  for="tc-ocr-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-ocr-name" placeholder="my-text">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

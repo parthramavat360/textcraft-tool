@@ -26,6 +26,7 @@ class Widget_Case_Converter extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Convert text between uppercase, lowercase, sentence case, title case, and more. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -71,13 +72,18 @@ class Widget_Case_Converter extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-cc-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-cc-convert', 'Convert Text', 'tc-cc-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-cc-convert" type="button">Convert Text</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-cc-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-cc-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-cc-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-cc-words">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Sentences</span><span class="tc-stat-value" id="tc-cc-sentences">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Lines</span><span class="tc-stat-value" id="tc-cc-lines">0</span></div>
+        </div>
         </div>
         <?php
     }

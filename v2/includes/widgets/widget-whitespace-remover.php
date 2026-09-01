@@ -26,6 +26,7 @@ class Widget_Whitespace_Remover extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Clean up messy text by removing extra whitespace. Trim lines, collapse spaces, strip tabs, and remove blank lines. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -75,13 +76,18 @@ class Widget_Whitespace_Remover extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-ws-bar', 'Cleaning...'); ?>
 
-        <?php $this->render_actions('tc-ws-clean', 'Clean Whitespace', 'tc-ws-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-ws-clean" type="button">Clean Whitespace</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-ws-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-ws-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-ws-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-ws-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Lines</span><span class="tc-stat-value" id="tc-ws-lines">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Saved</span><span class="tc-stat-value" id="tc-ws-saved">0%</span></div>
+        </div>
         </div>
         <?php
     }

@@ -35,8 +35,8 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-ascii-drop', 'image/*', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-ascii-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Density</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Density</label>
             <div class="tc-modes" data-group="ascii-density">
                 <button class="tc-btn tc-btn--ghost" data-val="simple" type="button">Simple</button>
                 <button class="tc-btn tc-btn--ghost sel" data-val="medium" type="button">Medium</button>
@@ -45,7 +45,7 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Character Set</label>
+            <label class="tc-label" >Character Set</label>
             <div class="tc-modes" data-group="ascii-format">
                 <button class="tc-btn tc-btn--ghost sel" data-val="blocks" type="button">Blocks</button>
                 <button class="tc-btn tc-btn--ghost" data-val="characters" type="button">Characters</button>
@@ -55,7 +55,7 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ascii-width">
+                <label class="tc-range-label"  for="tc-ascii-width">
                     Width: <span id="tc-ascii-width-val">120</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-ascii-width" min="40" max="300" value="120" step="5">
@@ -67,7 +67,7 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-ascii-invert">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Invert</b>
                     <small>Reverse brightness (light on dark).</small>
                 </span>
@@ -75,8 +75,8 @@ class Widget_Ascii_Art extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-ascii-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-ascii-name" placeholder="my-ascii-art">
+            <label class="tc-label"  for="tc-ascii-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-ascii-name" placeholder="my-ascii-art">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

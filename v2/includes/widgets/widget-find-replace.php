@@ -26,6 +26,7 @@ class Widget_Find_Replace extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Search and replace words or phrases in any text. Supports normal text, regex patterns, and whole-word matching. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -105,13 +106,18 @@ class Widget_Find_Replace extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-fr-progress', 'Replacing...'); ?>
 
-        <?php $this->render_actions('tc-fr-convert', 'Find & Replace', 'tc-fr-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-fr-convert" type="button">Find &amp; Replace</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-fr-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-fr-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-fr-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-fr-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Matches</span><span class="tc-stat-value" id="tc-fr-matches">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Replaced</span><span class="tc-stat-value" id="tc-fr-replaced">0</span></div>
+        </div>
         </div>
         <?php
     }

@@ -38,9 +38,9 @@ class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Quality <span class="tc-rsz-quality-badge" id="tc-w2j-quality-val">92</span>%</h4>
                 <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">1</span>
+                    <span class="tc-rsz-slider-min" style="font-family:'Space Grotesk',system-ui,sans-serif">1</span>
                     <input type="range" class="tc-rsz-slider" id="tc-w2j-quality" min="1" max="100" value="92">
-                    <span class="tc-rsz-slider-max">100</span>
+                    <span class="tc-rsz-slider-max" style="font-family:'Space Grotesk',system-ui,sans-serif">100</span>
                 </div>
             </div>
 
@@ -56,11 +56,20 @@ class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
 
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Background Color</h4>
-                <div class="tc-rsz-slider-wrap">
-                    <input type="color" class="tc-color" id="tc-w2j-bgcolor" value="#ffffff" style="width:40px;height:36px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;padding:2px">
-                    <span class="tc-rsz-quality-badge" id="tc-w2j-bgcolor-hex">#ffffff</span>
-                    <span style="font-size:12px;opacity:0.6">Fill color behind transparency (JPG has no alpha)</span>
+                <div class="tc-premium-color-picker" data-picker="tc-w2j-bgcolor">
+                    <label class="tc-pcp-swatch" for="tc-w2j-bgcolor"><span class="tc-pcp-swatch-fill" data-swatch="tc-w2j-bgcolor"></span></label>
+                    <span class="tc-pcp-hex"></span>
+                    <input type="color" class="tc-pcp-input" id="tc-w2j-bgcolor" value="#ffffff">
+                    <div class="tc-pcp-swatches" data-palette="tc-w2j-bgcolor">
+                        <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#f1f5f9" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#e11d48" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#0ea5e9" type="button"></button>
+                    </div>
                 </div>
+                <span class="tc-rsz-quality-badge" id="tc-w2j-bgcolor-hex">#ffffff</span>
+                <span class="tc-w2j-hint">Fill color behind transparency (JPG has no alpha)</span>
             </div>
 
             <div class="tc-rsz-section">
@@ -69,7 +78,7 @@ class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
                     <label class="tc-rsz-toggle">
                         <input type="checkbox" class="tc-rsz-toggle-input" id="tc-w2j-ios" checked>
                         <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                        <span class="tc-rsz-toggle-text"><b>Auto-downscale large images on iOS (4096px max)</b></span>
+                        <span class="tc-rsz-toggle-text"><b style="font-family:'Space Grotesk',system-ui,sans-serif">Auto-downscale large images on iOS (4096px max)</b></span>
                     </label>
                 </div>
             </div>
@@ -78,7 +87,11 @@ class Widget_Webp_To_Jpg extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-w2j-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-w2j-convert', 'Convert to JPG', 'tc-w2j-download', 'Download JPG'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-w2j-convert" type="button">Convert to JPG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-w2j-download" type="button">Download JPG</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-w2j-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (WebP)</span><span class="tc-stat-value" id="tc-w2j-stat-orig">-</span></div>

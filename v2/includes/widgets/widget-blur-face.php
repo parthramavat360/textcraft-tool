@@ -34,7 +34,7 @@ class Widget_Blur_Face extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-blur-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-blur-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgprem">
 
             <div class="tc-rsz-section tc-blur-workspace" id="tc-blur-workspace" style="display:none">
                 <h4 class="tc-rsz-heading">Draw rectangles over areas to blur</h4>

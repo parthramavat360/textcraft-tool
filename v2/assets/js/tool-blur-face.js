@@ -62,6 +62,14 @@
             blurredBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-blur-file');
+            var basO = document.getElementById('tc-preview-orig');
+            if (basO) basO.innerHTML = '';
+            var basR = document.getElementById('tc-preview-result');
+            if (basR) basR.innerHTML = '';
+            var po = document.getElementById('tc-blur-preview-orig');
+            if (po) po.innerHTML = '';
+            var pr = document.getElementById('tc-blur-result');
+            if (pr) pr.innerHTML = '';
             if (workspace) workspace.style.display = 'none';
             if (strengthSection) strengthSection.style.display = 'none';
             if (modeSection) modeSection.style.display = 'none';
@@ -235,9 +243,21 @@
     if (clearBtn) {
         clearBtn.addEventListener('click', function () {
             blurRegions = [];
-            var rects = overlay.querySelectorAll('.tc-blur-rect');
+            var rects = overlay ? overlay.querySelectorAll('.tc-blur-rect') : [];
             rects.forEach(function (r) { r.remove(); });
             updateRegionCount();
+            // Repaint clean image so the canvas no longer shows any blur work
+            if (canvas && imgEl) {
+                var c2 = canvas.getContext('2d');
+                c2.drawImage(imgEl, 0, 0, displayW, displayH);
+            }
+            // Clear any produced result + download
+            blurredBlob = null;
+            if (dlBtn) dlBtn.style.display = 'none';
+            var res = document.getElementById('tc-blur-result');
+            if (res) res.innerHTML = '';
+            TCTP.updateResultPanel(naturalW + '\u00D7' + naturalH, '\u2014', '\u2014', 'Ready');
+            TCTP.toast('Cleared all blur areas.', '\u2705');
         });
     }
 

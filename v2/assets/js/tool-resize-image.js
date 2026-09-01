@@ -62,6 +62,8 @@
             file = null;
             resizedBlob = null;
             TCTP.hideFileRow('tc-rsz-file');
+            if (document.getElementById('tc-preview-orig')) document.getElementById('tc-preview-orig').innerHTML = '';
+            if (document.getElementById('tc-preview-result')) document.getElementById('tc-preview-result').innerHTML = '';
             var dlBtn = document.getElementById('tc-rsz-download');
             if (dlBtn) dlBtn.style.display = 'none';
         });

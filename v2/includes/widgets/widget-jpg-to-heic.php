@@ -35,14 +35,14 @@ class Widget_Jpg_To_Heic extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2h-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2h-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2h-quality">
+        <div class="tc-input-group" >
+            <label class="tc-range-label"  for="tc-j2h-quality">
                 Quality: <span id="tc-j2h-quality-val">85</span>%
             </label>
-            <div class="tc-range-wrap">
-                <span class="tc-range-min">1</span>
-                <input type="range" class="tc-range" id="tc-j2h-quality" min="1" max="100" value="85">
-                <span class="tc-range-max">100</span>
+            <div class="tc-rsz-slider-wrap">
+                <span class="tc-rsz-slider-min" >1</span>
+                <input type="range" class="tc-range" id="tc-j2h-quality" min="1" max="100" value="85" >
+                <span class="tc-rsz-slider-max" >100</span>
             </div>
             <p class="tc-lvl-hint">Higher quality = larger file. Note: HEIC is encoded as WebP in-browser for compatibility.</p>
         </div>
@@ -51,7 +51,7 @@ class Widget_Jpg_To_Heic extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2h-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -59,8 +59,8 @@ class Widget_Jpg_To_Heic extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2h-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2h-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-j2h-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-j2h-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

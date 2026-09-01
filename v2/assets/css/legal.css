@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    TCTP: Legal & Policies widget
    Scoped entirely under .tclp- to avoid collisions.
    Mirrors the textcraft-legal-policies.html reference design.
@@ -24,7 +24,7 @@
 	--tclp-card: oklch(1 0 0);
 	--tclp-shadow-soft: 0 1px 2px oklch(0.2 0.03 264 / 0.05), 0 8px 24px -12px oklch(0.2 0.03 264 / 0.18);
 
-	font-family: "DM Sans", system-ui, sans-serif;
+	font-family: "Lexend", system-ui, sans-serif;
 	font-size: 16px;
 	line-height: 1.65;
 	color: var(--tclp-ink);
@@ -403,7 +403,7 @@
 	cursor: pointer;
 	transition: 0.16s ease;
 	white-space: nowrap;
-	font-family: "DM Sans", system-ui, sans-serif;
+	font-family: "Lexend", system-ui, sans-serif;
 }
 
 .tclp-btn-light {

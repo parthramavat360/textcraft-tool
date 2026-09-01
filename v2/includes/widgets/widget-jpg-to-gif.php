@@ -35,37 +35,37 @@ class Widget_Jpg_To_Gif extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2gif-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2gif-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Color Palette</label>
-            <div class="tc-modes" data-group="j2gif-colors" style="margin-top:8px">
-                <button class="tc-btn tc-btn--ghost" data-val="16" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">16</button>
-                <button class="tc-btn tc-btn--ghost" data-val="32" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">32</button>
-                <button class="tc-btn tc-btn--ghost" data-val="64" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">64</button>
-                <button class="tc-btn tc-btn--ghost sel" data-val="128" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">128</button>
-                <button class="tc-btn tc-btn--ghost" data-val="256" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">256</button>
+        <div class="tc-input-group" >
+            <label class="tc-range-label" >Color Palette</label>
+            <div class="tc-modes" data-group="j2gif-colors" >
+                <button class="tc-btn tc-btn--ghost" data-val="16" type="button" >16</button>
+                <button class="tc-btn tc-btn--ghost" data-val="32" type="button" >32</button>
+                <button class="tc-btn tc-btn--ghost" data-val="64" type="button" >64</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="128" type="button" >128</button>
+                <button class="tc-btn tc-btn--ghost" data-val="256" type="button" >256</button>
             </div>
             <p class="tc-lvl-hint">More colors = higher quality but larger file.</p>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2gif-delay">
+            <label class="tc-range-label"  for="tc-j2gif-delay">
                 Frame Delay: <span id="tc-j2gif-delay-val">200</span>ms
             </label>
-            <div class="tc-range-wrap">
-                <span class="tc-range-min">50</span>
-                <input type="range" class="tc-range" id="tc-j2gif-delay" min="50" max="2000" value="200" step="50">
-                <span class="tc-range-max">2000</span>
+            <div class="tc-rsz-slider-wrap">
+                <span class="tc-rsz-slider-min" >50</span>
+                <input type="range" class="tc-range" id="tc-j2gif-delay" min="50" max="2000" value="200" step="50" >
+                <span class="tc-rsz-slider-max" >2000</span>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2gif-quality">
+            <label class="tc-range-label"  for="tc-j2gif-quality">
                 Encoding Quality: <span id="tc-j2gif-quality-val">10</span>
             </label>
-            <div class="tc-range-wrap">
-                <span class="tc-range-min">1</span>
-                <input type="range" class="tc-range" id="tc-j2gif-quality" min="1" max="100" value="10">
-                <span class="tc-range-max">100</span>
+            <div class="tc-rsz-slider-wrap">
+                <span class="tc-rsz-slider-min" >1</span>
+                <input type="range" class="tc-range" id="tc-j2gif-quality" min="1" max="100" value="10" >
+                <span class="tc-rsz-slider-max" >100</span>
             </div>
         </div>
 
@@ -73,7 +73,7 @@ class Widget_Jpg_To_Gif extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2gif-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -81,8 +81,8 @@ class Widget_Jpg_To_Gif extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2gif-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2gif-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-j2gif-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-j2gif-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

@@ -41,7 +41,7 @@ class Widget_Heic_To_Png extends TextCraft_Tool_Base {
                     <label class="tc-rsz-toggle">
                         <input type="checkbox" class="tc-rsz-toggle-input" id="tc-h2p-ios" checked>
                         <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                        <span class="tc-rsz-toggle-text"><b>Auto-downscale large images on iOS (4096px max)</b></span>
+                        <span class="tc-rsz-toggle-text"><b style="font-family:'Space Grotesk',system-ui,sans-serif">Auto-downscale large images on iOS (4096px max)</b></span>
                     </label>
                 </div>
             </div>
@@ -50,7 +50,11 @@ class Widget_Heic_To_Png extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-h2p-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-h2p-convert', 'Convert to PNG', 'tc-h2p-download', 'Download PNG'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-h2p-convert" type="button">Convert to PNG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-h2p-download" type="button">Download PNG</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-h2p-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (HEIC)</span><span class="tc-stat-value" id="tc-h2p-stat-orig">-</span></div>

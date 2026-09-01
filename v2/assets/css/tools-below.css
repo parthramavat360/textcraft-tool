@@ -1,4 +1,4 @@
-/* =========================================================================
+﻿/* =========================================================================
    TextCraft Tools Home Below Sections
    How it works, Most used, Browse by category, FAQ, SEO body, CTA band.
    White theme, tctp design tokens. Scoped under .tcb-sections root.
@@ -13,7 +13,7 @@
   --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px -12px rgba(16,24,40,.18);
   --shadow-lg:0 24px 60px -30px rgba(16,24,40,.4);
   --font-display:"Space Grotesk",system-ui,sans-serif;
-  --font-body:"DM Sans",system-ui,sans-serif;
+  --font-body:"Lexend", system-ui, sans-serif;
   box-sizing:border-box;
   color:var(--ink);
   font-family:var(--font-body);

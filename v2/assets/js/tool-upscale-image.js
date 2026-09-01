@@ -48,6 +48,8 @@
     fileRow.querySelector('.tc-x').addEventListener('click', function() {
       uploadedFile = null;
       TCTP.hideFileRow('tc-up-file');
+      if (document.getElementById('tc-preview-orig')) document.getElementById('tc-preview-orig').innerHTML = '';
+      if (document.getElementById('tc-preview-result')) document.getElementById('tc-preview-result').innerHTML = '';
       canvas.style.display = 'none';
       if (info) info.style.display = 'none';
     });

@@ -1,5 +1,5 @@
-/* ==========================================================================
-   Tools Section — Matching HTML design exactly
+﻿/* ==========================================================================
+   Tools Section â€” Matching HTML design exactly
    Colors from HTML: --ink:#0b1220 --body:#4a5568 --muted:#8792a6
    --paper:#fff --surface:#f6f8fb --line:#e4e9f0 --accent:#0b1220
    --radius:14px --shadow card hover
@@ -39,7 +39,7 @@
 }
 
 .tctp-rail p {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 11.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -55,7 +55,7 @@
     width: 100%;
     padding: 8px 10px;
     border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 14.5px;
     font-weight: 500;
     color: #4a5568;
@@ -106,7 +106,7 @@
 }
 
 .tctp-sec-head span {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 13px;
     color: #8792a6;
     white-space: nowrap;
@@ -177,17 +177,17 @@
 
 .tctp-card p {
     margin: 0;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 13.5px;
     color: #4a5568;
     line-height: 1.5;
 }
 
 /* --------------------------------------------------------------------------
-   Tag — "Popular" badge
+   Tag â€” "Popular" badge
    -------------------------------------------------------------------------- */
 .tctp-tag {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-size: 11px;
     font-weight: 600;
     color: #0b1220;
@@ -206,11 +206,11 @@
     text-align: center;
     padding: 60px 24px;
     color: #8792a6;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Lexend', sans-serif;
 }
 
 /* --------------------------------------------------------------------------
-   Responsive — 960px
+   Responsive â€” 960px
    -------------------------------------------------------------------------- */
 @media (max-width: 960px) {
     .tctp-main {
@@ -233,7 +233,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Responsive — 640px
+   Responsive â€” 640px
    -------------------------------------------------------------------------- */
 @media (max-width: 640px) {
     .tctp-main {

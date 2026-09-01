@@ -29,17 +29,17 @@ class Widget_Remove_Background extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Automatically remove the background from any image using AI. Produces a transparent PNG. Everything runs in your browser — your images are never uploaded.
+            Automatically remove the background from any image using AI. Produces a transparent PNG. Everything runs in your browser â€” your images are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-rmbg-drop', 'image/*', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-rmbg-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-rmbg-highquality" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>High Quality</b>
                     <small>Use the ISNet model (slower, more accurate).</small>
                 </span>
@@ -50,7 +50,7 @@ class Widget_Remove_Background extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-rmbg-webp">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Output Format: WebP</b>
                     <small>Save as WebP (smaller) instead of PNG.</small>
                 </span>
@@ -58,8 +58,8 @@ class Widget_Remove_Background extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-rmbg-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-rmbg-name" placeholder="image-no-bg">
+            <label class="tc-label"  for="tc-rmbg-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-rmbg-name" placeholder="image-no-bg">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

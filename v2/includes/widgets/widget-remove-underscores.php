@@ -26,6 +26,7 @@ class Widget_Remove_Underscores extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Remove underscores from your text. Replace them with spaces, hyphens, or strip them entirely. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -77,13 +78,18 @@ class Widget_Remove_Underscores extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-ru-bar', 'Processing...'); ?>
 
-        <?php $this->render_actions('tc-ru-convert', 'Remove Underscores', 'tc-ru-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-ru-convert" type="button">Remove Underscores</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-ru-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-ru-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-ru-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-ru-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Underscores</span><span class="tc-stat-value" id="tc-ru-count">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Result Length</span><span class="tc-stat-value" id="tc-ru-result-len">0</span></div>
+        </div>
         </div>
         <?php
     }

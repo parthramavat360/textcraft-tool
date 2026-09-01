@@ -182,7 +182,7 @@
   background-size:11px;background-position:center;background-repeat:no-repeat;
   box-shadow:0 4px 10px -4px rgba(11, 18, 32, .6);
 }
-.tc-premium .tc-btn--ghost.sel{color:var(--accent)}
+.tc-premium .tc-btn--ghost.sel{color:var(--accent);color:#fff}
 .tc-premium .tc-card-title{
   display:block;font-size:14.5px;font-weight:700;color:var(--ink);
   padding-right:18px;

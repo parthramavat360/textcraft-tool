@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: WebP Compressor
- * Premium redesign — quality slider, downscale, output name, clear all.
+ * Premium redesign â€” quality slider, downscale, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -35,12 +35,16 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-wp-drop', 'image/webp,.webp', 'Drag & drop a WebP image here or click to browse'); ?>
         <?php $this->render_file_row('tc-wp-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-wp-quality">
+                <label class="tc-range-label"  for="tc-wp-quality">
                     Quality: <span id="tc-wp-quality-val">85%</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-wp-quality" min="10" max="100" value="85">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >10</span>
+                    <input type="range" class="tc-range" id="tc-wp-quality" min="10" max="100" value="85" >
+                    <span class="tc-rsz-slider-max" >100</span>
+                </div>
                 <p class="tc-lvl-hint">Lower quality shrinks the file more but may soften details.</p>
             </div>
         </div>
@@ -49,7 +53,7 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-wp-resize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Downscale</b>
                     <small>Reduce the image to a maximum dimension.</small>
                 </span>
@@ -58,7 +62,7 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-wp-slider-section" style="display:none">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-wp-maxdim">
+                <label class="tc-range-label"  for="tc-wp-maxdim">
                     Max Dimension: <span id="tc-wp-dim-val">1200px</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-wp-maxdim" min="320" max="2048" value="1200" step="32">
@@ -67,8 +71,8 @@ class Widget_Webp_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-wp-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-wp-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-wp-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-wp-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

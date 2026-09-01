@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define plugin constants.
  */
-define( 'TCTP_VERSION', '1.0.59' );
+define( 'TCTP_VERSION', '1.0.87' );
 define( 'TCTP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TCTP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TCTP_DATA_VERSION', 4 );
@@ -532,21 +532,21 @@ function tctp_disable_optimized_markup_js( $settings ) {
 }
 
 /**
- * Enqueue Google Fonts site-wide — applies Space Grotesk + DM Sans everywhere.
+ * Enqueue Google Fonts site-wide — applies Space Grotesk + Lexend everywhere.
  */
 function tctp_enqueue_global_fonts() {
     wp_enqueue_style(
         'tctp-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap',
+        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap',
         [],
         null
     );
 
     /* Apply fonts globally to the entire site */
     wp_add_inline_style( 'tctp-google-fonts', '
-        /* Global — DM Sans (body) + Space Grotesk (headings) applied site-wide */
+        /* Global — Lexend (body) + Space Grotesk (headings) applied site-wide */
         body {
-            font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         h1, h2, h3, h4, h5, h6,
         .elementor-heading-title,
@@ -949,16 +949,16 @@ add_action( 'wp_enqueue_scripts', 'tctp_enqueue_assets' );
 function tctp_enqueue_editor_assets() {
     wp_enqueue_style(
         'tctp-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap',
+        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap',
         [],
         null
     );
 
     /* Apply fonts globally inside the Elementor editor preview */
     wp_add_inline_style( 'tctp-google-fonts', '
-        /* Global — DM Sans (body) + Space Grotesk (headings) in Elementor editor */
+        /* Global — Lexend (body) + Space Grotesk (headings) in Elementor editor */
         body {
-            font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         h1, h2, h3, h4, h5, h6,
         .elementor-heading-title,

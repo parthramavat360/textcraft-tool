@@ -428,6 +428,81 @@
         initAllCheatSearches();
     }
 
+    // ─── Generic premium color picker (swatch + hex + presets) ───
+    // Applied to any tool that marks a picker with .tc-premium-color-picker.
+    // Each picker keeps its native <input type="color" id="X"> (same id) so
+    // existing per-tool JS reading .value keeps working; we only sync the
+    // visible swatch fill + hex readout (runtime data, no inline CSS).
+
+    TCTP.initPremiumColorPicker = function (wrapper) {
+        if (!wrapper || wrapper.getAttribute('data-tcp-init')) return;
+        wrapper.setAttribute('data-tcp-init', '1');
+        var pickerId = wrapper.getAttribute('data-picker');
+        var input = pickerId ? document.getElementById(pickerId) : null;
+        var fill = wrapper.querySelector('[data-swatch="' + pickerId + '"]');
+        var hex = wrapper.querySelector('.tc-pcp-hex');
+        if (!input) return;
+
+        var hexOf = function (v) {
+            return '#' + (v || '').replace('#', '').slice(0, 6).toUpperCase();
+        };
+
+        var paint = function (v) {
+            if (fill) fill.style.background = v || '#ffffff';
+            if (hex) hex.textContent = hexOf(v || input.value);
+        };
+
+        // presets
+        wrapper.querySelectorAll('.tc-pcp-csw').forEach(function (btn) {
+            btn.style.background = btn.getAttribute('data-val') || '#ffffff';
+            btn.addEventListener('click', function () {
+                var v = btn.getAttribute('data-val');
+                input.value = v;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                paint(v);
+            });
+        });
+
+        // native input
+        input.addEventListener('input', function () { paint(input.value); });
+        input.addEventListener('change', function () { paint(input.value); });
+
+        paint(input.value);
+    };
+
+    TCTP.initAllPremiumColorPickers = function () {
+        document.querySelectorAll('.tc-premium-color-picker').forEach(function (w) {
+            TCTP.initPremiumColorPicker(w);
+        });
+    };
+
+    // Re-paint visible swatch/hex readouts from the native input's current
+    // value. Call after programmatically setting a color input (e.g. "clear
+    // all") so the premium readout stays in sync. Optional id restricts it.
+    TCTP.syncPremiumColorPickers = function (id) {
+        var wrappers = document.querySelectorAll('.tc-premium-color-picker');
+        wrappers.forEach(function (w) {
+            var pickerId = w.getAttribute('data-picker');
+            if (id && pickerId !== id) return;
+            var input = pickerId ? document.getElementById(pickerId) : null;
+            var fill = w.querySelector('[data-swatch="' + pickerId + '"]');
+            var hex = w.querySelector('.tc-pcp-hex');
+            if (!input) return;
+            var v = input.value;
+            if (fill) fill.style.background = v || '#ffffff';
+            if (hex) hex.textContent = '#' + v.replace('#', '').slice(0, 6).toUpperCase();
+        });
+    };
+
+    // Auto-init on DOM ready and re-arm if widgets are injected later.
+    function initPcps() { TCTP.initAllPremiumColorPickers(); }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPcps);
+    } else {
+        initPcps();
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  EXPOSE
     // ═══════════════════════════════════════════════════════════

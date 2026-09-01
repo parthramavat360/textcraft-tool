@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: JPG to PDF Converter
- * Premium redesign — page size cards, margins, orientation, fit/optimize
+ * Premium redesign â€” page size cards, margins, orientation, fit/optimize
  * switches, output file name, clear all.
  *
  * @package TextCraft_Tools_Pro
@@ -36,23 +36,23 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2pdf-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2pdf-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Page Size</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Page Size</label>
             <div class="tc-modes tc-modes--cards" data-group="j2pdf-size">
                 <button class="tc-btn tc-btn--ghost sel" data-val="a4" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">A4</span>
+                    <span class="tc-card-title" >A4</span>
                     <span class="tc-card-desc">210 &times; 297 mm</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="letter" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Letter</span>
+                    <span class="tc-card-title" >Letter</span>
                     <span class="tc-card-desc">8.5 &times; 11 in</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="legal" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Legal</span>
+                    <span class="tc-card-title" >Legal</span>
                     <span class="tc-card-desc">8.5 &times; 14 in</span>
                 </button>
                 <button class="tc-btn tc-btn--ghost" data-val="auto" type="button">
-                    <span class="tc-card-title" style="font-family:'Space Grotesk',system-ui,sans-serif">Auto</span>
+                    <span class="tc-card-title" >Auto</span>
                     <span class="tc-card-desc">Fit to image size</span>
                 </button>
             </div>
@@ -62,7 +62,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Orientation</label>
+            <label class="tc-label" >Orientation</label>
             <div class="tc-modes" data-group="j2pdf-orient">
                 <button class="tc-btn sel" data-val="portrait" type="button">Portrait</button>
                 <button class="tc-btn" data-val="landscape" type="button">Landscape</button>
@@ -74,7 +74,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-j2pdf-margins-wrap">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2pdf-margins">
+                <label class="tc-range-label"  for="tc-j2pdf-margins">
                     Margins: <span id="tc-j2pdf-margins-val">20 px</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-j2pdf-margins" min="0" max="80" value="20">
@@ -86,7 +86,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2pdf-fit" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Fit image to page</b>
                     <small>Scale each image to fit within the page margins.</small>
                 </span>
@@ -97,7 +97,7 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2pdf-optimize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Optimize output size</b>
                     <small>Re-encodes output streams for smaller files (strips some metadata).</small>
                 </span>
@@ -105,8 +105,8 @@ class Widget_Jpg_To_Pdf extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2pdf-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2pdf-name" placeholder="my-images">
+            <label class="tc-label"  for="tc-j2pdf-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-j2pdf-name" placeholder="my-images">
             <p class="tc-lvl-hint">Leave empty to use the source image name (single) or "converted" (multiple).</p>
         </div>
 

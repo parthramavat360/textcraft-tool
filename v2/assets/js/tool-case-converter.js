@@ -210,6 +210,34 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            convertedText = '';
+
+            var modeCards = document.querySelectorAll('.tc-cc-types .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var trimCb = document.getElementById(PREFIX + 'trim');
+            var dedupCb = document.getElementById(PREFIX + 'dedup-spaces');
+            if (trimCb) trimCb.checked = false;
+            if (dedupCb) dedupCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            ['chars', 'words', 'sentences', 'lines'].forEach(function (k) {
+                setStat(PREFIX + k, '0');
+            });
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

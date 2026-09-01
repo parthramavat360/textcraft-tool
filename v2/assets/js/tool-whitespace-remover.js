@@ -140,6 +140,36 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var modeCards = document.querySelectorAll('.tc-ws-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var tabsCb = document.getElementById(PREFIX + 'tabs');
+            var blankCb = document.getElementById(PREFIX + 'blanklines');
+            var globalCb = document.getElementById(PREFIX + 'globaltrim');
+            if (tabsCb) tabsCb.checked = true;
+            if (blankCb) blankCb.checked = false;
+            if (globalCb) globalCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            ['chars', 'words', 'lines', 'saved'].forEach(function (k) {
+                setStat(PREFIX + k, k === 'saved' ? '0%' : '0');
+            });
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

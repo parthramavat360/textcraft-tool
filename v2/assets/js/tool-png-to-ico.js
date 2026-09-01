@@ -55,6 +55,10 @@
             icoBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-ico-file');
+            var po = document.getElementById('tc-ico-preview-orig');
+            if (po) po.innerHTML = '';
+            var pr = document.getElementById('tc-ico-result');
+            if (pr) pr.innerHTML = '';
             if (previewSection) previewSection.style.display = 'none';
         });
     }
@@ -136,7 +140,7 @@
         var headerSize = 6 + count * 16;
         var totalDataSize = 0;
         for (var i = 0; i < count; i++) {
-            totalDataSize += pngBlobs[i].data.length;
+            totalDataSize += pngBlobs[i].data.byteLength;
         }
 
         var buffer = new ArrayBuffer(headerSize + totalDataSize);
@@ -180,7 +184,14 @@
             var ctx = tempCanvas.getContext('2d');
             ctx.drawImage(imgEl, 0, 0, size, size);
             tempCanvas.toBlob(function (blob) {
-                resolve({ data: blob, size: size });
+                var fail = function () { resolve({ data: new ArrayBuffer(0), size: size }); };
+                if (!blob) { fail(); return; }
+                var reader = new FileReader();
+                reader.onload = function () {
+                    resolve({ data: reader.result, size: size });
+                };
+                reader.onerror = fail;
+                reader.readAsArrayBuffer(blob);
             }, 'image/png');
         });
     }

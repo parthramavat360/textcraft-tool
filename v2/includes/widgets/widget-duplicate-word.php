@@ -26,6 +26,7 @@ class Widget_Duplicate_Word extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Find repeated words in your text and analyze word frequency. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -74,13 +75,18 @@ class Widget_Duplicate_Word extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-dw-bar', 'Scanning...'); ?>
 
-        <?php $this->render_actions('tc-dw-find', 'Find Duplicates', 'tc-dw-copy', 'Copy Results'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-dw-find" type="button">Find Duplicates</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-dw-copy" type="button">Copy Results</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-dw-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-dw-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Total Words</span><span class="tc-stat-value" id="tc-dw-total">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Unique Words</span><span class="tc-stat-value" id="tc-dw-unique">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Duplicates</span><span class="tc-stat-value" id="tc-dw-duplicates">0</span></div>
+        </div>
         </div>
         <?php
     }

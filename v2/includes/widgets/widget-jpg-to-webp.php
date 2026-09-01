@@ -35,18 +35,22 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2w-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2w-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2w-quality">
+                <label class="tc-range-label"  for="tc-j2w-quality">
                     Quality: <span id="tc-j2w-quality-badge">92</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-j2w-quality" min="1" max="100" value="92">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >1</span>
+                    <input type="range" class="tc-range" id="tc-j2w-quality" min="1" max="100" value="92" >
+                    <span class="tc-rsz-slider-max" >100</span>
+                </div>
                 <p class="tc-lvl-hint">Higher quality keeps more detail but produces larger files.</p>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Presets</label>
+            <label class="tc-label" >Presets</label>
             <div class="tc-modes" data-group="j2w-quality">
                 <button class="tc-btn tc-btn--ghost" data-val="60" type="button">Small (60%)</button>
                 <button class="tc-btn tc-btn--ghost" data-val="75" type="button">Good (75%)</button>
@@ -60,7 +64,7 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2w-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -68,8 +72,8 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2w-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2w-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-j2w-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-j2w-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
@@ -92,7 +96,7 @@ class Widget_Jpg_To_Webp extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {}
 
     /**
-     * Override result panel with JPG→WebP specific labels.
+     * Override result panel with JPGâ†’WebP specific labels.
      */
     protected function render_result(array $settings): void {
         ?>

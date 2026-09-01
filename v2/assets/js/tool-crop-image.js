@@ -71,6 +71,8 @@
             croppedBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-crop-file');
+            if (document.getElementById('tc-preview-orig')) document.getElementById('tc-preview-orig').innerHTML = '';
+            if (document.getElementById('tc-preview-result')) document.getElementById('tc-preview-result').innerHTML = '';
             if (previewWrap) previewWrap.style.display = 'none';
         });
     }

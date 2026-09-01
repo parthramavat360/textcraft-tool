@@ -26,6 +26,7 @@ class Widget_Character_Remover extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Remove unwanted characters from your text. Choose a quick preset or enter custom characters to strip. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -88,13 +89,18 @@ class Widget_Character_Remover extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-cr-bar', 'Removing...'); ?>
 
-        <?php $this->render_actions('tc-cr-remove', 'Remove Characters', 'tc-cr-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-cr-remove" type="button">Remove Characters</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-cr-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-cr-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-cr-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-cr-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Removed</span><span class="tc-stat-value" id="tc-cr-removed">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Result Length</span><span class="tc-stat-value" id="tc-cr-result-len">0</span></div>
+        </div>
         </div>
         <?php
     }

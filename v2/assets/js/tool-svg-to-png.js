@@ -47,6 +47,10 @@
             pngBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-svg-file');
+            var po = document.getElementById('tc-svg-preview-orig');
+            if (po) po.innerHTML = '';
+            var pr = document.getElementById('tc-svg-result');
+            if (pr) pr.innerHTML = '';
             if (previewSection) previewSection.style.display = 'none';
             if (dimsSection) dimsSection.style.display = 'none';
         });

@@ -35,25 +35,25 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-p2w-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-p2w-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2w-quality">
+        <div class="tc-input-group" >
+            <label class="tc-range-label"  for="tc-p2w-quality">
                 Quality: <span id="tc-p2w-quality-badge">92</span>
             </label>
-            <div class="tc-range-wrap">
-                <span class="tc-range-min">1</span>
-                <input type="range" class="tc-range" id="tc-p2w-quality" min="1" max="100" value="92">
-                <span class="tc-range-max">100</span>
+            <div class="tc-rsz-slider-wrap">
+                <span class="tc-rsz-slider-min" >1</span>
+                <input type="range" class="tc-range" id="tc-p2w-quality" min="1" max="100" value="92" >
+                <span class="tc-rsz-slider-max" >100</span>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Presets</label>
-            <div class="tc-modes" data-group="p2w-quality" style="margin-top:8px">
-                <button class="tc-btn tc-btn--ghost" data-val="60" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Small (60%)</button>
-                <button class="tc-btn tc-btn--ghost" data-val="75" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Good (75%)</button>
-                <button class="tc-btn tc-btn--ghost sel" data-val="92" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Best (92%)</button>
-                <button class="tc-btn tc-btn--ghost" data-val="95" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">HQ (95%)</button>
-                <button class="tc-btn tc-btn--ghost" data-val="100" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Lossless</button>
+            <label class="tc-range-label" >Presets</label>
+            <div class="tc-modes" data-group="p2w-quality" >
+                <button class="tc-btn tc-btn--ghost" data-val="60" type="button" >Small (60%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="75" type="button" >Good (75%)</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="92" type="button" >Best (92%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="95" type="button" >HQ (95%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="100" type="button" >Lossless</button>
             </div>
         </div>
 
@@ -61,7 +61,7 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-p2w-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -69,8 +69,8 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2w-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-p2w-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-p2w-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-p2w-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
@@ -93,7 +93,7 @@ class Widget_Png_To_Webp extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {}
 
     /**
-     * Override result panel with PNG→WebP specific labels.
+     * Override result panel with PNGâ†’WebP specific labels.
      */
     protected function render_result(array $settings): void {
         ?>

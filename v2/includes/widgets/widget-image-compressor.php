@@ -30,29 +30,33 @@ class Widget_Image_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Compress JPG, PNG, WebP or GIF images to reduce file size while maintaining quality. Batch support for multiple images. All processing happens in your browser — no upload needed.
+            Compress JPG, PNG, WebP or GIF images to reduce file size while maintaining quality. Batch support for multiple images. All processing happens in your browser â€” no upload needed.
         </div>
 
         <?php $this->render_drop_zone('tc-comp-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop images here or click to browse (multiple files supported)'); ?>
 
-        <div class="tc-input-group tc-comp-file-list" id="tc-comp-file-list" style="margin-top:18px;display:none">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Files <span class="tc-lvl-hint" id="tc-comp-count" style="font-weight:400;margin-left:6px">0 files</span></label>
+        <div class="tc-input-group tc-comp-file-list" id="tc-comp-file-list" style="display:none">
+            <label class="tc-label">Files <span class="tc-lvl-hint tc-comp-count-hint" id="tc-comp-count">0 files</span></label>
             <div class="tc-comp-files" id="tc-comp-files"></div>
         </div>
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-comp-quality">
+                <label class="tc-range-label"  for="tc-comp-quality">
                     Quality: <span id="tc-comp-quality-val">80%</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-comp-quality" min="5" max="100" value="80">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >5</span>
+                    <input type="range" class="tc-range" id="tc-comp-quality" min="5" max="100" value="80" >
+                    <span class="tc-rsz-slider-max" >100</span>
+                </div>
                 <p class="tc-lvl-hint">Lower quality shrinks files more but may soften details.</p>
             </div>
         </div>
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-comp-maxw">
+                <label class="tc-range-label"  for="tc-comp-maxw">
                     Max Width: <span id="tc-comp-maxw-val">Off</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-comp-maxw" min="0" max="4096" value="0" step="32">
@@ -79,7 +83,7 @@ class Widget_Image_Compressor extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {
         ?>
         <div class="tc-comp-result" id="tc-comp-result">
-            <p style="color:#64748b;padding:12px 0">Compressed images will appear here after you click Compress.</p>
+            <p>Compressed images will appear here after you click Compress.</p>
         </div>
         <?php
     }
@@ -106,8 +110,8 @@ class Widget_Image_Compressor extends TextCraft_Tool_Base {
                         </div>
                     </div>
                     <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">
-                        <div class="tc-comp-result-preview" id="tc-comp-preview-orig" style="display:flex;align-items:center;justify-content:center;min-height:200px;background:#0d1321;border-radius:8px;overflow:hidden">
-                            <p style="color:#64748b">Upload images to see preview</p>
+                        <div class="tc-comp-result-preview" id="tc-comp-preview-orig">
+                            <p>Upload images to see preview</p>
                         </div>
                     </div>
                     <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">

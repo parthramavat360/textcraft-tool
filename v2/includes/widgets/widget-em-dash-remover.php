@@ -26,6 +26,7 @@ class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Remove em dashes, en dashes, and hyphens from your text. Choose what to replace them with. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -62,6 +63,9 @@ class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
                     <button class="tc-rsz-mode-card" type="button" data-val="comma">
                         <span class="tc-rsz-mode-text"><b>Comma</b><span>Replace with ,</span></span>
                     </button>
+                    <button class="tc-rsz-mode-card" type="button" data-val="custom">
+                        <span class="tc-rsz-mode-text"><b>Custom</b><span>Enter your own text</span></span>
+                    </button>
                 </div>
             </div>
 
@@ -76,13 +80,18 @@ class Widget_Em_Dash_Remover extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-edr-bar', 'Processing...'); ?>
 
-        <?php $this->render_actions('tc-edr-remove', 'Remove Dashes', 'tc-edr-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-edr-remove" type="button">Remove Dashes</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-edr-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-edr-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-edr-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Words</span><span class="tc-stat-value" id="tc-edr-words">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Em Dashes</span><span class="tc-stat-value" id="tc-edr-em">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">En Dashes</span><span class="tc-stat-value" id="tc-edr-en">0</span></div>
+        </div>
         </div>
         <?php
     }

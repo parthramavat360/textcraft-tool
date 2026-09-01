@@ -153,4 +153,29 @@
         });
     }
 
+    // ── Clear all ─────────────────────────────────────────────
+
+    var clearBtn = document.getElementById(prefix + 'clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        file = null;
+        convertedBlob = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        TCTP.hideFileRow(prefix + 'file');
+
+        if (iosToggle) iosToggle.checked = true;
+
+        ['stat-orig', 'stat-comp', 'stat-saved'].forEach(function (k) {
+            var el = document.getElementById(prefix + k);
+            if (el) el.textContent = '-';
+        });
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+
+        var origPv = document.getElementById('tc-preview-orig');
+        if (origPv) origPv.innerHTML = '<div class="tc-preview-placeholder">Original WebP will appear here</div>';
+        var resPv = document.getElementById('tc-preview-result');
+        if (resPv) resPv.innerHTML = '<div class="tc-preview-placeholder">Converted PNG will appear here</div>';
+        TCTP.switchToOriginalTab();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
 })();

@@ -26,6 +26,7 @@ class Widget_Remove_Line_Breaks extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Remove line breaks from text. Choose how to handle line endings — replace with spaces, join all lines, or preserve paragraph breaks.
         </div>
@@ -67,13 +68,18 @@ class Widget_Remove_Line_Breaks extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-rlb-progress', 'Removing line breaks...'); ?>
 
-        <?php $this->render_actions('tc-rlb-convert', 'Remove Breaks', 'tc-rlb-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-rlb-convert" type="button">Remove Breaks</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-rlb-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-rlb-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original</span><span class="tc-stat-value" id="tc-rlb-orig">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Result</span><span class="tc-stat-value" id="tc-rlb-result-count">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Lines Removed</span><span class="tc-stat-value" id="tc-rlb-lines-removed">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Saved</span><span class="tc-stat-value" id="tc-rlb-saved">0%</span></div>
+        </div>
         </div>
         <?php
     }

@@ -140,6 +140,39 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var presetCards = document.querySelectorAll('.tc-cr-presets .tc-rsz-mode-card');
+            presetCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (presetCards[0]) presetCards[0].classList.add('sel');
+            selectedChars = ' ';
+            if (customWrap) customWrap.style.display = 'none';
+            if (customInput) customInput.value = '';
+
+            var caseCb = document.getElementById(PREFIX + 'case');
+            var trimCb = document.getElementById(PREFIX + 'trim');
+            var dedupCb = document.getElementById(PREFIX + 'dedup');
+            if (caseCb) caseCb.checked = false;
+            if (trimCb) trimCb.checked = false;
+            if (dedupCb) dedupCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            updateStats('');
+            setStat(PREFIX + 'removed', '0');
+            setStat(PREFIX + 'result-len', '0');
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

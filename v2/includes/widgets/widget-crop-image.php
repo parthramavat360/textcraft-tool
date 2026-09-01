@@ -34,7 +34,7 @@ class Widget_Crop_Image extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-crop-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-crop-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgopt">
 
             <div class="tc-rsz-section" id="tc-crop-preview-wrap" style="display:none">
                 <h4 class="tc-rsz-heading">Image Preview</h4>

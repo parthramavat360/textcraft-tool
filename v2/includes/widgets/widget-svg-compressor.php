@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: SVG Compressor
- * Premium redesign — precision slider, toggle options, output name, clear all.
+ * Premium redesign â€” precision slider, toggle options, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -29,15 +29,15 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
     protected function render_tool_content(array $settings): void {
         ?>
         <div class="tc-tool-desc">
-            Optimize SVG files by removing metadata, comments, and rounding path precision. Everything runs in your browser — your files are never uploaded.
+            Optimize SVG files by removing metadata, comments, and rounding path precision. Everything runs in your browser â€” your files are never uploaded.
         </div>
 
         <?php $this->render_drop_zone('tc-svg-drop', 'image/svg+xml,.svg', 'Drag & drop an SVG file here or click to browse'); ?>
         <?php $this->render_file_row('tc-svg-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-svg-precision">
+                <label class="tc-range-label"  for="tc-svg-precision">
                     Precision: <span id="tc-svg-precision-val">3</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-svg-precision" min="0" max="10" value="3">
@@ -49,7 +49,7 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-svg-meta" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Remove Metadata</b>
                     <small>Strip editor metadata, titles, descriptions.</small>
                 </span>
@@ -60,7 +60,7 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-svg-comments" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Remove Comments</b>
                     <small>Remove all HTML/XML comments.</small>
                 </span>
@@ -71,7 +71,7 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-svg-paths" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Minify Path Data</b>
                     <small>Round numbers and remove whitespace in d="" attributes.</small>
                 </span>
@@ -79,8 +79,8 @@ class Widget_Svg_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-svg-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-svg-name" placeholder="my-graphic">
+            <label class="tc-label"  for="tc-svg-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-svg-name" placeholder="my-graphic">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

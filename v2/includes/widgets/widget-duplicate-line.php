@@ -26,6 +26,7 @@ class Widget_Duplicate_Line extends TextCraft_Tool_Base {
 
     protected function render_tool_content(array $settings): void {
         ?>
+        <div class="tc-txtp">
         <div class="tc-tool-desc">
             Remove duplicate lines from your text. Choose how to handle matching and sorting. Works entirely in your browser — no data is sent to any server.
         </div>
@@ -77,13 +78,18 @@ class Widget_Duplicate_Line extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-dl-bar', 'Processing...'); ?>
 
-        <?php $this->render_actions('tc-dl-remove', 'Remove Duplicates', 'tc-dl-copy', 'Copy Result'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-dl-remove" type="button">Remove Duplicates</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-dl-copy" type="button">Copy Result</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-dl-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Characters</span><span class="tc-stat-value" id="tc-dl-chars">0</span></div>
             <div class="tc-stat-item"><span class="tc-stat-label">Total Lines</span><span class="tc-stat-value" id="tc-dl-total">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Unique</span><span class="tc-stat-value" id="tc-dl-unique">0</span></div>
             <div class="tc-stat-item tc-stat--saved"><span class="tc-stat-label">Removed</span><span class="tc-stat-value" id="tc-dl-removed">0</span></div>
+        </div>
         </div>
         <?php
     }

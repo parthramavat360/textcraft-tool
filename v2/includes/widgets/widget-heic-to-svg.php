@@ -113,9 +113,9 @@ class Widget_Heic_To_Svg extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Max Paths <span class="tc-rsz-quality-badge" id="tc-h2s-paths-val">500</span></h4>
                 <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">10</span>
+                    <span class="tc-rsz-slider-min" style="font-family:'Space Grotesk',system-ui,sans-serif">10</span>
                     <input type="range" class="tc-rsz-slider" id="tc-h2s-paths" min="10" max="2000" value="500" step="10">
-                    <span class="tc-rsz-slider-max">2000</span>
+                    <span class="tc-rsz-slider-max" style="font-family:'Space Grotesk',system-ui,sans-serif">2000</span>
                 </div>
             </div>
 
@@ -123,7 +123,11 @@ class Widget_Heic_To_Svg extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-h2s-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-h2s-convert', 'Convert to SVG', 'tc-h2s-download', 'Download SVG'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-h2s-convert" type="button">Convert to SVG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-h2s-download" type="button">Download SVG</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-h2s-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (HEIC)</span><span class="tc-stat-value" id="tc-h2s-stat-orig">-</span></div>

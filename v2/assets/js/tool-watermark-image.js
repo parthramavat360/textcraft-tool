@@ -76,6 +76,8 @@
             watermarkBlob = null;
             if (dlBtn) dlBtn.style.display = 'none';
             TCTP.hideFileRow('tc-wm-file');
+            if (document.getElementById('tc-preview-orig')) document.getElementById('tc-preview-orig').innerHTML = '';
+            if (document.getElementById('tc-preview-result')) document.getElementById('tc-preview-result').innerHTML = '';
             if (previewSection) previewSection.style.display = 'none';
         });
     }
@@ -331,20 +333,76 @@
     var fontSelect = document.getElementById('tc-wm-font');
     if (fontSelect) fontSelect.addEventListener('change', debouncedRender);
 
+    // ── Premium font picker ────────────────────────────────────
+    var fontPick = document.getElementById('tc-wm-font-pick');
+    var fontTrigger = document.getElementById('tc-wm-font-trigger');
+    var fontMenu = document.getElementById('tc-wm-font-menu');
+    var fontPrev = document.getElementById('tc-wm-font-prev');
+    var fontOpts = fontMenu ? fontMenu.querySelectorAll('.tc-wm-font-opt') : [];
+    var fontCls = {
+        'Arial': 'tc-wm-font-opt--arial',
+        'Georgia': 'tc-wm-font-opt--georgia',
+        'Times New Roman': 'tc-wm-font-opt--times',
+        'Courier New': 'tc-wm-font-opt--courier',
+        'Verdana': 'tc-wm-font-opt--verdana',
+        'Impact': 'tc-wm-font-opt--impact'
+    };
+    function fontSyncFromSelect() {
+        if (!fontSelect || !fontPrev) return;
+        var v = fontSelect.value;
+        var cls = fontCls[v] || fontCls['Arial'];
+        fontPrev.textContent = v;
+        fontPrev.className = 'tc-wm-font-prev ' + cls;
+        if (fontOpts) {
+            fontOpts.forEach(function (o) {
+                var on = o.getAttribute('data-font') === v;
+                o.classList.toggle('sel', on);
+                o.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+        }
+    }
+    function fontSet(v) {
+        if (fontSelect) {
+            fontSelect.value = v;
+            fontSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        fontSyncFromSelect();
+    }
+    function fontClose() {
+        if (fontMenu) fontMenu.classList.remove('open');
+        if (fontTrigger) fontTrigger.setAttribute('aria-expanded', 'false');
+    }
+    if (fontTrigger && fontMenu) {
+        fontTrigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = fontMenu.classList.toggle('open');
+            fontTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        fontOpts.forEach(function (o) {
+            o.addEventListener('click', function () {
+                fontSet(o.getAttribute('data-font'));
+                fontClose();
+            });
+        });
+        document.addEventListener('click', function (e) {
+            if (fontPick && !fontPick.contains(e.target)) fontClose();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') fontClose();
+        });
+    }
+    fontSyncFromSelect();
+
     var colorInput = document.getElementById('tc-wm-color');
-    var colorHex = document.getElementById('tc-wm-color-hex');
     if (colorInput) {
         colorInput.addEventListener('input', function () {
-            if (colorHex) colorHex.textContent = colorInput.value;
             debouncedRender();
         });
     }
 
     var strokeInput = document.getElementById('tc-wm-stroke-color');
-    var strokeHex = document.getElementById('tc-wm-stroke-hex');
     if (strokeInput) {
         strokeInput.addEventListener('input', function () {
-            if (strokeHex) strokeHex.textContent = strokeInput.value;
             debouncedRender();
         });
     }

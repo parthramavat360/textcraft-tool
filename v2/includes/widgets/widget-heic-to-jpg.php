@@ -38,9 +38,9 @@ class Widget_Heic_To_Jpg extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Quality <span class="tc-rsz-quality-badge" id="tc-h2j-quality-val">92</span>%</h4>
                 <div class="tc-rsz-slider-wrap">
-                    <span class="tc-rsz-slider-min">1</span>
+                    <span class="tc-rsz-slider-min" style="font-family:'Space Grotesk',system-ui,sans-serif">1</span>
                     <input type="range" class="tc-rsz-slider" id="tc-h2j-quality" min="1" max="100" value="92">
-                    <span class="tc-rsz-slider-max">100</span>
+                    <span class="tc-rsz-slider-max" style="font-family:'Space Grotesk',system-ui,sans-serif">100</span>
                 </div>
             </div>
 
@@ -60,7 +60,7 @@ class Widget_Heic_To_Jpg extends TextCraft_Tool_Base {
                     <label class="tc-rsz-toggle">
                         <input type="checkbox" class="tc-rsz-toggle-input" id="tc-h2j-ios" checked>
                         <span class="tc-rsz-toggle-track"><span class="tc-rsz-toggle-thumb"></span></span>
-                        <span class="tc-rsz-toggle-text"><b>Auto-downscale large images on iOS (4096px max)</b></span>
+                        <span class="tc-rsz-toggle-text"><b style="font-family:'Space Grotesk',system-ui,sans-serif">Auto-downscale large images on iOS (4096px max)</b></span>
                     </label>
                 </div>
             </div>
@@ -69,7 +69,11 @@ class Widget_Heic_To_Jpg extends TextCraft_Tool_Base {
 
         <?php $this->render_progress_bar('tc-h2j-progress', 'Converting...'); ?>
 
-        <?php $this->render_actions('tc-h2j-convert', 'Convert to JPG', 'tc-h2j-download', 'Download JPG'); ?>
+        <div class="tc-actions">
+            <button class="tc-btn tc-btn--accent" id="tc-h2j-convert" type="button">Convert to JPG</button>
+            <button class="tc-btn tc-btn--ghost" id="tc-h2j-download" type="button">Download JPG</button>
+            <button class="tc-btn tc-btn--ghost tc-btn--clear" id="tc-h2j-clear" type="button">Clear all</button>
+        </div>
 
         <div class="tc-stats-row">
             <div class="tc-stat-item"><span class="tc-stat-label">Original (HEIC)</span><span class="tc-stat-value" id="tc-h2j-stat-orig">-</span></div>

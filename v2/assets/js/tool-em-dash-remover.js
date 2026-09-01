@@ -154,6 +154,36 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var dashCards = document.querySelectorAll('.tc-edr-dash-types .tc-rsz-mode-card');
+            dashCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (dashCards[0]) dashCards[0].classList.add('sel');
+
+            var repCards = document.querySelectorAll('.tc-edr-replace-types .tc-rsz-mode-card');
+            repCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (repCards[0]) repCards[0].classList.add('sel');
+
+            if (customWrap) customWrap.style.display = 'none';
+            if (customInput) customInput.value = '';
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            updateStats('');
+            setStat(PREFIX + 'em', '0');
+            setStat(PREFIX + 'en', '0');
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

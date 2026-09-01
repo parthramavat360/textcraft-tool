@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: JPG Compressor
- * Premium redesign — quality slider, downscale, output name, clear all.
+ * Premium redesign â€” quality slider, downscale, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -35,12 +35,16 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-jpg-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop a JPG image here or click to browse'); ?>
         <?php $this->render_file_row('tc-jpg-file'); ?>
 
-        <div class="tc-input-group" id="tc-jpg-quality-wrap" style="margin-top:18px">
+        <div class="tc-input-group" id="tc-jpg-quality-wrap" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-jpg-quality">
+                <label class="tc-range-label"  for="tc-jpg-quality">
                     Quality: <span id="tc-jpg-quality-val">92%</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-jpg-quality" min="20" max="95" value="92">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >20</span>
+                    <input type="range" class="tc-range" id="tc-jpg-quality" min="20" max="95" value="92" >
+                    <span class="tc-rsz-slider-max" >95</span>
+                </div>
                 <p class="tc-lvl-hint">Lower quality shrinks the file more but may soften details.</p>
             </div>
         </div>
@@ -49,7 +53,7 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-jpg-resize">
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Downscale</b>
                     <small>Reduce the image to a maximum dimension.</small>
                 </span>
@@ -58,7 +62,7 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-jpg-slider-section" style="display:none">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-jpg-maxdim">
+                <label class="tc-range-label"  for="tc-jpg-maxdim">
                     Max Dimension: <span id="tc-jpg-dim-val">1200px</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-jpg-maxdim" min="320" max="2048" value="1200" step="32">
@@ -67,8 +71,8 @@ class Widget_Jpg_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-jpg-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-jpg-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-jpg-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-jpg-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

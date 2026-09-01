@@ -1,5 +1,5 @@
-/* ==========================================================================
-   TextCraft Tools Pro — Global Styles
+﻿/* ==========================================================================
+   TextCraft Tools Pro â€” Global Styles
    Clean reset + Elementor overrides + full-width breakout
    ========================================================================== */
 
@@ -21,7 +21,7 @@ body {
     overflow-x: clip;
     background: #ffffff;
     color: #0b1220;
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: "Lexend", system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   Elementor — force full-width sections for our widgets
+   Elementor â€” force full-width sections for our widgets
    -------------------------------------------------------------------------- */
 .elementor-section.elementor-section-full_width > .elementor-container {
     max-width: 100% !important;
@@ -80,7 +80,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   Elementor — fix position: sticky by removing overflow from all ancestors
+   Elementor â€” fix position: sticky by removing overflow from all ancestors
    Elementor adds overflow:hidden on multiple wrapper levels which kills sticky
    -------------------------------------------------------------------------- */
 .elementor-section,
@@ -96,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   Images — prevent overflow
+   Images â€” prevent overflow
    -------------------------------------------------------------------------- */
 img {
     max-width: 100%;

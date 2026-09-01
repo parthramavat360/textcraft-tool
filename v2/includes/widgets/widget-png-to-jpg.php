@@ -35,32 +35,44 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-pn2j-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-pn2j-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-pn2j-quality">
+        <div class="tc-input-group" >
+            <label class="tc-range-label"  for="tc-pn2j-quality">
                 Quality: <span id="tc-pn2j-quality-badge">92</span>
             </label>
-            <div class="tc-range-wrap">
-                <span class="tc-range-min">1</span>
-                <input type="range" class="tc-range" id="tc-pn2j-quality" min="1" max="100" value="92">
-                <span class="tc-range-max">100</span>
+            <div class="tc-rsz-slider-wrap">
+                <span class="tc-rsz-slider-min" >1</span>
+                <input type="range" class="tc-range" id="tc-pn2j-quality" min="1" max="100" value="92" >
+                <span class="tc-rsz-slider-max" >100</span>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Presets</label>
-            <div class="tc-modes" data-group="pn2j-quality" style="margin-top:8px">
-                <button class="tc-btn tc-btn--ghost" data-val="70" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Small (70%)</button>
-                <button class="tc-btn tc-btn--ghost" data-val="82" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Good (82%)</button>
-                <button class="tc-btn tc-btn--ghost sel" data-val="92" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Best (92%)</button>
-                <button class="tc-btn tc-btn--ghost" data-val="98" type="button" style="font-family:'Space Grotesk',system-ui,sans-serif">Max (98%)</button>
+            <label class="tc-range-label" >Presets</label>
+            <div class="tc-modes" data-group="pn2j-quality" >
+                <button class="tc-btn tc-btn--ghost" data-val="70" type="button" >Small (70%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="82" type="button" >Good (82%)</button>
+                <button class="tc-btn tc-btn--ghost sel" data-val="92" type="button" >Best (92%)</button>
+                <button class="tc-btn tc-btn--ghost" data-val="98" type="button" >Max (98%)</button>
             </div>
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-pn2j-bgcolor">
+            <label class="tc-range-label"  for="tc-pn2j-bgcolor">
                 Background Color: <span id="tc-pn2j-bgcolor-hex">#ffffff</span>
             </label>
-            <input type="color" class="tc-color" id="tc-pn2j-bgcolor" value="#ffffff" style="width:56px;height:36px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;padding:2px;margin-top:6px">
+            <div class="tc-premium-color-picker" data-picker="tc-pn2j-bgcolor">
+                <label class="tc-pcp-swatch" for="tc-pn2j-bgcolor"><span class="tc-pcp-swatch-fill" data-swatch="tc-pn2j-bgcolor"></span></label>
+                <span class="tc-pcp-hex"></span>
+                <input type="color" class="tc-pcp-input" id="tc-pn2j-bgcolor" value="#ffffff">
+                <div class="tc-pcp-swatches" data-palette="tc-pn2j-bgcolor">
+                    <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#f1f5f9" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#ff0000" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#00bfff" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#00ff00" type="button"></button>
+                </div>
+            </div>
             <p class="tc-lvl-hint">Fill color for transparent areas (JPG has no transparency).</p>
         </div>
 
@@ -68,7 +80,7 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-pn2j-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -76,8 +88,8 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-pn2j-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-pn2j-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-pn2j-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-pn2j-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
@@ -100,7 +112,7 @@ class Widget_Png_To_Jpg extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {}
 
     /**
-     * Override result panel with PNG→JPG specific labels.
+     * Override result panel with PNGâ†’JPG specific labels.
      */
     protected function render_result(array $settings): void {
         ?>

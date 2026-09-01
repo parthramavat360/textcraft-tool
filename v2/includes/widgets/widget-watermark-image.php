@@ -34,7 +34,7 @@ class Widget_Watermark_Image extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-wm-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-wm-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgopt">
 
             <div class="tc-rsz-section tc-wm-preview-section" id="tc-wm-preview-section" style="display:none">
                 <h4 class="tc-rsz-heading">Preview</h4>
@@ -67,16 +67,28 @@ class Widget_Watermark_Image extends TextCraft_Tool_Base {
                     <div class="tc-wm-row">
                         <div class="tc-wm-field">
                             <label class="tc-rsz-dim-label">Font</label>
-                            <div class="tc-rsz-select-wrap">
-                                <select id="tc-wm-font" class="tc-rsz-select">
-                                    <option value="Arial">Arial</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <option value="Times New Roman">Times New Roman</option>
-                                    <option value="Courier New">Courier New</option>
-                                    <option value="Verdana">Verdana</option>
-                                    <option value="Impact">Impact</option>
-                                </select>
+                            <div class="tc-wm-font-pick" id="tc-wm-font-pick">
+                                <button type="button" class="tc-wm-font-trigger" id="tc-wm-font-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="tc-wm-font-prev" id="tc-wm-font-prev">Arial</span>
+                                    <svg class="tc-wm-font-caret" viewBox="0 0 12 7" width="12" height="7" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <div class="tc-wm-font-menu" id="tc-wm-font-menu" role="listbox">
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--arial sel" role="option" data-font="Arial">Arial</button>
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--georgia" role="option" data-font="Georgia">Georgia</button>
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--times" role="option" data-font="Times New Roman">Times New Roman</button>
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--courier" role="option" data-font="Courier New">Courier New</button>
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--verdana" role="option" data-font="Verdana">Verdana</button>
+                                    <button type="button" class="tc-wm-font-opt tc-wm-font-opt--impact" role="option" data-font="Impact">Impact</button>
+                                </div>
                             </div>
+                            <select id="tc-wm-font" hidden>
+                                <option value="Arial" selected>Arial</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Impact">Impact</option>
+                            </select>
                         </div>
                         <div class="tc-wm-field">
                             <label class="tc-rsz-dim-label">Size</label>
@@ -89,16 +101,36 @@ class Widget_Watermark_Image extends TextCraft_Tool_Base {
                     <div class="tc-wm-row">
                         <div class="tc-wm-field">
                             <label class="tc-rsz-dim-label">Color</label>
-                            <div class="tc-wm-color-wrap">
-                                <input type="color" id="tc-wm-color" value="#ffffff" class="tc-wm-color">
-                                <span class="tc-wm-color-hex" id="tc-wm-color-hex">#ffffff</span>
+                            <div class="tc-premium-color-picker" data-picker="tc-wm-color">
+                                <label class="tc-pcp-swatch" for="tc-wm-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-wm-color"></span></label>
+                                <span class="tc-pcp-hex" id="tc-wm-color-hex"></span>
+                                <input type="color" class="tc-pcp-input" id="tc-wm-color" value="#ffffff">
+                                <div class="tc-pcp-swatches" data-palette="tc-wm-color">
+                                    <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ffd700" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ff0000" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#00ff00" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#00bfff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ff69b4" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#000000" type="button"></button>
+                                </div>
                             </div>
                         </div>
                         <div class="tc-wm-field">
                             <label class="tc-rsz-dim-label">Stroke</label>
-                            <div class="tc-wm-color-wrap">
-                                <input type="color" id="tc-wm-stroke-color" value="#000000" class="tc-wm-color">
-                                <span class="tc-wm-color-hex" id="tc-wm-stroke-hex">#000000</span>
+                            <div class="tc-premium-color-picker" data-picker="tc-wm-stroke-color">
+                                <label class="tc-pcp-swatch" for="tc-wm-stroke-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-wm-stroke-color"></span></label>
+                                <span class="tc-pcp-hex" id="tc-wm-stroke-hex"></span>
+                                <input type="color" class="tc-pcp-input" id="tc-wm-stroke-color" value="#000000">
+                                <div class="tc-pcp-swatches" data-palette="tc-wm-stroke-color">
+                                    <button class="tc-pcp-csw" data-val="#000000" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ff0000" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#00bfff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ffd700" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ff69b4" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                                </div>
                             </div>
                         </div>
                     </div>

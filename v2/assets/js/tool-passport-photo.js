@@ -30,14 +30,19 @@
     var sourceW = 0, sourceH = 0;
     var presetIdx = 0;
     var zoom = 1.6;
-    var face = 0.38;          // 0..1 top-biased vertical anchor
+    var panX = 0.5;           // 0..1 horizontal crop-window position (left->right)
+    var panY = 0.38;          // 0..1 vertical crop-window position (top->bottom)
     var bgColor = '#ffffff';
     var outFmt = 'image/jpeg';
     var outExt = 'jpg';
+    var sheetCount = 0;       // 0 = auto
+    var resScale = 1;         // output upscale: 1, 2, or 4
     var madeBlob = null;      // single cropped photo blob
     var sheetBlob = null;
     var dragging = false;
-    var dragStart = { x: 0, y: 0, face: 0.38 };
+    var dragStart = { x: 0, y: 0, panX: 0.5, panY: 0.38 };
+    var labelText = '';
+    var labelColor = '#0b1220';
 
     var imgEl = document.getElementById('tc-ppt-crop-img');
     var frameEl = document.getElementById('tc-ppt-display-frame');
@@ -86,7 +91,8 @@
             dragging = true;
             dragStart.x = ev.clientX;
             dragStart.y = ev.clientY;
-            dragStart.face = face;
+            dragStart.panX = panX;
+            dragStart.panY = panY;
             ev.preventDefault();
         });
         stageEl.addEventListener('touchstart', function (ev) {
@@ -95,7 +101,8 @@
             var t = ev.touches[0];
             dragStart.x = t.clientX;
             dragStart.y = t.clientY;
-            dragStart.face = face;
+            dragStart.panX = panX;
+            dragStart.panY = panY;
             ev.preventDefault();
         }, { passive: false });
 
@@ -104,10 +111,14 @@
             var px = ev.clientX || (ev.touches && ev.touches[0].clientX);
             var py = ev.clientY || (ev.touches && ev.touches[0].clientY);
             var rect = stageEl.getBoundingClientRect();
-            var dy = (py - dragStart.y) / rect.height;
-            face = clamp01(dragStart.face + dy);
-            var faceSlider = document.getElementById('tc-ppt-face');
-            if (faceSlider) faceSlider.value = Math.round(face * 100);
+            var r = srcRect();
+            var scale = (rect.width || 1) / (r.sw || 1);
+            var availX = Math.max(1, sourceW - r.sw);
+            var availY = Math.max(1, sourceH - r.sh);
+            var dx = px - dragStart.x;
+            var dy = py - dragStart.y;
+            panX = clamp01(dragStart.panX - (dx / scale) / availX);
+            panY = clamp01(dragStart.panY - (dy / scale) / availY);
             drawCrop();
             if (ev.cancelable) ev.preventDefault();
         }
@@ -125,14 +136,19 @@
     // ── Sliders ────────────────────────────────────────────────
 
     var zoomInput = document.getElementById('tc-ppt-zoom');
-    var faceInput = document.getElementById('tc-ppt-face');
+    var zoomValue = document.getElementById('tc-ppt-zoom-value');
     if (zoomInput) zoomInput.addEventListener('input', function () {
         zoom = (parseInt(zoomInput.value) || 100) / 100;
+        if (zoomValue) zoomValue.textContent = zoomInput.value + '%';
         drawCrop();
     });
-    if (faceInput) faceInput.addEventListener('input', function () {
-        face = (parseInt(faceInput.value) || 0) / 100;
-        drawCrop();
+
+    // ── Guides toggle ───────────────────────────────────────────
+
+    var guidesOn = document.getElementById('tc-ppt-guides-on');
+    var guidesEl = document.getElementById('tc-ppt-guides');
+    if (guidesOn && guidesEl) guidesOn.addEventListener('change', function () {
+        guidesEl.hidden = !guidesOn.checked;
     });
 
     // ── Presets ────────────────────────────────────────────────
@@ -172,6 +188,36 @@
         updateStats();
     });
 
+    // ── Bottom label ──────────────────────────────────────────
+
+    var labelInput = document.getElementById('tc-ppt-label-text');
+    var labelColorInput = document.getElementById('tc-ppt-label-color');
+    if (labelInput) labelInput.addEventListener('input', function () {
+        labelText = labelInput.value;
+        liveLabelPreview();
+    });
+    if (labelColorInput) labelColorInput.addEventListener('input', function () {
+        labelColor = labelColorInput.value;
+        liveLabelPreview();
+    });
+
+    function liveLabelPreview() {
+        // The label is part of the output render; refresh the result live so
+        // the user sees the label without re-creating the photo.
+        updateStats();
+        if (!source) return;
+        var c = renderPhotoCanvas();
+        c.toBlob(function (blob) {
+            if (!blob) return;
+            var url = URL.createObjectURL(blob);
+            TCTP.showResultPreview(url);
+            TCTP.switchToResultTab();
+            madeBlob = blob;
+            var dl = document.getElementById('tc-ppt-download');
+            if (dl) dl.disabled = false;
+        }, outFmt, 0.95);
+    }
+
     // ── Output format ──────────────────────────────────────────
 
     var fmtBtns = document.querySelectorAll('.tc-ppt-fmt');
@@ -184,13 +230,36 @@
         });
     });
 
+    // ── Photo count ────────────────────────────────────────────
+
+    var countBtns = document.querySelectorAll('#tc-ppt-count-pills .tc-ppt-count');
+    countBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            countBtns.forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
+            sheetCount = parseInt(btn.getAttribute('data-count'), 10) || 0;
+        });
+    });
+
+    // ── Resolution ─────────────────────────────────────────────
+
+    var resBtns = document.querySelectorAll('#tc-ppt-res-pills .tc-ppt-count');
+    resBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            resBtns.forEach(function (b) { b.classList.remove('sel'); });
+            btn.classList.add('sel');
+            resScale = parseInt(btn.getAttribute('data-scale'), 10) || 1;
+        });
+    });
+
     // ── Crop rendering (stage + live guide) ────────────────────
 
     function resetCrop() {
         zoom = 1.6;
-        face = 0.38;
+        panX = 0.5;
+        panY = 0.38;
         if (zoomInput) zoomInput.value = 160;
-        if (faceInput) faceInput.value = 38;
+        if (zoomValue) zoomValue.textContent = '160%';
         madeBlob = null;
         sheetBlob = null;
         updateStats();
@@ -201,6 +270,8 @@
         source = null;
         sourceW = sourceH = 0;
         madeBlob = sheetBlob = null;
+        labelText = '';
+        if (labelInput) labelInput.value = '';
         var dl = document.getElementById('tc-ppt-download');
         var made = document.getElementById('tc-ppt-make');
         if (dl) dl.disabled = true;
@@ -233,14 +304,11 @@
         sw = sw / zoom;
         sh = sh / zoom;
 
-        // Horizontal: center.
-        var sx = (sourceW - sw) / 2;
-
-        // Vertical: head-biased. face maps 0..1 from top-aligned to bottom.
-        var avail = Math.max(0, sourceH - sh);
-        var anchor = face * (sourceH / (sourceH - sh || 1));
-        anchor = Math.max(0, Math.min(1, anchor));
-        var sy = avail * anchor;
+        // Free pan: drag moves the crop window across the available travel.
+        var availX = Math.max(0, sourceW - sw);
+        var availY = Math.max(0, sourceH - sh);
+        var sx = availX * clamp01(panX);
+        var sy = availY * clamp01(panY);
 
         return { sx: sx, sy: sy, sw: sw, sh: sh };
     }
@@ -284,8 +352,8 @@
 
     function renderPhotoCanvas() {
         var r = srcRect();
-        var pw = PRESETS[presetIdx].w;
-        var ph = PRESETS[presetIdx].h;
+        var pw = PRESETS[presetIdx].w * resScale;
+        var ph = PRESETS[presetIdx].h * resScale;
         var canvas = document.createElement('canvas');
         canvas.width = pw;
         canvas.height = ph;
@@ -296,31 +364,55 @@
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(source, r.sx, r.sy, r.sw, r.sh, 0, 0, pw, ph);
+        drawLabel(ctx, pw, ph);
         return canvas;
+    }
+
+    function drawLabel(ctx, pw, ph) {
+        var t = labelText;
+        if (!t) return;
+        var barH = Math.max(22, Math.round(ph * 0.11));
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fillRect(0, ph - barH, pw, barH);
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.fillRect(0, ph - barH, pw, 1);
+        ctx.fillStyle = labelColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '600 ' + Math.max(9, Math.round(ph * 0.05)) + 'px "Space Grotesk", "Arial", sans-serif';
+        ctx.fillText(t, pw / 2, ph - barH / 2);
     }
 
     function renderSheetFrom(photoCanvas) {
         var pw = photoCanvas.width;
         var ph = photoCanvas.height;
+        var S = resScale;
+        var SH_W = SHEET_W * S;
+        var SH_H = SHEET_H * S;
+        var SH_D = SHEET_D * S;
+        var SH_GAP = SHEET_GAP * S;
+        var SH_TICK = SHEET_TICK * S;
 
         // Margins for each cell (photo + breathing room) in px.
-        var cellPad = 90;
-        var innerW = SHEET_W - SHEET_D * 2;
-        var innerH = SHEET_H - SHEET_D * 2;
+        var cellPad = 90 * S;
+        var innerW = SH_W - SH_D * 2;
+        var innerH = SH_H - SH_D * 2;
 
         // Choose the grid (cols x rows) that fits the most photos while
-        // keeping each photo as large as possible.
+        // keeping each photo as large as possible. If a count was chosen,
+        // restrict to grids with exactly that many photos.
         var best = null;
         for (var c = 1; c <= 8; c++) {
             for (var r = 1; r <= 8; r++) {
-                var boxW = (innerW - (c - 1) * SHEET_GAP) / c;
-                var boxH = (innerH - (r - 1) * SHEET_GAP) / r;
+                var count = c * r;
+                if (sheetCount > 0 && count !== sheetCount) continue;
+                var boxW = (innerW - (c - 1) * SH_GAP) / c;
+                var boxH = (innerH - (r - 1) * SH_GAP) / r;
                 var wScale = (boxW - cellPad) / pw;
                 var hScale = (boxH - cellPad) / ph;
                 var s = Math.max(0.15, Math.min(wScale, hScale));
                 var photoW = pw * s;
                 var photoH = ph * s;
-                var count = c * r;
                 if (!best || count > best.count ||
                     (count === best.count && photoW * photoH > best.photoW * best.photoH)) {
                     best = {
@@ -334,32 +426,32 @@
         }
 
         var canvas = document.createElement('canvas');
-        canvas.width = SHEET_W;
-        canvas.height = SHEET_H;
+        canvas.width = SH_W;
+        canvas.height = SH_H;
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, SHEET_W, SHEET_H);
+        ctx.fillRect(0, 0, SH_W, SH_H);
 
-        var startX = SHEET_D;
-        var startY = SHEET_D;
+        var startX = SH_D;
+        var startY = SH_D;
         for (var row = 0; row < best.rows; row++) {
             for (var col = 0; col < best.cols; col++) {
-                var dx = startX + col * (best.cellW + SHEET_GAP) + (best.cellW - best.photoW) / 2;
-                var dy = startY + row * (best.cellH + SHEET_GAP) + (best.cellH - best.photoH) / 2;
+                var dx = startX + col * (best.cellW + SH_GAP) + (best.cellW - best.photoW) / 2;
+                var dy = startY + row * (best.cellH + SH_GAP) + (best.cellH - best.photoH) / 2;
                 ctx.drawImage(photoCanvas, dx, dy, best.photoW, best.photoH);
                 // trim marks
                 ctx.strokeStyle = '#b9c2ce';
-                ctx.lineWidth = 1;
+                ctx.lineWidth = Math.max(1, S);
                 ctx.strokeRect(dx, dy, best.photoW, best.photoH);
             }
         }
 
         // sheet label
         ctx.fillStyle = '#0b1220';
-        ctx.font = '18px "DM Sans", sans-serif';
+        ctx.font = (18 * S) + 'px "DM Sans", sans-serif';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.fillText(PRESETS[presetIdx].name + ' — ' + best.count + ' prints · 6×4 in @ 300 DPI', SHEET_D, SHEET_H - SHEET_D + 6);
+        ctx.fillText(PRESETS[presetIdx].name + ' — ' + best.count + ' prints · 6×4 in @ ' + (300 * S) + ' DPI', SH_D, SH_H - SH_D + 6 * S);
 
         return canvas;
     }

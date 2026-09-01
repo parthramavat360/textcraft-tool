@@ -35,8 +35,8 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-p2svg-drop', 'image/png,.png', 'Drag & drop PNG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-p2svg-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Detail Level</label>
+        <div class="tc-input-group" >
+            <label class="tc-label" >Detail Level</label>
             <div class="tc-rsz-mode-cards" data-group="p2svg-detail">
                 <div class="tc-rsz-mode-card sel" data-val="high">
                     <div class="tc-rsz-mode-icon">
@@ -69,7 +69,7 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif">Color Mode</label>
+            <label class="tc-label" >Color Mode</label>
             <div class="tc-rsz-mode-cards" data-group="p2svg-color">
                 <div class="tc-rsz-mode-card sel" data-val="embed">
                     <div class="tc-rsz-mode-icon">
@@ -112,7 +112,7 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
 
         <div class="tc-input-group">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2svg-paths">
+                <label class="tc-range-label"  for="tc-p2svg-paths">
                     Max Paths: <span id="tc-p2svg-paths-val">500</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-p2svg-paths" min="10" max="2000" value="500" step="10">
@@ -124,7 +124,7 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-p2svg-transparency" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Preserve Transparency</b>
                     <small>Keep transparent areas transparent in the output SVG.</small>
                 </span>
@@ -132,8 +132,8 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-p2svg-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-p2svg-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-p2svg-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-p2svg-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
@@ -156,7 +156,7 @@ class Widget_Png_To_Svg extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {}
 
     /**
-     * Override result panel with PNG→SVG specific labels.
+     * Override result panel with PNGâ†’SVG specific labels.
      */
     protected function render_result(array $settings): void {
         ?>

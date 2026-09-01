@@ -83,7 +83,7 @@
                 if (r.b) text += '+ ' + r.b + '\n';
             }
         });
-        unifiedEl.innerHTML = '<pre style="background:#0f172a;color:#e2e8f0;padding:16px;border-radius:12px;font-size:13px;line-height:1.6;overflow-x:auto;border:1px solid rgba(148,163,184,0.15);margin:0;white-space:pre-wrap">' + escHtml(text) + '</pre>';
+        unifiedEl.innerHTML = '<pre class="tctp-diff-unified-pre">' + escHtml(text) + '</pre>';
     }
 
     function renderStats(result, a, b) {
@@ -96,16 +96,50 @@
         var pct = total > 0 ? Math.round((unchanged / total) * 100) : 100;
 
         statsEl.innerHTML =
-            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px">' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#22c55e">' + unchanged + '</div><div style="color:#94a3b8;font-size:12px">Unchanged</div></div>' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#22c55e">' + added + '</div><div style="color:#94a3b8;font-size:12px">Lines Added</div></div>' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#ef4444">' + removed + '</div><div style="color:#94a3b8;font-size:12px">Lines Removed</div></div>' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;text-align:center;border:1px solid rgba(148,163,184,0.12)"><div style="font-size:28px;font-weight:700;color:#0b1220">' + pct + '%</div><div style="color:#94a3b8;font-size:12px">Similarity</div></div>' +
+            '<div class="tctp-diff-stats-grid">' +
+            '<div class="tctp-diff-stat-card"><div class="tctp-diff-stat-num tctp-diff-stat-green">' + unchanged + '</div><div class="tctp-diff-stat-lbl">Unchanged</div></div>' +
+            '<div class="tctp-diff-stat-card"><div class="tctp-diff-stat-num tctp-diff-stat-green">' + added + '</div><div class="tctp-diff-stat-lbl">Lines Added</div></div>' +
+            '<div class="tctp-diff-stat-card"><div class="tctp-diff-stat-num tctp-diff-stat-red">' + removed + '</div><div class="tctp-diff-stat-lbl">Lines Removed</div></div>' +
+            '<div class="tctp-diff-stat-card"><div class="tctp-diff-stat-num tctp-diff-stat-dark">' + pct + '%</div><div class="tctp-diff-stat-lbl">Similarity</div></div>' +
             '</div>' +
-            '<div style="background:#0f172a;padding:16px;border-radius:12px;border:1px solid rgba(148,163,184,0.12)">' +
-            '<div style="background:#1e293b;height:8px;border-radius:4px;overflow:hidden"><div style="background:linear-gradient(90deg,#22c55e,#0b1220);height:100%;width:' + pct + '%;transition:width 0.3s"></div></div>' +
-            '<div style="margin-top:8px;color:#94a3b8;font-size:12px">Original: ' + a.split('\n').length + ' lines | Modified: ' + b.split('\n').length + ' lines</div></div>';
+            '<div class="tctp-diff-stats-footer">' +
+            '<div class="tctp-diff-bar"><div class="tctp-diff-bar-fill" style="width:' + pct + '%"></div></div>' +
+            '<div class="tctp-diff-bar-cap">Original: ' + a.split('\n').length + ' lines | Modified: ' + b.split('\n').length + ' lines</div></div>';
     }
+
+    function showResult() {
+        resultEl.classList.add('tc-diff-open');
+    }
+
+    function hideResult() {
+        resultEl.classList.remove('tc-diff-open');
+    }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    var tabs = [];
+    resultEl.querySelectorAll('.tctp-rsz-tab').forEach(function (btn) {
+        tabs.push(btn);
+    });
+    function activateTab(tab) {
+        tabs.forEach(function (b) { b.classList.toggle('sel', b === tab); });
+        var name = tab.getAttribute('data-tab');
+        ['diff-visual', 'diff-unified', 'diff-stats'].forEach(function (id) {
+            var panel = document.getElementById(id);
+            if (!panel) return;
+            if (id === 'diff-visual') {
+                panel.classList.toggle('tc-diff-open', name === 'visual');
+            } else if (id === 'diff-unified') {
+                panel.classList.toggle('tc-diff-open', name === 'unified');
+            } else if (id === 'diff-stats') {
+                panel.classList.toggle('tc-diff-open', name === 'stats');
+            }
+        });
+    }
+    tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activateTab(btn);
+        });
+    });
 
     compareBtn.addEventListener('click', function () {
         var a = diffA.value;
@@ -117,9 +151,26 @@
         renderUnified(result);
         renderStats(result, a, b);
 
-        resultEl.style.display = '';
-        TCTP.initTabs(resultEl);
+        activateTab(tabs[0]);
+        showResult();
     });
+
+    /* ── Clear all ────────────────────────────────────────── */
+    var clearBtn = $('#diff-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            diffA.value = '';
+            diffB.value = '';
+            visualEl.innerHTML = '';
+            unifiedEl.innerHTML = '';
+            statsEl.innerHTML = '';
+            ignoreCase.checked = false;
+            ignoreSpace.checked = true;
+            activateTab(tabs[0]);
+            hideResult();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
 
     function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 })();

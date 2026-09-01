@@ -1,5 +1,5 @@
-/* ==========================================================================
-   TextCraft Tools Pro — Header Styles (Fully Responsive)
+﻿/* ==========================================================================
+   TextCraft Tools Pro â€” Header Styles (Fully Responsive)
    Matches: file:///D:/2026/imp/textcraft-redesign.html
    Responsive strategy:
      - Desktop nav (> 1024px): inline links + mega dropdown + CTA in the bar.
@@ -25,11 +25,11 @@
     --tctp-radius: 14px;
     --tctp-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px -12px rgba(16, 24, 40, .18);
     --tctp-font-display: "Space Grotesk", system-ui, sans-serif;
-    --tctp-font-body: "DM Sans", system-ui, sans-serif;
+    --tctp-font-body: "Lexend", system-ui, sans-serif;
 }
 
 /* --------------------------------------------------------------------------
-   Header — Sticky Bar (full viewport width)
+   Header â€” Sticky Bar (full viewport width)
    -------------------------------------------------------------------------- */
 .tctp-header {
     position: sticky;
@@ -183,7 +183,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Mega Menu — Multi-Column (fixed columns, centered when fewer than 5)
+   Mega Menu â€” Multi-Column (fixed columns, centered when fewer than 5)
    -------------------------------------------------------------------------- */
 .tctp-mega-cols {
     display: flex;
@@ -304,7 +304,7 @@
     background: var(--tctp-ink-2);
 }
 
-/* The mobile CTA lives inside the slide-out panel — hidden on desktop.
+/* The mobile CTA lives inside the slide-out panel â€” hidden on desktop.
    Scoped + !important so it wins over the later `.tctp-btn { display:inline-flex }`
    base rule (source-order/specificity defeat). */
 @media (min-width: 1025px) {
@@ -314,7 +314,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Mobile Hamburger — Hidden on Desktop
+   Mobile Hamburger â€” Hidden on Desktop
    -------------------------------------------------------------------------- */
 .tctp-hamburger {
     display: none;

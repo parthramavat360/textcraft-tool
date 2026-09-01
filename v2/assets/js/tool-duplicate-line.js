@@ -157,6 +157,39 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            cleanedText = '';
+
+            var modeCards = document.querySelectorAll('.tc-dl-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+
+            var caseCb = document.getElementById(PREFIX + 'case');
+            var trimCb = document.getElementById(PREFIX + 'trim');
+            var blanksCb = document.getElementById(PREFIX + 'blanks');
+            var sortCb = document.getElementById(PREFIX + 'sort');
+            if (caseCb) caseCb.checked = false;
+            if (trimCb) trimCb.checked = true;
+            if (blanksCb) blanksCb.checked = false;
+            if (sortCb) sortCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+
+            updateStats('');
+            setStat(PREFIX + 'total', '0');
+            setStat(PREFIX + 'unique', '0');
+            setStat(PREFIX + 'removed', '0');
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

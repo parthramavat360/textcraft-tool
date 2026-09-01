@@ -315,4 +315,40 @@
         });
     }
 
+    // ── Clear all ─────────────────────────────────────────────
+
+    var clearBtn = document.getElementById(prefix + 'clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+        file = null;
+        resultSVG = null;
+        if (convertedUrl) { URL.revokeObjectURL(convertedUrl); convertedUrl = null; }
+        converting = false;
+        TCTP.hideFileRow(prefix + 'file');
+
+        function resetGroup(group, val) {
+            var g = document.querySelector('[data-group="' + group + '"]');
+            if (!g) return;
+            g.querySelectorAll('.tc-rsz-mode-card').forEach(function (c) { c.classList.remove('sel'); });
+            var def = g.querySelector('.tc-rsz-mode-card[data-val="' + val + '"]');
+            if (def) def.classList.add('sel');
+        }
+        resetGroup('h2s-detail', 'high');
+        resetGroup('h2s-color', 'embed');
+        if (pathsSlider) pathsSlider.value = 500;
+        if (pathsBadge) pathsBadge.textContent = 500;
+
+        ['stat-orig', 'stat-comp', 'stat-fmt'].forEach(function (k) {
+            var el = document.getElementById(prefix + k);
+            if (el) el.textContent = '-';
+        });
+        TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+
+        var origPv = document.getElementById('tc-preview-orig');
+        if (origPv) origPv.innerHTML = '<div class="tc-preview-placeholder">Original HEIC will appear here</div>';
+        var resPv = document.getElementById('tc-preview-result');
+        if (resPv) resPv.innerHTML = '<div class="tc-preview-placeholder">Converted SVG will appear here</div>';
+        TCTP.switchToOriginalTab();
+        TCTP.toast('Cleared.', '\uD83E\uDDF9');
+    });
+
 })();

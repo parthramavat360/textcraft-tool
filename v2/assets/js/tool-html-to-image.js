@@ -96,98 +96,114 @@
 
             TCTP.showProgress('tc-html-progress', 20, 'Rendering HTML...');
 
-            // Create SVG with foreignObject
-            var svgNS = 'http://www.w3.org/2000/svg';
-            var xhtmlNS = 'http://www.w3.org/1999/xhtml';
+            renderWithHtml2canvas(code, outW, outH, scale, quality, function (blob) {
+                if (!blob) {
+                    TCTP.hideProgress('tc-html-progress');
+                    TCTP.toast('Failed to render HTML. Check your code.', '\u274C');
+                    return;
+                }
+                imageBlob = blob;
 
-            var svgStr = '<svg xmlns="' + svgNS + '" width="' + outW + '" height="' + outH + '">' +
-                '<foreignObject width="100%" height="100%">' +
-                '<div xmlns="' + xhtmlNS + '" style="width:' + outW + 'px;height:' + outH + 'px;overflow:hidden;">' +
-                '<style>body{margin:0;padding:0;}</style>' +
-                code +
-                '</div></foreignObject></svg>';
+                var origStat = document.getElementById('tc-html-stat-orig');
+                if (origStat) origStat.textContent = code.length + ' chars';
 
-            var svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
-            var url = URL.createObjectURL(svgBlob);
+                var outStat = document.getElementById('tc-html-stat-out');
+                if (outStat) outStat.textContent = TCTP.formatSize(blob.size);
 
-            var img = new Image();
-            img.onload = function () {
-                TCTP.setProgress('tc-html-progress', 60, 'Drawing to canvas...');
+                var dimsStat = document.getElementById('tc-html-stat-dims');
+                if (dimsStat) dimsStat.textContent = (outW * scale) + '\u00D7' + (outH * scale);
 
-                var canvas = document.createElement('canvas');
-                canvas.width = outW * scale;
-                canvas.height = outH * scale;
-                var ctx = canvas.getContext('2d');
-                ctx.scale(scale, scale);
+                TCTP.updateResultPanel(
+                    code.length + ' chars',
+                    TCTP.formatSize(blob.size),
+                    (outW * scale) + '\u00D7' + (outH * scale),
+                    'Done'
+                );
+                TCTP.switchToResultTab();
 
-                // White background for JPEG
-                if (outputFormat === 'image/jpeg') {
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, outW, outH);
+                var resultEl = document.getElementById('tc-html-result');
+                if (resultEl) {
+                    resultEl.innerHTML = '';
+                    var imgUrl = URL.createObjectURL(blob);
+                    resultEl.appendChild(showImg(imgUrl));
                 }
 
-                ctx.drawImage(img, 0, 0, outW, outH);
-                URL.revokeObjectURL(url);
+                if (dlBtn) {
+                    dlBtn.style.display = '';
+                    dlBtn.onclick = function () {
+                        var a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = 'html-image.' + (outputFormat === 'image/jpeg' ? 'jpg' : 'png');
+                        a.click();
+                        URL.revokeObjectURL(a.href);
+                    };
+                }
 
-                TCTP.setProgress('tc-html-progress', 80, 'Encoding...');
+                TCTP.setProgress('tc-html-progress', 100, 'Done!');
+                setTimeout(function () { TCTP.hideProgress('tc-html-progress'); }, 600);
+                TCTP.toast('Image generated!', '\u2705');
+            });
+        });
+    }
 
-                canvas.toBlob(function (blob) {
-                    imageBlob = blob;
-                    TCTP.setProgress('tc-html-progress', 100, 'Done!');
-                    setTimeout(function () { TCTP.hideProgress('tc-html-progress'); }, 600);
+    // ── html2canvas-based renderer ──────────────────────────
+    // Chromium taints canvases that draw foreignObject SVG images,
+    // which made the old toBlob()-based export fail silently. html2canvas
+    // renders the DOM directly to canvas (no SVG) so export is safe.
 
-                    var origStat = document.getElementById('tc-html-stat-orig');
-                    if (origStat) origStat.textContent = code.length + ' chars';
+    var h2cLoaded = false;
 
-                    var outStat = document.getElementById('tc-html-stat-out');
-                    if (outStat) outStat.textContent = TCTP.formatSize(blob.size);
+    function showImg(url) {
+        var resultImg = new Image();
+        resultImg.src = url;
+        resultImg.style.maxWidth = '100%';
+        resultImg.style.borderRadius = '8px';
+        resultImg.style.objectFit = 'contain';
+        resultImg.alt = 'Generated image';
+        return resultImg;
+    }
 
-                    var dimsStat = document.getElementById('tc-html-stat-dims');
-                    if (dimsStat) dimsStat.textContent = (outW * scale) + '\u00D7' + (outH * scale);
+    function loadHtml2canvas(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = function () { h2cLoaded = true; cb(); };
+        s.onerror = function () { TCTP.toast('Failed to load the HTML renderer. Check your connection.', '\u274C'); cb(); };
+        document.head.appendChild(s);
+    }
 
-                    TCTP.updateResultPanel(
-                        code.length + ' chars',
-                        TCTP.formatSize(blob.size),
-                        (outW * scale) + '\u00D7' + (outH * scale),
-                        'Done'
-                    );
-                    TCTP.switchToResultTab();
+    function renderWithHtml2canvas(code, outW, outH, scale, quality, cb) {
+        loadHtml2canvas(function () {
+            if (!window.html2canvas) { cb(null); return; }
 
-                    var resultEl = document.getElementById('tc-html-result');
-                    if (resultEl) {
-                        resultEl.innerHTML = '';
-                        var imgUrl = URL.createObjectURL(blob);
-                        var resultImg = new Image();
-                        resultImg.src = imgUrl;
-                        resultImg.style.maxWidth = '100%';
-                        resultImg.style.borderRadius = '8px';
-                        resultImg.style.objectFit = 'contain';
-                        resultImg.alt = 'Generated image';
-                        resultEl.appendChild(resultImg);
-                    }
+            TCTP.setProgress('tc-html-progress', 40, 'Building preview...');
 
-                    if (dlBtn) {
-                        dlBtn.style.display = '';
-                        dlBtn.onclick = function () {
-                            var a = document.createElement('a');
-                            a.href = URL.createObjectURL(blob);
-                            a.download = 'html-image.' + (outputFormat === 'image/jpeg' ? 'jpg' : 'png');
-                            a.click();
-                            URL.revokeObjectURL(a.href);
-                        };
-                    }
+            var host = document.createElement('div');
+            host.id = 'tc-html-render-host';
+            host.style.cssText = 'position:absolute;left:-10000px;top:0;width:' + outW + 'px;height:' + outH + 'px;overflow:hidden;background:#ffffff;';
+            host.innerHTML = '<style>html,body{margin:0;padding:0;}#root{margin:0;padding:0;}*{box-sizing:border-box;}</style>' + code;
+            document.body.appendChild(host);
 
-                    TCTP.toast('Image generated!', '\u2705');
-                }, outputFormat, quality);
-            };
-
-            img.onerror = function () {
-                TCTP.hideProgress('tc-html-progress');
-                URL.revokeObjectURL(url);
-                TCTP.toast('Failed to render HTML. Check your code.', '\u274C');
-            };
-
-            img.src = url;
+            setTimeout(function () {
+                TCTP.setProgress('tc-html-progress', 60, 'Rendering...');
+                html2canvas(host, {
+                    width: outW,
+                    height: outH,
+                    scale: scale,
+                    backgroundColor: outputFormat === 'image/jpeg' ? '#ffffff' : null,
+                    useCORS: true,
+                    logging: false
+                }).then(function (canvas) {
+                    var hostEl = document.getElementById('tc-html-render-host');
+                    if (hostEl) hostEl.remove();
+                    TCTP.setProgress('tc-html-progress', 80, 'Encoding...');
+                    canvas.toBlob(cb, outputFormat, quality);
+                }).catch(function () {
+                    var hostEl = document.getElementById('tc-html-render-host');
+                    if (hostEl) hostEl.remove();
+                    cb(null);
+                });
+            }, 150);
         });
     }
 })();

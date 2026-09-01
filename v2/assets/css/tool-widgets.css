@@ -11,7 +11,7 @@
      --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px -12px rgba(16,24,40,.18)
      --shadow-lg:0 24px 60px -30px rgba(16,24,40,.4)
      --font-display:"Space Grotesk",system-ui,sans-serif
-     --font-body:"DM Sans",system-ui,sans-serif
+     --font-body:"Lexend", system-ui, sans-serif
    ================================================================ */
 
 /* =========================================================================
@@ -27,7 +27,7 @@
   --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px -12px rgba(16,24,40,.18);
   --shadow-lg:0 24px 60px -30px rgba(16,24,40,.4);
   --font-display:"Space Grotesk",system-ui,sans-serif;
-  --font-body:"DM Sans",system-ui,sans-serif;
+  --font-body:"Lexend", system-ui, sans-serif;
   max-width:1200px; margin:0 auto; padding:0 24px 48px;
 }
 .tc-workspace-wrap *,.tc-workspace-wrap *::before,.tc-workspace-wrap *::after{box-sizing:border-box}
@@ -271,7 +271,7 @@
 /* =========================================================================
    21. TOAST NOTIFICATION
    ========================================================================= */
-.tctp-toast{position:fixed;bottom:24px;right:24px;background:#0b1220;color:#fff;padding:12px 20px;border-radius:12px;font-family:"DM Sans",system-ui,sans-serif;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:.3s ease;z-index:9999}
+.tctp-toast{position:fixed;bottom:24px;right:24px;background:#0b1220;color:#fff;padding:12px 20px;border-radius:12px;font-family:"Lexend", system-ui, sans-serif;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:.3s ease;z-index:9999}
 .tctp-toast--show{transform:translateY(0);opacity:1}
 .tctp-toast-icon{font-size:16px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .tctp-toast-msg{white-space:nowrap}
@@ -333,6 +333,250 @@
   flex-direction: column;
   gap: 0;
 }
+
+/* ── Image tools (resize/crop/rotate/watermark/flip/upscale) ──
+   Space Grotesk for section titles, field labels & placeholders.
+   Scoped to .tc-imgopt so the 150+ other tools are unaffected. */
+.tc-imgopt .tc-rsz-heading {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgopt .tc-rsz-dim-label,
+.tc-imgopt .tc-label {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgopt .tc-rsz-num,
+.tc-imgopt .tc-rsz-num--sm,
+.tc-imgopt .tc-input,
+.tc-imgopt .tc-rsz-select {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgopt .tc-rsz-num::placeholder,
+.tc-imgopt .tc-rsz-num--sm::placeholder,
+.tc-imgopt .tc-input::placeholder {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgopt .tc-rsz-quality-badge,
+.tc-imgopt .tc-rsz-unit,
+.tc-imgopt .tc-rsz-scale-hint,
+.tc-imgopt .tc-rsz-preset,
+.tc-imgopt .tc-rsz-fmt,
+.tc-imgopt .tc-rsz-mode-text b,
+.tc-imgopt .tc-rsz-mode-text span {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgopt-mt {
+  margin-top: 16px;
+}
+
+/* ── Premium redesign (blur-face / photo-editor / passport / png-to-ico / svg-to-png) ──
+   Space Grotesk on ALL section titles, field labels & placeholders.
+   Scoped to .tc-imgprem so no other tool is affected; NO inline styles. */
+.tc-imgprem .tc-rsz-heading {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  color: var(--ink, #0f1524);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+.tc-imgprem .tc-rsz-dim-label,
+.tc-imgprem .tc-label,
+.tc-imgprem .tc-rsz-slider-min,
+.tc-imgprem .tc-rsz-slider-max,
+.tc-imgprem .tc-rsz-unit,
+.tc-imgprem .tc-rsz-scale-hint,
+.tc-imgprem .tc-ppt-ctrl span,
+.tc-imgprem .tc-ppt-hint,
+.tc-imgprem .tc-ppt-outnote,
+.tc-imgprem .tc-svg-dims-row .tc-rsz-dim-label,
+.tc-imgprem .tc-pe-text-fields .tc-rsz-dim-label {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgprem .tc-rsz-num,
+.tc-imgprem .tc-rsz-num--sm,
+.tc-imgprem .tc-rsz-select,
+.tc-imgprem .tc-input,
+.tc-imgprem .tc-pe-text-input {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgprem .tc-rsz-num::placeholder,
+.tc-imgprem .tc-rsz-num--sm::placeholder,
+.tc-imgprem .tc-input::placeholder,
+.tc-imgprem .tc-pe-text-input::placeholder {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+/* Preset / card / bg text */
+.tc-imgprem .tc-rsz-mode-text b,
+.tc-imgprem .tc-rsz-mode-text span,
+.tc-imgprem .tc-rsz-fmt span:last-child,
+.tc-imgprem .tc-ppt-preset b,
+.tc-imgprem .tc-ppt-preset span,
+.tc-imgprem .tc-ppt-bg span,
+.tc-imgprem .tc-ppt-fmt,
+.tc-imgprem .tc-ico-preset-btn,
+.tc-imgprem .tc-svg-preset-btn {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-imgprem-mt {
+  margin-top: 16px;
+}
+
+/* Photo editor text-overlay fields */
+.tc-imgprem .tc-pe-text-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tc-imgprem .tc-pe-text-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.tc-imgprem .tc-pe-text-color-field {
+  flex: 1;
+}
+.tc-imgprem .tc-pe-text-size-field {
+  width: 120px;
+}
+.tc-imgprem .tc-pe-text-pos-field {
+  width: 100%;
+}
+.tc-imgprem .tc-pe-text-pos {
+  width: 100%;
+}
+
+/* ── Resize Image only: 2-column mode cards ── */
+.tc-rsz-resize .tc-rsz-mode-cards {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── Watermark Font picker (premium custom dropdown) ──
+   Scoped to this tool only. */
+.tc-wm-font-pick {
+  position: relative;
+}
+.tc-wm-font-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.tc-wm-font-trigger:hover {
+  border-color: var(--accent);
+}
+.tc-wm-font-trigger:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tc-wm-font-prev {
+  font-size: 15px;
+  color: var(--ink);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tc-wm-font-caret {
+  flex: 0 0 auto;
+  color: #8892a6;
+  transition: transform 0.18s;
+}
+.tc-wm-font-pick.open .tc-wm-font-caret {
+  transform: rotate(180deg);
+}
+.tc-wm-font-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.18);
+}
+.tc-wm-font-menu.open {
+  display: flex;
+}
+.tc-wm-font-opt {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tc-wm-font-opt:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+.tc-wm-font-opt.sel {
+  background: var(--accent);
+  color: #fff;
+}
+.tc-wm-font-opt--arial {
+  font-family: Arial, sans-serif;
+}
+.tc-wm-font-opt--georgia {
+  font-family: Georgia, serif;
+}
+.tc-wm-font-opt--times {
+  font-family: "Times New Roman", Times, serif;
+}
+.tc-wm-font-opt--courier {
+  font-family: "Courier New", Courier, monospace;
+}
+.tc-wm-font-opt--verdana {
+  font-family: Verdana, sans-serif;
+}
+.tc-wm-font-opt--impact {
+  font-family: Impact, sans-serif;
+}
+.tc-wm-font-prev.tc-wm-font-opt--arial {
+  font-family: Arial, sans-serif;
+}
+.tc-wm-font-prev.tc-wm-font-opt--georgia {
+  font-family: Georgia, serif;
+}
+.tc-wm-font-prev.tc-wm-font-opt--times {
+  font-family: "Times New Roman", Times, serif;
+}
+.tc-wm-font-prev.tc-wm-font-opt--courier {
+  font-family: "Courier New", Courier, monospace;
+}
+.tc-wm-font-prev.tc-wm-font-opt--verdana {
+  font-family: Verdana, sans-serif;
+}
+.tc-wm-font-prev.tc-wm-font-opt--impact {
+  font-family: Impact, sans-serif;
+}
+
+.tc-inline-msg {
+  display: none;
+  margin: 10px 0 4px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #fbbf24;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.tc-inline-msg.show { display: block; }
 
 .tc-rsz-section {
   padding: 18px 0;
@@ -752,6 +996,87 @@
   align-items: center;
   gap: 12px;
 }
+
+/* ── Premium tool options (replaces previously-inline styles) ─── */
+/* The premium converter tools used inline `font-family:'Space Grotesk'`
+   on option labels/sliders/modes/inputs plus a few layout overrides.
+   These rules reproduce that exact look from the stylesheet instead. */
+
+.tc-premium .tc-range-label,
+.tc-premium .tc-label,
+.tc-premium .tc-opt-text,
+.tc-premium .tc-modes .tc-btn--ghost,
+.tc-premium .tc-input,
+.tc-premium .tc-rsz-slider-min,
+.tc-premium .tc-rsz-slider-max {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-premium .tc-input::placeholder {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-premium .tc-file-row + .tc-input-group {
+  margin-top: 18px;
+}
+.tc-premium .tc-rsz-slider-wrap .tc-range {
+  flex: 1;
+  min-width: 0;
+}
+.tc-premium .tc-comp-count-hint {
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+/* Premium color swatch inputs (was inline sizing on each input) */
+.tc-premium .tc-color {
+  width: 56px;
+  height: 36px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 2px;
+  margin-top: 6px;
+}
+
+/* Per-tool layout toggles that lived inline (kept scoped so other
+   premium tools are untouched). */
+.tc-premium .tc-modes[data-group="pn2j-quality"],
+.tc-premium .tc-modes[data-group="p2w-quality"],
+.tc-premium .tc-modes[data-group="j2a-quality"],
+.tc-premium .tc-modes[data-group="j2gif-colors"] {
+  margin-top: 8px;
+}
+.tc-premium #tc-dpdf-thumbs {
+  margin-bottom: 4px;
+}
+.tc-premium #tc-p2p-bgcolor {
+  width: 52px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.tc-premium .tc-comp-result {
+  color: #64748b;
+  padding: 12px 0;
+}
+.tc-premium .tc-comp-result-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: #0d1321;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tc-premium .tc-comp-result-preview > p {
+  color: #64748b;
+}
+.tc-premium #tc-kb-custom-row {
+  margin-top: 10px;
+}
+
 .tc-rsz-slider-min,
 .tc-rsz-slider-max {
   font-family: var(--font-body);
@@ -1867,6 +2192,207 @@
   padding: 12px;
 }
 
+/* ── 7 Text Tools (case-converter / remove-line-breaks / find-replace /
+   character-remover / duplicate-line / duplicate-word / em-dash-remover) ──
+   Space Grotesk on ALL section titles, field labels, toggles & placeholders.
+   Scoped to .tc-txtp (added to each tool's content wrapper) so no other tool
+   is affected. No inline styles. */
+.tc-txtp .tc-rsz-heading,
+.tc-txtp .tc-label,
+.tc-txtp .tc-fr-field-lbl {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tc-input,
+.tc-txtp .tc-fr-styled-input {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tc-input::placeholder,
+.tc-txtp .tc-fr-styled-input::placeholder,
+.tc-txtp .tc-textarea::placeholder {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tc-rsz-mode-text b,
+.tc-txtp .tc-rsz-mode-text span,
+.tc-txtp .tc-rsz-toggle-text b,
+.tc-txtp .tc-rsz-toggle-text span,
+.tc-txtp .tc-stat-label {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tc-stat-label {
+  letter-spacing: 0.08em;
+}
+.tc-txtp .tc-btn--clear {
+  color: #b45309;
+}
+.tc-txtp .tc-btn--clear:hover {
+  border-color: #f5c89a;
+  background: #fef7ed;
+  color: #92400e;
+}
+
+/* ── Text Diff / Compare (text-diff) ──
+   Space Grotesk + layout, scoped to .tc-txtp. No inline styles. */
+.tc-txtp .tc-check {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tc-flex.tc-diff-actions {
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tc-txtp .tc-diff-result {
+  display: none;
+}
+.tc-txtp .tc-diff-result.tc-diff-open {
+  display: block;
+}
+.tc-txtp .tc-diff-result .tc-diff-panel {
+  display: none;
+}
+.tc-txtp .tc-diff-result .tc-diff-panel.tc-diff-open {
+  display: block;
+}
+.tc-txtp .tctp-rsz-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tc-txtp .tctp-rsz-tab {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: transparent;
+  color: var(--ink-2, #64748b);
+  cursor: pointer;
+}
+.tc-txtp .tctp-rsz-tab.sel {
+  background: var(--accent, #e11d48);
+  border-color: var(--accent, #e11d48);
+  color: #fff;
+}
+.tc-txtp .tctp-diff-unified-pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.tc-txtp .tctp-diff-visual {
+  margin-bottom: 8px;
+}
+.tc-txtp .tctp-diff-line {
+  display: flex;
+  gap: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.tc-txtp .tctp-diff-ln {
+  min-width: 34px;
+  text-align: right;
+  color: #64748b;
+  user-select: none;
+}
+.tc-txtp .tctp-diff-code {
+  flex: 1;
+  word-break: break-word;
+}
+.tc-txtp .tctp-diff-ch {
+  background: rgba(234, 88, 12, 0.08);
+}
+.tc-txtp .tctp-diff-del {
+  background: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  border-radius: 3px;
+}
+.tc-txtp .tctp-diff-add {
+  background: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+  border-radius: 3px;
+}
+.tc-txtp .tctp-diff-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.tc-txtp .tctp-diff-stat-card {
+  background: #0f172a;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+.tc-txtp .tctp-diff-stat-num {
+  font-size: 28px;
+  font-weight: 700;
+}
+.tc-txtp .tctp-diff-stat-green {
+  color: #22c55e;
+}
+.tc-txtp .tctp-diff-stat-red {
+  color: #ef4444;
+}
+.tc-txtp .tctp-diff-stat-dark {
+  color: #0b1220;
+}
+.tc-txtp .tctp-diff-stat-lbl {
+  color: #94a3b8;
+  font-size: 12px;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-txtp .tctp-diff-stats-footer {
+  background: #0f172a;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+.tc-txtp .tctp-diff-bar {
+  background: #1e293b;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.tc-txtp .tctp-diff-bar-fill {
+  background: linear-gradient(90deg, #22c55e, #0b1220);
+  height: 100%;
+  transition: width 0.3s;
+}
+.tc-txtp .tctp-diff-bar-cap {
+  margin-top: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+
+/* ── PNG to ICO — Space Grotesk on all option titles/labels/placeholders ──
+   Scoped to this tool only (tc-ico-options). No inline styles. */
+.tc-ico-options .tc-rsz-heading {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-ico-options .tc-rsz-toggle-text,
+.tc-ico-options .tc-rsz-toggle-text b,
+.tc-ico-options .tc-rsz-toggle-text span,
+.tc-ico-options .tc-ico-preset-btn,
+.tc-ico-options .tc-ico-size-item span {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+.tc-ico-options .tc-ico-preset-btn {
+  letter-spacing: 0.02em;
+}
+
 /* ── SVG to PNG ────────────────────────────────────────────── */
 
 .tc-svg-preview-wrap {
@@ -2024,7 +2550,275 @@
   padding: 12px;
 }
 
+/* ── Blur Face premium (scoped to this tool) ────────────── */
+.tc-imgprem .tc-blur-canvas-wrap {
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(10, 18, 34, 0.08);
+}
+.tc-imgprem .tc-blur-actions-row {
+  flex-wrap: wrap;
+}
+.tc-imgprem .tc-blur-clear-btn,
+.tc-imgprem .tc-blur-undo-btn {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+.tc-imgprem .tc-blur-count {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 500;
+}
+
 /* ── Meme Generator ────────────────────────────────────────── */
+
+.tc-meme-options .tc-rsz-heading {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.tc-meme-options .tc-input-group {
+  margin-bottom: 16px;
+}
+.tc-meme-options .tc-input-group:last-child {
+  margin-bottom: 0;
+}
+
+.tc-meme-options .tc-range-label {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 500;
+  font-size: 14px;
+  align-items: center;
+}
+.tc-meme-options .tc-range-label .tc-meme-opt-name {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+
+.tc-meme-options .tc-meme-opt-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--accent-soft, rgba(11, 18, 32, 0.08));
+  color: var(--accent, #0b1220);
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.tc-meme-options .tc-input,
+.tc-meme-options .tc-input::placeholder,
+.tc-meme-options .tc-modes .tc-btn {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+}
+
+.tc-meme-options .tc-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tc-meme-options .tc-modes .tc-btn {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.tc-meme-options #tc-meme-align-group .tc-modes {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.tc-meme-options #tc-meme-align-group .tc-modes .tc-btn {
+  padding: 0;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.tc-meme-options .tc-meme-color-group .tc-range-label {
+  justify-content: space-between;
+}
+.tc-meme-options .tc-meme-color-hex {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tc-meme-options .tc-color {
+  width: 56px;
+  height: 36px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 2px;
+  background: #fff;
+}
+
+/* Premium color picker (swatch + hex + presets) */
+.tc-meme-color-picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+.tc-meme-color-picker:hover { border-color: #c8d2de; }
+
+.tc-meme-swatch {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1.5px var(--line), 0 2px 6px rgba(16, 24, 40, 0.12);
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+}
+.tc-meme-swatch-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 7px;
+}
+.tc-meme-color-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.tc-meme-color-hex {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.tc-meme-swatches {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.tc-meme-csw {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.tc-meme-csw:hover { transform: scale(1.15); box-shadow: 0 0 0 2px var(--accent); }
+
+/* ── Generic premium color picker (swatch + hex + presets) ───── */
+/* Shared component so any tool's bare color input can get the same
+   premium look as txt-meme-generator without inline CSS. Each picker
+   keeps its native <input type="color"> (same id) so existing tool JS
+   that reads .value keeps working; the component just skins it. */
+
+.tc-premium-color-picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+.tc-premium-color-picker:hover { border-color: #c8d2de; }
+
+.tc-pcp-swatch {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1.5px var(--line), 0 2px 6px rgba(16, 24, 40, 0.12);
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+}
+.tc-pcp-swatch-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 7px;
+}
+.tc-pcp-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.tc-pcp-hex {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.tc-pcp-swatches {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.tc-pcp-csw {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  background-color: var(--line);
+}
+.tc-pcp-csw:hover { transform: scale(1.15); box-shadow: 0 0 0 2px var(--accent); }
+
+.tc-w2j-hint {
+  display: block;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 6px;
+}
+
+.tc-meme-options .tc-rsz-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tc-meme-options .tc-rsz-slider-wrap .tc-rsz-slider-min,
+.tc-meme-options .tc-rsz-slider-wrap .tc-rsz-slider-max {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 12px;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
 
 .tc-meme-preview-wrap {
   display: flex;
@@ -2037,52 +2831,19 @@
   padding: 12px;
 }
 
-.tc-meme-preview-wrap canvas {
-  display: block;
+.tc-meme-preview-wrap .tc-meme-canvas {
+  display: none;
   max-width: 100%;
   border-radius: 4px;
 }
 
-.tc-meme-text-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.tc-meme-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tc-meme-input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  font-size: 16px;
-  text-transform: uppercase;
-  color: var(--ink);
-  background: #fff;
-  outline: none;
-  transition: border-color 0.18s;
-}
-
-.tc-meme-input:focus {
-  border-color: var(--accent);
-}
-
-.tc-meme-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.tc-meme-style-row {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.tc-meme-placeholder {
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  text-align: center;
+  margin: 16px 8px;
 }
 
 .tc-meme-result {
@@ -2096,8 +2857,167 @@
   object-fit: contain;
 }
 
-.tc-meme-result-preview {
-  padding: 12px;
+.tc-meme-result-empty {
+  color: #64748b;
+  padding: 12px 0;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 14px;
+}
+
+.tc-meme-preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: #0d1321;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tc-meme-preview-empty p {
+  color: #64748b;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 14px;
+}
+
+.tc-meme-options .tc-meme-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tc-meme-options .tc-meme-tool {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
+.tc-meme-options .tc-meme-tool.sel {
+  background: var(--accent, #0ea5e9);
+  color: #ffffff;
+  border-color: var(--accent, #0ea5e9);
+}
+
+.tc-meme-hint {
+  color: #64748b;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 12.5px;
+  margin: 8px 2px 0;
+}
+
+.tc-meme-options .tc-meme-block-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tc-meme-options .tc-meme-block-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: rgba(15, 23, 42, 0.35);
+  cursor: pointer;
+}
+
+.tc-meme-options .tc-meme-block-row.sel {
+  border-color: var(--accent, #0ea5e9);
+  box-shadow: 0 0 0 1px var(--accent, #0ea5e9);
+}
+
+.tc-meme-options .tc-meme-block-row.dragging {
+  opacity: 0.5;
+  border-style: dashed;
+}
+.tc-meme-options .tc-meme-block-row.drag-over {
+  border-color: var(--accent, #0ea5e9);
+  box-shadow: 0 0 0 1px var(--accent, #0ea5e9);
+  background: rgba(14, 165, 233, 0.12);
+}
+.tc-meme-options .tc-meme-block-tt {
+  cursor: move;
+}
+
+.tc-meme-options .tc-meme-block-idx {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tc-meme-options .tc-meme-block-row.sel .tc-meme-block-idx {
+  background: var(--accent, #0ea5e9);
+  color: #ffffff;
+}
+
+.tc-meme-options .tc-meme-block-tt {
+  flex: 0 0 auto;
+  width: 16px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.tc-meme-options .tc-meme-block-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tc-meme-options .tc-meme-block-input::placeholder {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.tc-meme-options .tc-meme-block-del {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tc-meme-options .tc-meme-block-del:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.tc-meme-options .tc-meme-add-text {
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.tc-meme-options .tc-meme-selection {
+  color: #64748b;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 12.5px;
+  margin: 0 0 14px;
+}
+
+.tc-meme-preview-wrap .tc-meme-canvas.dragging {
+  cursor: grabbing;
 }
 
 /* ── HTML to Image ─────────────────────────────────────────── */
@@ -2304,6 +3224,26 @@
   border-radius: 10px;
   cursor: pointer;
   padding: 0;
+}
+
+.tc-color-preview-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: #0d1321;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tc-color-preview-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+}
+.tc-color-result-empty {
+  color: #64748b;
+  padding: 12px 0;
 }
 
 .tc-color-values {
@@ -3014,6 +3954,156 @@
   .tc-pe-text-row {
     flex-wrap: wrap;
   }
+}
+
+/* ── Photo Editor premium (scoped) ─────────────────────────── */
+.tc-imgprem .tc-pe-sliders {
+  gap: 16px;
+}
+.tc-imgprem .tc-pe-sliders .tc-rsz-slider-wrap {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px 14px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.tc-imgprem .tc-pe-sliders .tc-rsz-slider-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tc-imgprem .tc-pe-sliders .tc-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink, #0f1524);
+  margin: 0;
+}
+.tc-imgprem .tc-pe-sliders .tc-label span {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft, rgba(60, 110, 255, 0.12));
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.tc-imgprem .tc-pe-transform-modes .tc-rsz-mode-card.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft, rgba(60, 110, 255, 0.08));
+}
+.tc-imgprem .tc-pe-transform-modes .tc-rsz-mode-card.sel .tc-rsz-mode-text b,
+.tc-imgprem .tc-pe-transform-modes .tc-rsz-mode-card.sel .tc-rsz-mode-text span {
+  color: var(--accent);
+}
+.tc-imgprem .tc-pe-preview-wrap canvas {
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(10, 18, 34, 0.1);
+}
+.tc-imgprem .tc-pe-text-fields .tc-rsz-dim-field,
+.tc-imgprem .tc-pe-text-fields .tc-pe-text-pos-field {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px 14px;
+}
+.tc-imgprem .tc-pe-text-row {
+  align-items: flex-end;
+}
+
+/* ── Photo Editor: Premium Position dropdown ────────────────── */
+.tc-imgprem .tc-pe-pos-pick {
+  position: relative;
+}
+.tc-imgprem .tc-pe-pos-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink, #0f1524);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.tc-imgprem .tc-pe-pos-trigger:hover {
+  border-color: var(--accent);
+}
+.tc-imgprem .tc-pe-pos-trigger:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tc-imgprem .tc-pe-pos-prev {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tc-imgprem .tc-pe-pos-caret {
+  flex: 0 0 auto;
+  color: #8892a6;
+  transition: transform 0.18s;
+}
+.tc-imgprem .tc-pe-pos-pick.open .tc-pe-pos-caret {
+  transform: rotate(180deg);
+}
+.tc-imgprem .tc-pe-pos-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.18);
+}
+.tc-imgprem .tc-pe-pos-menu.open {
+  display: flex;
+}
+.tc-imgprem .tc-pe-pos-opt {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink, #0f1524);
+  text-align: left;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tc-imgprem .tc-pe-pos-opt:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+.tc-imgprem .tc-pe-pos-opt.sel {
+  background: var(--accent);
+  color: #fff;
+}
+.tc-imgprem .tc-pe-pos-native {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Text to Speech ─────────────────────────────────────────── */
@@ -3978,7 +5068,7 @@
 .tc-ig-caption-num { font-size: 13px; font-weight: 700; color: var(--accent, #0b1220); }
 .tc-ig-caption-chars { font-size: 12px; color: var(--muted, #64748b); }
 .tc-ig-caption-text {
-  margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'DM Sans', sans-serif;
+  margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'Lexend', sans-serif;
   font-size: 14px; line-height: 1.7; color: var(--ink, #f1f5f9);
 }
 .tc-ig-ht-set {
@@ -4093,7 +5183,7 @@
 .tc-md-card-num { font-size: 12px; font-weight: 700; color: var(--accent, #0b1220); }
 .tc-md-card-badge { font-size: 12px; font-weight: 600; margin-left: auto; }
 .tc-md-card-text {
-  margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'DM Sans', sans-serif;
+  margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'Lexend', sans-serif;
   font-size: 14px; line-height: 1.7; color: var(--ink, #f1f5f9);
 }
 .tc-md-analysis-row {
@@ -5164,6 +6254,169 @@
   object-fit: contain;
 }
 
+/* ── Passport premium (scoped to this tool) ───────────────── */
+.tc-imgprem .tc-ppt-crop-controls {
+  position: relative;
+}
+.tc-imgprem .tc-ppt-value {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent, #0b1220);
+  background: var(--accent-soft, rgba(11, 18, 32, 0.08));
+  padding: 4px 10px;
+  border-radius: 8px;
+  width: fit-content;
+  margin-top: -6px;
+}
+.tc-imgprem .tc-ppt-face-value {
+  margin-top: 0;
+}
+.tc-imgprem .tc-ppt-label-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.tc-imgprem .tc-ppt-label-row span,
+.tc-imgprem .tc-ppt-label-color-row > span {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+}
+.tc-imgprem .tc-ppt-label-row input {
+  width: 100%;
+}
+.tc-imgprem .tc-ppt-label-color-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tc-imgprem .tc-ppt-label-color-row > span {
+  flex: 0 0 auto;
+}
+.tc-imgprem .tc-ppt-label-color-row .tc-premium-color-picker {
+  justify-content: flex-start;
+}
+
+/* Free-drag guides overlay */
+.tc-ppt-guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.tc-ppt-guide-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.tc-ppt-guide-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.tc-ppt-guide-head { top: 8%; }
+.tc-ppt-guide-eye { top: 36%; }
+
+/* Guide toggle switch */
+.tc-ppt-guide-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  width: fit-content;
+}
+.tc-ppt-guide-toggle input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.tc-ppt-guide-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 22px;
+  background: var(--line, #d6dde7);
+  transition: background 0.2s ease;
+  flex: 0 0 auto;
+}
+.tc-ppt-guide-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.25);
+  transition: transform 0.2s ease;
+}
+.tc-ppt-guide-toggle input:checked + .tc-ppt-guide-switch {
+  background: var(--accent, #0b1220);
+}
+.tc-ppt-guide-toggle input:checked + .tc-ppt-guide-switch::after {
+  transform: translateX(18px);
+}
+.tc-ppt-guide-text {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2, #334155);
+}
+
+/* Photo count pills */
+.tc-ppt-count-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.tc-ppt-count-row > span {
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-2, #334155);
+}
+.tc-ppt-count-pills {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tc-ppt-count {
+  padding: 8px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font-family: var(--font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2, #334155);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.tc-ppt-count:hover {
+  border-color: #c8d2de;
+}
+.tc-ppt-count.sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
 @media (max-width: 900px) {
   .tc-ppt-presets { grid-template-columns: repeat(2, 1fr); }
   .tc-ppt-crop-row { grid-template-columns: 1fr; }
@@ -5505,7 +6758,7 @@
 
 /* Rendered document container (shared) */
 .tc-ofp-render {
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "Lexend", system-ui, sans-serif;
   color: #111827;
   font-size: 14px;
   line-height: 1.5;

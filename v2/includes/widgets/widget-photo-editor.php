@@ -34,7 +34,7 @@ class Widget_Photo_Editor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-pe-drop', 'image/*', 'Drag & drop or click to upload a photo'); ?>
         <?php $this->render_file_row('tc-pe-file'); ?>
 
-        <div class="tc-rsz-options" style="margin-top:16px">
+        <div class="tc-rsz-options tc-imgprem tc-imgprem-mt">
 
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Adjustments</h4>
@@ -95,15 +95,53 @@ class Widget_Photo_Editor extends TextCraft_Tool_Base {
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Text Overlay</h4>
                 <div class="tc-pe-text-fields">
-                    <input type="text" class="tc-rsz-num" id="tc-pe-text" placeholder="Enter text to overlay" style="width:100%">
+                    <div class="tc-rsz-dim-field">
+                        <label class="tc-rsz-dim-label">Text</label>
+                        <input type="text" class="tc-rsz-num tc-pe-text-input" id="tc-pe-text" placeholder="Enter text to overlay">
+                    </div>
                     <div class="tc-pe-text-row">
-                        <input type="color" id="tc-pe-text-color" value="#ffffff" title="Text color">
-                        <input type="number" class="tc-rsz-num" id="tc-pe-text-size" value="32" min="8" max="200" title="Font size">
-                        <select class="tc-rsz-select" id="tc-pe-text-pos">
-                            <option value="top">Top</option>
-                            <option value="center" selected>Center</option>
-                            <option value="bottom">Bottom</option>
-                        </select>
+                        <div class="tc-pe-text-color-field">
+                            <label class="tc-rsz-dim-label">Color</label>
+                            <div class="tc-premium-color-picker" data-picker="tc-pe-text-color">
+                                <label class="tc-pcp-swatch" for="tc-pe-text-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-pe-text-color"></span></label>
+                                <span class="tc-pcp-hex"></span>
+                                <input type="color" class="tc-pcp-input" id="tc-pe-text-color" value="#ffffff">
+                                <div class="tc-pcp-swatches" data-palette="tc-pe-text-color">
+                                    <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#fffc3d" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#ff5b5b" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#00e0c6" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#3d7bff" type="button"></button>
+                                    <button class="tc-pcp-csw" data-val="#000000" type="button"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tc-pe-text-size-field">
+                            <label class="tc-rsz-dim-label">Size</label>
+                            <div class="tc-rsz-dim-input">
+                                <input type="number" class="tc-rsz-num" id="tc-pe-text-size" value="32" min="8" max="200" title="Font size">
+                                <span class="tc-rsz-unit">px</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-pe-text-pos-field">
+                        <label class="tc-rsz-dim-label">Position</label>
+                        <div class="tc-pe-pos-pick" id="tc-pe-pos-pick">
+                            <div class="tc-pe-pos-trigger" id="tc-pe-pos-trigger" role="button" aria-haspopup="listbox" aria-expanded="false" tabindex="0">
+                                <span class="tc-pe-pos-prev" id="tc-pe-pos-prev">Center</span>
+                                <svg class="tc-pe-pos-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div class="tc-pe-pos-menu" id="tc-pe-pos-menu" role="listbox">
+                                <button class="tc-pe-pos-opt" type="button" role="option" data-val="top">Top</button>
+                                <button class="tc-pe-pos-opt" type="button" role="option" data-val="center">Center</button>
+                                <button class="tc-pe-pos-opt" type="button" role="option" data-val="bottom">Bottom</button>
+                            </div>
+                            <select class="tc-rsz-select tc-pe-text-pos tc-pe-pos-native" id="tc-pe-text-pos" aria-hidden="true" tabindex="-1">
+                                <option value="top">Top</option>
+                                <option value="center" selected>Center</option>
+                                <option value="bottom">Bottom</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,6 +157,39 @@ class Widget_Photo_Editor extends TextCraft_Tool_Base {
         ?>
         <div class="tc-pe-preview-wrap" id="tc-pe-preview-wrap" style="display:none">
             <canvas id="tc-pe-canvas" style="max-width:100%;border-radius:8px"></canvas>
+        </div>
+        <?php
+    }
+
+    protected function render_result(array $settings): void {
+        ?>
+        <div class="tc-result-col">
+            <div class="tc-panel">
+                <div class="tc-panel-head">
+                    <h3>2 &middot; Result</h3>
+                    <span id="tc-status-chip">Idle</span>
+                </div>
+                <div class="tc-panel-body">
+                    <div class="tc-stats">
+                        <div><span>Original</span><b id="tc-stat-orig">&mdash;</b></div>
+                        <div><span>Output</span><b id="tc-stat-comp">&mdash;</b></div>
+                        <div class="saved"><span>Saved</span><b id="tc-stat-saved">&mdash;</b></div>
+                    </div>
+                    <div class="tc-tabs-header">
+                        <h4>Preview</h4>
+                        <div class="tc-tabs">
+                            <button class="on" data-tab="original">Original</button>
+                            <button data-tab="result">Edited</button>
+                        </div>
+                    </div>
+                    <div class="tc-preview" data-tab-content="original" id="tc-preview-orig">Original preview will appear here</div>
+                    <div class="tc-preview is-hidden" data-tab-content="result" id="tc-preview-result">
+                        <p class="tc-preview-placeholder">Apply edits to see your edited photo here.</p>
+                        <?php $this->render_result_content($settings); ?>
+                    </div>
+                </div>
+            </div>
+            <?php $this->render_side_panel($settings); ?>
         </div>
         <?php
     }

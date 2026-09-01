@@ -34,7 +34,7 @@ class Widget_Svg_To_Png extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-svg-drop', 'image/svg+xml,.svg', 'Drag & drop an SVG file here or click to browse'); ?>
         <?php $this->render_file_row('tc-svg-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgprem">
 
             <div class="tc-rsz-section" id="tc-svg-preview-section" style="display:none">
                 <h4 class="tc-rsz-heading">Preview</h4>
@@ -94,9 +94,17 @@ class Widget_Svg_To_Png extends TextCraft_Tool_Base {
 
             <div class="tc-rsz-section" id="tc-svg-custom-color-section" style="display:none">
                 <h4 class="tc-rsz-heading">Background Color</h4>
-                <div class="tc-wm-color-wrap">
-                    <input type="color" id="tc-svg-bg-color" value="#ffffff" class="tc-wm-color">
-                    <span class="tc-wm-color-hex" id="tc-svg-bg-hex">#ffffff</span>
+                <div class="tc-premium-color-picker" data-picker="tc-svg-bg-color">
+                    <label class="tc-pcp-swatch" for="tc-svg-bg-color"><span class="tc-pcp-swatch-fill" data-swatch="tc-svg-bg-color"></span></label>
+                    <span class="tc-pcp-hex"></span>
+                    <input type="color" class="tc-pcp-input" id="tc-svg-bg-color" value="#ffffff">
+                    <div class="tc-pcp-swatches" data-palette="tc-svg-bg-color">
+                        <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#f8fafc" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#e11d48" type="button"></button>
+                        <button class="tc-pcp-csw" data-val="#0ea5e9" type="button"></button>
+                    </div>
                 </div>
             </div>
 

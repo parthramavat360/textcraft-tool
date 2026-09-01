@@ -176,6 +176,39 @@
         });
     }
 
+    /* ── Clear all ──────────────────────────────────────────── */
+    var clearBtn = document.getElementById(PREFIX + 'clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            inp.value = '';
+            duplicateText = '';
+
+            var modeCards = document.querySelectorAll('.tc-dw-modes .tc-rsz-mode-card');
+            modeCards.forEach(function (c) { c.classList.remove('sel'); });
+            if (modeCards[0]) modeCards[0].classList.add('sel');
+            if (customWrap) customWrap.style.display = 'none';
+            if (ignoreInput) ignoreInput.value = '';
+
+            var caseCb = document.getElementById(PREFIX + 'case');
+            var minCb = document.getElementById(PREFIX + 'min');
+            if (caseCb) caseCb.checked = false;
+            if (minCb) minCb.checked = false;
+
+            if (origPreview) origPreview.value = '';
+            if (resultPreview) resultPreview.value = '';
+            if (elTags) elTags.innerHTML = '';
+            if (elFreq) elFreq.innerHTML = '';
+
+            updateStats('');
+            setStat(PREFIX + 'total', '0');
+            setStat(PREFIX + 'unique', '0');
+            setStat(PREFIX + 'duplicates', '0');
+            TCTP.updateResultPanel('\u2014', '\u2014', '\u2014', 'Idle');
+            TCTP.switchToOriginalTab();
+            TCTP.toast('Cleared.', '\uD83E\uDDF9');
+        });
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     updateStats('');
 

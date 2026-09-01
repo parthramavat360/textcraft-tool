@@ -34,7 +34,7 @@ class Widget_Png_To_Ico extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-ico-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop an image here or click to browse'); ?>
         <?php $this->render_file_row('tc-ico-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgprem tc-ico-options">
 
             <div class="tc-rsz-section" id="tc-ico-preview-section" style="display:none">
                 <h4 class="tc-rsz-heading">Preview</h4>

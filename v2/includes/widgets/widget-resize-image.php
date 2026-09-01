@@ -34,7 +34,7 @@ class Widget_Resize_Image extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-rsz-drop', 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif', 'Drag & drop images here or click to browse'); ?>
         <?php $this->render_file_row('tc-rsz-file'); ?>
 
-        <div class="tc-rsz-options">
+        <div class="tc-rsz-options tc-imgopt tc-rsz-resize">
 
             <div class="tc-rsz-section">
                 <h4 class="tc-rsz-heading">Resize Mode</h4>

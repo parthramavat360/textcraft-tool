@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget: PNG Compressor
- * Premium redesign — quality slider, downscale, output name, clear all.
+ * Premium redesign â€” quality slider, downscale, output name, clear all.
  *
  * @package TextCraft_Tools_Pro
  */
@@ -35,12 +35,16 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-png-drop', 'image/png', 'Drag & drop a PNG image here or click to browse'); ?>
         <?php $this->render_file_row('tc-png-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
+        <div class="tc-input-group" >
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-png-quality">
+                <label class="tc-range-label"  for="tc-png-quality">
                     Quality: <span id="tc-png-quality-val">90%</span>
                 </label>
-                <input type="range" class="tc-range" id="tc-png-quality" min="10" max="100" value="90">
+                <div class="tc-rsz-slider-wrap">
+                    <span class="tc-rsz-slider-min" >10</span>
+                    <input type="range" class="tc-range" id="tc-png-quality" min="10" max="100" value="90" >
+                    <span class="tc-rsz-slider-max" >100</span>
+                </div>
                 <p class="tc-lvl-hint">Lower values quantize colors to make the file much smaller.</p>
             </div>
         </div>
@@ -49,7 +53,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-png-resize" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>Downscale</b>
                     <small>Reduce the image to a maximum dimension.</small>
                 </span>
@@ -58,7 +62,7 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
 
         <div class="tc-input-group" id="tc-png-slider-section">
             <div class="tc-range-wrap">
-                <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-png-maxdim">
+                <label class="tc-range-label"  for="tc-png-maxdim">
                     Max Dimension: <span id="tc-png-dim-val">1200px</span>
                 </label>
                 <input type="range" class="tc-range" id="tc-png-maxdim" min="320" max="2048" value="1200" step="32">
@@ -67,8 +71,8 @@ class Widget_Png_Compressor extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-png-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-png-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-png-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-png-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 

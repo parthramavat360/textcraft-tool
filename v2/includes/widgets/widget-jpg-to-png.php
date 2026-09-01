@@ -35,11 +35,22 @@ class Widget_Jpg_To_Png extends TextCraft_Tool_Base {
         <?php $this->render_drop_zone('tc-j2p-drop', 'image/jpeg,.jpg,.jpeg', 'Drag & drop JPG images here or click to browse'); ?>
         <?php $this->render_file_row('tc-j2p-file'); ?>
 
-        <div class="tc-input-group" style="margin-top:18px">
-            <label class="tc-range-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2p-bgcolor">
+        <div class="tc-input-group" >
+            <label class="tc-range-label"  for="tc-j2p-bgcolor">
                 Background Color: <span id="tc-j2p-bgcolor-hex">#ffffff</span>
             </label>
-            <input type="color" class="tc-color" id="tc-j2p-bgcolor" value="#ffffff" style="width:56px;height:36px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;padding:2px;margin-top:6px">
+            <div class="tc-premium-color-picker" data-picker="tc-j2p-bgcolor">
+                <label class="tc-pcp-swatch" for="tc-j2p-bgcolor"><span class="tc-pcp-swatch-fill" data-swatch="tc-j2p-bgcolor"></span></label>
+                <span class="tc-pcp-hex"></span>
+                <input type="color" class="tc-pcp-input" id="tc-j2p-bgcolor" value="#ffffff">
+                <div class="tc-pcp-swatches" data-palette="tc-j2p-bgcolor">
+                    <button class="tc-pcp-csw" data-val="#ffffff" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#0b1220" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#ff0000" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#00bfff" type="button"></button>
+                    <button class="tc-pcp-csw" data-val="#00ff00" type="button"></button>
+                </div>
+            </div>
             <p class="tc-lvl-hint">Fill color behind the image (PNG supports transparency).</p>
         </div>
 
@@ -47,7 +58,7 @@ class Widget_Jpg_To_Png extends TextCraft_Tool_Base {
             <label class="tc-premium-opt">
                 <input type="checkbox" class="tc-switch-input" id="tc-j2p-ios" checked>
                 <span class="tc-switch" aria-hidden="true"></span>
-                <span class="tc-opt-text" style="font-family:'Space Grotesk',system-ui,sans-serif">
+                <span class="tc-opt-text" >
                     <b>iOS-Compatible Downscale</b>
                     <small>Auto-downscale large images (4096px max) for iOS compatibility.</small>
                 </span>
@@ -55,8 +66,8 @@ class Widget_Jpg_To_Png extends TextCraft_Tool_Base {
         </div>
 
         <div class="tc-input-group">
-            <label class="tc-label" style="font-family:'Space Grotesk',system-ui,sans-serif" for="tc-j2p-name">Output file name</label>
-            <input type="text" class="tc-input" style="font-family:'Space Grotesk',system-ui,sans-serif" id="tc-j2p-name" placeholder="my-image">
+            <label class="tc-label"  for="tc-j2p-name">Output file name</label>
+            <input type="text" class="tc-input"  id="tc-j2p-name" placeholder="my-image">
             <p class="tc-lvl-hint">Leave empty to use your source file name.</p>
         </div>
 
@@ -79,7 +90,7 @@ class Widget_Jpg_To_Png extends TextCraft_Tool_Base {
     protected function render_result_content(array $settings): void {}
 
     /**
-     * Override result panel with JPG→PNG specific labels.
+     * Override result panel with JPGâ†’PNG specific labels.
      */
     protected function render_result(array $settings): void {
         ?>
